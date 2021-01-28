@@ -23,7 +23,7 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 
 internal class ModuleSchemaFactory(
-    private val fileInterfaceNameFactory: FileInterfaceNameFactory,
+    private val moduleInterfaceNameFactory: ModuleInterfaceNameFactory,
     private val elementUtils: Elements
 ) {
 
@@ -35,7 +35,7 @@ internal class ModuleSchemaFactory(
     ): ModuleSchema {
         return ModuleSchema(
             packageName = packageName,
-            interfaceName = fileInterfaceNameFactory.createInterfaceName(component),
+            interfaceName = moduleInterfaceNameFactory.createInterfaceName(component),
             componentType = component.toTypeElement(),
             bindings = bindings
         )

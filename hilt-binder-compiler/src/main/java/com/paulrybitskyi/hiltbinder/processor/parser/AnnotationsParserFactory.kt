@@ -20,7 +20,7 @@ import com.paulrybitskyi.hiltbinder.processor.ComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.detectors.*
 import com.paulrybitskyi.hiltbinder.processor.factories.BindingMethodNameFactory
 import com.paulrybitskyi.hiltbinder.processor.factories.BindingSchemaFactory
-import com.paulrybitskyi.hiltbinder.processor.factories.FileInterfaceNameFactory
+import com.paulrybitskyi.hiltbinder.processor.factories.ModuleInterfaceNameFactory
 import com.paulrybitskyi.hiltbinder.processor.factories.ModuleSchemaFactory
 import com.paulrybitskyi.hiltbinder.processor.providers.PackageNameProvider
 import javax.annotation.processing.ProcessingEnvironment
@@ -99,14 +99,14 @@ internal object AnnotationsParserFactory {
 
     private fun createModuleSchemaFactory(env: ProcessingEnvironment): ModuleSchemaFactory {
         return ModuleSchemaFactory(
-            fileInterfaceNameFactory = createFileInterfaceNameFactory(),
+            moduleInterfaceNameFactory = createModuleInterfaceNameFactory(),
             elementUtils = env.elementUtils
         )
     }
 
 
-    private fun createFileInterfaceNameFactory(): FileInterfaceNameFactory {
-        return FileInterfaceNameFactory()
+    private fun createModuleInterfaceNameFactory(): ModuleInterfaceNameFactory {
+        return ModuleInterfaceNameFactory()
     }
 
 
