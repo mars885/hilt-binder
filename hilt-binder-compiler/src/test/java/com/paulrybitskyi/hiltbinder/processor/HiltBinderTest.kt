@@ -21,7 +21,7 @@ import com.google.testing.compile.JavaFileObjects.forResource
 import com.google.testing.compile.JavaFileObjects.forSourceLines
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.factories.FileInterfaceNameFactory
+import com.paulrybitskyi.hiltbinder.processor.factories.ModuleInterfaceNameFactory
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.providers.MessageProvider
@@ -33,7 +33,7 @@ internal class HiltBinderTest {
     private companion object {
 
         private val COMPONENT_MAPPER = ComponentMapper()
-        private val FILE_INTERFACE_NAME_FACTORY = FileInterfaceNameFactory()
+        private val MODULE_INTERFACE_NAME_FACTORY = ModuleInterfaceNameFactory()
         private val MESSAGE_PROVIDER = MessageProvider()
 
         private val VALID_ANNOTATION_COMPONENTS = BindType.Component
@@ -390,7 +390,7 @@ internal class HiltBinderTest {
                 public class Test implements Testable {}
             """.trimIndent()
             )
-            val interfaceName = FILE_INTERFACE_NAME_FACTORY.createInterfaceName(hiltComponent)
+            val interfaceName = MODULE_INTERFACE_NAME_FACTORY.createInterfaceName(hiltComponent)
             val expectedModule = forSourceLines(
                 interfaceName,
                 """
@@ -435,7 +435,7 @@ internal class HiltBinderTest {
             """.trimIndent()
             )
             val hiltComponent = COMPONENT_MAPPER.mapToHiltComponent(component)
-            val interfaceName = FILE_INTERFACE_NAME_FACTORY.createInterfaceName(hiltComponent)
+            val interfaceName = MODULE_INTERFACE_NAME_FACTORY.createInterfaceName(hiltComponent)
             val expectedModule = forSourceLines(
                 interfaceName,
                 """

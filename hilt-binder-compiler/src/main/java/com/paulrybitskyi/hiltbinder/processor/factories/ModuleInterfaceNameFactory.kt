@@ -18,7 +18,7 @@ package com.paulrybitskyi.hiltbinder.processor.factories
 
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
 
-internal class FileInterfaceNameFactory {
+internal class ModuleInterfaceNameFactory {
 
 
     private companion object {
