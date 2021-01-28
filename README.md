@@ -1,9 +1,9 @@
 # HiltBinder
 An annotating processing library that automatically generates Dagger Hilt's `@Binds` methods.
 
-[ ![Download](https://api.bintray.com/packages/mars885/maven/hilt-binder/images/download.svg) ](https://bintray.com/mars885/maven/hilt-binder/_latestVersion)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Platform](https://img.shields.io/badge/platform-Android-green.svg)](http://developer.android.com/index.html)
+[![Download](https://api.bintray.com/packages/mars885/maven/hilt-binder/images/download.svg)](https://bintray.com/mars885/maven/hilt-binder/_latestVersion)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Contents
 * [Installation](#installation)
@@ -69,7 +69,7 @@ class GlideImageLoader @Inject constructor(): ImageLoader
 
 Which generates this:
 
-````kotlin
+````java
 @Module
 @InstallIn(SingletonComponent.class)
 public interface HiltBinder_SingletonComponentModule {
@@ -93,7 +93,7 @@ class PicassoImageLoader @Inject constructor(): AbstractImageLoader(), ImageLoad
 
 Which generates this:
 
-````kotlin
+````java
 @Module
 @InstallIn(SingletonComponent.class)
 public interface HiltBinder_SingletonComponentModule {
@@ -124,7 +124,7 @@ class AndroidLogger @Inject constructor(): Logger
 
 Which generates this:
 
-````kotlin
+````java
 @Module
 @InstallIn(FragmentComponent.class)
 public interface HiltBinder_FragmentComponentModule {
@@ -156,7 +156,8 @@ class NativeAppUrlOpener @Inject constructor(): UrlOpener
 ````
 
 Which generates this:
-````kotlin
+
+````java
 @Module
 @InstallIn(SingletonComponent.class)
 public interface HiltBinder_SingletonComponentModule {
@@ -193,7 +194,8 @@ class LogOutSettingHandler @Inject constructor(): SettingHandler
 ````
 
 Which generates this:
-````kotlin
+
+````java
 @Module
 @InstallIn(SingletonComponent.class)
 public interface HiltBinder_SingletonComponentModule {
@@ -246,7 +248,8 @@ class LogOutSettingHandler @Inject constructor(): SettingHandler
 ````
 
 Which generates this:
-````kotlin
+
+````java
 @Module
 @InstallIn(SingletonComponent.class)
 public interface HiltBinder_SingletonComponentModule {
@@ -285,7 +288,7 @@ class BooksRemoteDataStore @Inject constructor(): BooksDataStore
 
 Which generates this:
 
-````kotlin
+````java
 @Module
 @InstallIn(SingletonComponent.class)
 public interface HiltBinder_SingletonComponentModule {
