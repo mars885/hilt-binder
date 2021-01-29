@@ -6,6 +6,7 @@ An annotating processing library that automatically generates Dagger Hilt's `@Bi
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Contents
+* [Motivation](#motivation)
 * [Installation](#installation)
 * [Usage](#usage)
   * [Basics](#basics)
@@ -14,6 +15,24 @@ An annotating processing library that automatically generates Dagger Hilt's `@Bi
   * [Qualifiers](#qualifiers)
 * [Sample](#sample)
 * [License](#license)
+
+## Motivation
+
+The main motivation behind this library is to eliminate boilerplate code when binding types in the Dagger Hilt library. Every now and then we have a type that should be exposed only by its supertype (a superclass or an implemented interface). In order to bind the type to its supertype in the Dagger Hilt, we have to write something like this:
+
+````kotlin
+@Module
+@InstallIn(SingletonComponent::class)
+interface BindingsModule {
+
+  @Binds
+  fun bindType(type: Type): Supertype
+
+}
+````
+
+Can't we just automate this process and instruct the machine to generate a binding for us? This library is the answer to the given question.
+
 
 ## Installation
 
