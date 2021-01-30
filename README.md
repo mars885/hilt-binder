@@ -3,6 +3,7 @@ An annotating processing library that automatically generates Dagger Hilt's `@Bi
 
 [![Platform](https://img.shields.io/badge/platform-Android-green.svg)](http://developer.android.com/index.html)
 [![Download](https://api.bintray.com/packages/mars885/maven/hilt-binder/images/download.svg)](https://bintray.com/mars885/maven/hilt-binder/_latestVersion)
+[![Build](https://github.com/mars885/hilt-binder/workflows/Build/badge.svg?branch=master)](https://github.com/mars885/hilt-binder/actions)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Contents
