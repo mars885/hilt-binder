@@ -326,6 +326,10 @@ public interface HiltBinder_SingletonComponentModule {
 
 The project contains a [sample](https://github.com/mars885/hilt-binder/tree/master/sample/src/main/java/com/paulrybitskyi/hiltbinder/sample) application that illustrates the aforementioned examples as well as some advanced ones.
 
+Apart from the sample, you can also take a look at the following repositories that heavily utilize this library:
+- [Gamedge](https://github.com/mars885/gamedge) - An Android application for browsing video games and checking the latest gaming news from around the world.
+- [DocSkanner](https://github.com/mars885/doc-skanner) - An Android application that makes it possible to automatically scan and digitize documents from photos.
+
 ## License
 
 HiltBinder is licensed under the [Apache 2.0 License](LICENSE).
