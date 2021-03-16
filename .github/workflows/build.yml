@@ -9,6 +9,7 @@ on:
 jobs:
   check:
     runs-on: [ubuntu-latest]
+    if: ${{ !contains(github.event.head_commit.message, '[ci skip]') }}
     continue-on-error: true
 
     steps:
@@ -32,13 +33,17 @@ jobs:
           path: |
             ~/.gradle/caches/
             ~/.gradle/wrapper/
-          key: ${{ runner.os }}-gradle-${{ hashFiles('checksum.txt') }}
+          key: cache-gradle-${{ runner.os }}-${{ hashFiles('checksum.txt') }}
+          restore-keys: |
+            cache-gradle-${{ runner.os }}-
+            cache-gradle-
 
       - name: Test Application
         run: ./gradlew check
 
   assemble:
     runs-on: [ubuntu-latest]
+    if: ${{ !contains(github.event.head_commit.message, '[ci skip]') }}
     continue-on-error: true
 
     steps:
@@ -62,7 +67,10 @@ jobs:
           path: |
             ~/.gradle/caches/
             ~/.gradle/wrapper/
-          key: ${{ runner.os }}-gradle-${{ hashFiles('checksum.txt') }}
+          key: cache-gradle-${{ runner.os }}-${{ hashFiles('checksum.txt') }}
+          restore-keys: |
+            cache-gradle-${{ runner.os }}-
+            cache-gradle-
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
