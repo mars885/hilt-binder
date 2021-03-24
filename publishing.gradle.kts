@@ -16,10 +16,10 @@
 
 apply(plugin = PLUGIN_JAVA_LIBRARY)
 apply(plugin = PLUGIN_MAVEN_PUBLISH)
-//apply(plugin = PLUGIN_BINTRAY)
+apply(plugin = PLUGIN_SIGNING)
 
-project.group = publishingConfig.releaseGroupId
-project.version = publishingConfig.releaseVersion
+project.group = publishingConfig.artifactGroupId
+project.version = publishingConfig.artifactVersion
 
 configure<JavaPluginExtension> {
     withJavadocJar()
@@ -28,16 +28,17 @@ configure<JavaPluginExtension> {
 
 configure<PublishingExtension> {
     publications {
-        create<MavenPublication>("MyPublication") {
+        create<MavenPublication>(publishingConfig.mavenPublicationName) {
             from(components["java"])
-            groupId = publishingConfig.releaseGroupId
-            artifactId = publishingConfig.releaseArtifact
-            version = publishingConfig.releaseVersion
+
+            groupId = publishingConfig.artifactGroupId
+            artifactId = publishingConfig.artifactName
+            version = publishingConfig.artifactVersion
 
             pom {
-                name.set(publishingConfig.releaseArtifact)
-                description.set(publishingConfig.releaseDescription)
-                url.set(publishingConfig.releaseWebsite)
+                name.set(publishingConfig.artifactName)
+                description.set(publishingConfig.artifactDescription)
+                url.set(publishingConfig.artifactWebsite)
 
                 licenses {
                     license {
@@ -62,38 +63,31 @@ configure<PublishingExtension> {
             }
         }
     }
+
+    repositories {
+        maven {
+            name = publishingConfig.hostRepoName
+            url = uri(publishingConfig.hostRepoUrl)
+
+            credentials {
+                username = property("SONATYPE_NEXUS_USERNAME", System.getenv("SONATYPE_NEXUS_USERNAME"))
+                password = property("SONATYPE_NEXUS_PASSWORD", System.getenv("SONATYPE_NEXUS_PASSWORD"))
+            }
+        }
+    }
+}
+
+configure<SigningExtension> {
+    val pubExt = checkNotNull(extensions.findByType(PublishingExtension::class.java))
+    val publication = pubExt.publications[publishingConfig.mavenPublicationName]
+
+    sign(publication)
 }
 
 tasks {
-    named<org.gradle.api.tasks.javadoc.Javadoc>("javadoc") {
+    named<Javadoc>("javadoc") {
         if(JavaVersion.current().isJava9Compatible) {
             (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
         }
     }
 }
-
-// https://github.com/bintray/gradle-bintray-plugin/issues/301
-// Unfortunately, the provided solution does not work at the
-// moment, since another error with text "Unresolved reference: jfrog"
-// pops and there seems to be nothing I can do about it.
-/*configure<com.jfrog.bintray.gradle.BintrayExtension> {
-    user = property("bintrayUser", "")
-    key = property("bintrayApiKey", "")
-
-    setPublications("MyPublication")
-
-    with(pkg) {
-        repo = publishingConfig.releaseRepoName
-        name = publishingConfig.releaseArtifact
-        desc = publishingConfig.releaseDescription
-        websiteUrl = publishingConfig.siteUrl
-        vcsUrl = publishingConfig.gitUrl
-        issueTrackerUrl = publishingConfig.issueTracker
-        githubReleaseNotesFile = publishingConfig.releaseNotesFile
-        setLicenses(publishingConfig.allLicenses)
-        dryRun = true
-        publish = true
-        override = false
-        publicDownloadNumbers = false
-    }
-}*/

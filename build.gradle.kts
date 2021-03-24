@@ -20,9 +20,11 @@ plugins {
 
 buildscript {
     repositories {
+        mavenCentral()
         google()
         jcenter()
     }
+
     dependencies {
         classpath(deps.plugins.androidGradle)
         classpath(deps.plugins.kotlinGradle)
@@ -33,6 +35,7 @@ buildscript {
 
 allprojects {
     repositories {
+        mavenCentral()
         google()
         jcenter()
     }

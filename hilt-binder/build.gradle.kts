@@ -16,40 +16,14 @@
 
 plugins {
     kotlin()
-    bintray()
 }
 
 dependencies {
     implementation(deps.vanillaDagger)
 }
 
-publishingConfig.releaseArtifact = publishingConfig.hiltBinderArtifact
-publishingConfig.releaseVersion = publishingConfig.hiltBinderArtifactVersion
-publishingConfig.releaseDescription = publishingConfig.hiltBinderArtifactDesc
+publishingConfig.artifactName = publishingConfig.hiltBinderArtifactName
+publishingConfig.artifactVersion = publishingConfig.hiltBinderArtifactVersion
+publishingConfig.artifactDescription = publishingConfig.hiltBinderArtifactDesc
 
 apply(from = "../publishing.gradle.kts")
-
-// Ideally, this should go into the publishing.gradle.kts file,
-// but due to an existing bug, this configuration has to be duplicated
-// in every distributable artifact's build.gradle.kts file.
-bintray {
-    user = property("bintrayUser", "")
-    key = property("bintrayApiKey", "")
-
-    setPublications("MyPublication")
-
-    with(pkg) {
-        repo = publishingConfig.releaseRepoName
-        name = publishingConfig.releaseArtifact
-        desc = publishingConfig.releaseDescription
-        websiteUrl = publishingConfig.siteUrl
-        vcsUrl = publishingConfig.gitUrl
-        issueTrackerUrl = publishingConfig.issueTracker
-        githubReleaseNotesFile = publishingConfig.releaseNotesFile
-        setLicenses(publishingConfig.allLicenses)
-        dryRun = false
-        publish = true
-        override = false
-        publicDownloadNumbers = false
-    }
-}
