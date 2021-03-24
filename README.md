@@ -107,7 +107,7 @@ What happens if we have a class that has a superclass and also implements some i
 abstract class AbstractImageLoader
 interface ImageLoader
 
-@BindType(ImageLoader::class)
+@BindType(to = ImageLoader::class)
 class PicassoImageLoader @Inject constructor(): AbstractImageLoader(), ImageLoader
 ````
 
