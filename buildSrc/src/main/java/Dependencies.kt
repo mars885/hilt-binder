@@ -37,31 +37,34 @@ object appConfig {
 
 object publishingConfig {
 
-    const val releaseRepoName = "maven"
-    const val releaseGroupId = "com.paulrybitskyi"
-    const val releaseWebsite = "https://github.com/mars885/hilt-binder"
-    const val releaseNotesFile = "CHANGELOG.md"
+    const val artifactGroupId = "com.paulrybitskyi"
+    const val artifactWebsite = "https://github.com/mars885/hilt-binder"
+
+    const val mavenPublicationName = "release"
+
     const val licenseName = "The Apache Software License, Version 2.0"
     const val licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-    const val allLicenses = "Apache-2.0"
     const val developerId = "mars885"
     const val developerName = "Paul Rybitskyi"
     const val developerEmail = "paul.rybitskyi.work@gmail.com"
     const val siteUrl = "https://github.com/mars885/hilt-binder"
     const val gitUrl = "https://github.com/mars885/hilt-binder.git"
-    const val issueTracker = "https://github.com/mars885/hilt-binder/issues"
 
-    const val hiltBinderArtifact = "hilt-binder"
-    const val hiltBinderArtifactDesc = "A public API of the library that automatically generates Dagger Hilt's @Binds methods."
+    const val hostRepoName = "sonatype"
+    const val hostRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+
+    const val hiltBinderArtifactName = "hilt-binder"
     const val hiltBinderArtifactVersion = "1.0.0-alpha01"
+    const val hiltBinderArtifactDesc = "A public API of the library that automatically generates Dagger Hilt's @Binds methods."
 
-    const val hiltBinderCompilerArtifact = "hilt-binder-compiler"
-    const val hiltBinderCompilerArtifactDesc = "An annotation processor of the library that automatically generates Dagger Hilt's @Binds methods."
+    const val hiltBinderCompilerArtifactName = "hilt-binder-compiler"
     const val hiltBinderCompilerArtifactVersion = "1.0.0-alpha01"
+    const val hiltBinderCompilerArtifactDesc = "An annotation processor of the library that automatically generates Dagger Hilt's @Binds methods."
 
-    var releaseArtifact = ""
-    var releaseVersion = ""
-    var releaseDescription = ""
+    var artifactName = ""
+    var artifactVersion = ""
+    var artifactDescription = ""
+
 }
 
 

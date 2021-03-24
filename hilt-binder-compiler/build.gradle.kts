@@ -19,7 +19,6 @@ import org.gradle.internal.jvm.Jvm
 plugins {
     kotlin()
     kotlinKapt()
-    bintray()
 }
 
 dependencies {
@@ -50,33 +49,8 @@ dependencies {
     }
 }
 
-publishingConfig.releaseArtifact = publishingConfig.hiltBinderCompilerArtifact
-publishingConfig.releaseVersion = publishingConfig.hiltBinderCompilerArtifactVersion
-publishingConfig.releaseDescription = publishingConfig.hiltBinderCompilerArtifactDesc
+publishingConfig.artifactName = publishingConfig.hiltBinderCompilerArtifactName
+publishingConfig.artifactVersion = publishingConfig.hiltBinderCompilerArtifactVersion
+publishingConfig.artifactDescription = publishingConfig.hiltBinderCompilerArtifactDesc
 
 apply(from = "../publishing.gradle.kts")
-
-// Ideally, this should go into the publishing.gradle.kts file,
-// but due to an existing bug, this configuration has to be duplicated
-// in every distributable artifact's build.gradle.kts file.
-bintray {
-    user = property("bintrayUser", "")
-    key = property("bintrayApiKey", "")
-
-    setPublications("MyPublication")
-
-    with(pkg) {
-        repo = publishingConfig.releaseRepoName
-        name = publishingConfig.releaseArtifact
-        desc = publishingConfig.releaseDescription
-        websiteUrl = publishingConfig.siteUrl
-        vcsUrl = publishingConfig.gitUrl
-        issueTrackerUrl = publishingConfig.issueTracker
-        githubReleaseNotesFile = publishingConfig.releaseNotesFile
-        setLicenses(publishingConfig.allLicenses)
-        dryRun = false
-        publish = true
-        override = false
-        publicDownloadNumbers = false
-    }
-}

@@ -27,7 +27,7 @@ const val PLUGIN_KOTLIN_ANDROID = "kotlin-android"
 const val PLUGIN_KOTLIN_KAPT = "kotlin-kapt"
 const val PLUGIN_DAGGER_HILT_ANDROID = "dagger.hilt.android.plugin"
 const val PLUGIN_MAVEN_PUBLISH = "maven-publish"
-const val PLUGIN_BINTRAY = "com.jfrog.bintray"
+const val PLUGIN_SIGNING = "org.gradle.signing"
 
 
 fun PluginDependenciesSpec.gradleVersions(): PluginDependencySpec {
@@ -45,11 +45,6 @@ fun PluginDependenciesSpec.kotlin(): PluginDependencySpec {
 }
 
 
-fun PluginDependenciesSpec.javaLibrary(): PluginDependencySpec {
-    return id(PLUGIN_JAVA_LIBRARY)
-}
-
-
 fun PluginDependenciesSpec.kotlinAndroid(): PluginDependencySpec {
     return id(PLUGIN_KOTLIN_ANDROID)
 }
@@ -62,14 +57,4 @@ fun PluginDependenciesSpec.kotlinKapt(): PluginDependencySpec {
 
 fun PluginDependenciesSpec.daggerHiltAndroid(): PluginDependencySpec {
     return id(PLUGIN_DAGGER_HILT_ANDROID)
-}
-
-
-fun PluginDependenciesSpec.mavenPublish(): PluginDependencySpec {
-    return id(PLUGIN_MAVEN_PUBLISH)
-}
-
-
-fun PluginDependenciesSpec.bintray(): PluginDependencySpec {
-    return (id(PLUGIN_BINTRAY) version versions.bintrayPluginVersion)
 }
