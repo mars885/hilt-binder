@@ -73,7 +73,6 @@ object versions {
     const val kotlin = "1.4.21" // also in buildSrc build.gradle.kts file
     const val gradlePlugin = "4.1.1" // also in buildSrc build.gradle.kts file
     const val gradleVersionsPlugin = "0.36.0"
-    const val bintrayPluginVersion = "1.8.5"
     const val appCompat = "1.2.0"
     const val navigation = "2.3.2"
     const val fragmentKtx = "1.2.5"
@@ -101,7 +100,6 @@ object deps {
         const val kotlinGradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         const val daggerHiltGradle = "com.google.dagger:hilt-android-gradle-plugin:${versions.daggerHilt}"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersionsPlugin}"
-        const val bintray = "com.jfrog.bintray.gradle:gradle-bintray-plugin:${versions.bintrayPluginVersion}"
 
     }
 
