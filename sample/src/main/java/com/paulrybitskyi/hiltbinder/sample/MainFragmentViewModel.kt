@@ -28,4 +28,12 @@ internal class MainFragmentViewModel @Inject constructor(
     private val dep1: ViewModelDep1,
     private val dep2: ViewModelDep2,
     private val dep3: ViewModelDep3
-): ViewModel()
+): ViewModel() {
+
+
+    fun testCallback() {
+        // ignore
+    }
+
+
+}
