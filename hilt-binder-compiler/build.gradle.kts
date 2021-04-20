@@ -37,11 +37,20 @@ dependencies {
     testImplementation(deps.truth)
     testImplementation(deps.compileTesting)
 
-    // The following dep excludes Android related classes for some reason
-    // (Android components and their according scopes), so they are
-    // provided in a separate local jar file.
-    testImplementation(deps.daggerHilt)
-    testImplementation(files(deps.local.daggerHilt))
+    // Some Hilt Android classes have to be present on the classpath
+    // when testing. Since hilt-binder-compiler is a jar artifact and
+    // dagger-hilt consists of aar artifacts, we have to somehow
+    // pull the Android classes. If the dependency in question
+    // (dagger-hilt in this case) does not specify some extra
+    // metadata (e.g., https://stackoverflow.com/questions/62681012/version-update-of-androidx-ktx-navigation-fragment-and-navigation-ui-fails-from)
+    // then Gradle will simply ignore any aar dependencies.
+    // If the dependency specifies that extra metadata, then Gradle
+    // will throw an error. Somewhere between release 2.31.2-alpha
+    // and 2.34.1-beta, dagger-hilt started adding that extra metadata.
+    // The workaround then is to manually add missing classes from the classpath
+    // by adding local jars in which they are contained.
+    testImplementation(files(deps.local.daggerHiltCore))
+    testImplementation(files(deps.local.daggerHiltAndroid))
 
     // https://github.com/google/compile-testing/issues/28
     if(Jvm.current().javaVersion?.isJava9Compatible == false) {
