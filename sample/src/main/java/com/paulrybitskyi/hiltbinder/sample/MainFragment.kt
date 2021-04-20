@@ -16,6 +16,8 @@
 
 package com.paulrybitskyi.hiltbinder.sample
 
+import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.paulrybitskyi.hiltbinder.sample.deps.*
@@ -39,6 +41,13 @@ internal class MainFragment : Fragment(R.layout.fragment_main) {
     @DepMapKey(DepType.DEP3) @Inject lateinit var dep3: FragmentDep3
     @DepMapKey(DepType.DEP4) @Inject lateinit var dep4: FragmentDep4
     @Inject lateinit var superDepsMap: Map<String, @JvmSuppressWildcards FragmentSuperDep>
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.testCallback()
+    }
 
 
 }
