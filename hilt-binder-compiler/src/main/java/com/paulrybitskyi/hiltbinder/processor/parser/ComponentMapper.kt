@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor
+package com.paulrybitskyi.hiltbinder.processor.parser
 
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent

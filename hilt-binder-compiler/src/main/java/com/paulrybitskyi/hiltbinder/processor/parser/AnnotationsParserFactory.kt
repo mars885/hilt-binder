@@ -16,13 +16,13 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser
 
-import com.paulrybitskyi.hiltbinder.processor.ComponentMapper
-import com.paulrybitskyi.hiltbinder.processor.detectors.*
-import com.paulrybitskyi.hiltbinder.processor.factories.BindingMethodNameFactory
-import com.paulrybitskyi.hiltbinder.processor.factories.BindingSchemaFactory
-import com.paulrybitskyi.hiltbinder.processor.factories.ModuleInterfaceNameFactory
-import com.paulrybitskyi.hiltbinder.processor.factories.ModuleSchemaFactory
-import com.paulrybitskyi.hiltbinder.processor.providers.PackageNameProvider
+import com.paulrybitskyi.hiltbinder.processor.parser.detectors.*
+import com.paulrybitskyi.hiltbinder.processor.parser.factories.BindingMethodNameFactory
+import com.paulrybitskyi.hiltbinder.processor.parser.factories.BindingSchemaFactory
+import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNameFactory
+import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleSchemaFactory
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.PackageNameProvider
 import javax.annotation.processing.ProcessingEnvironment
 
 internal object AnnotationsParserFactory {
@@ -58,8 +58,14 @@ internal object AnnotationsParserFactory {
         return HiltComponentDetector(
             componentMapper = createComponentMapper(),
             elementUtils = env.elementUtils,
-            typeUtils = env.typeUtils
+            typeUtils = env.typeUtils,
+            messageProvider = createMessageProvider()
         )
+    }
+
+
+    private fun createMessageProvider(): MessageProvider {
+        return MessageProvider()
     }
 
 
@@ -71,7 +77,8 @@ internal object AnnotationsParserFactory {
     private fun createContributionTypeDetector(env: ProcessingEnvironment): ContributionTypeDetector {
         return ContributionTypeDetector(
             elementUtils = env.elementUtils,
-            typeUtils = env.typeUtils
+            typeUtils = env.typeUtils,
+            messageProvider = createMessageProvider()
         )
     }
 
@@ -79,7 +86,8 @@ internal object AnnotationsParserFactory {
     private fun createQualifierAnnotationDetector(env: ProcessingEnvironment): QualifierAnnotationDetector {
         return QualifierAnnotationDetector(
             elementUtils = env.elementUtils,
-            typeUtils = env.typeUtils
+            typeUtils = env.typeUtils,
+            messageProvider = createMessageProvider()
         )
     }
 
@@ -87,7 +95,8 @@ internal object AnnotationsParserFactory {
     private fun createBindingReturnTypeDetector(env: ProcessingEnvironment): BindingReturnTypeDetector {
         return BindingReturnTypeDetector(
             elementUtils = env.elementUtils,
-            typeUtils = env.typeUtils
+            typeUtils = env.typeUtils,
+            messageProvider = createMessageProvider()
         )
     }
 

@@ -22,7 +22,6 @@ import com.paulrybitskyi.hiltbinder.processor.generator.ModuleFileGeneratorFacto
 import com.paulrybitskyi.hiltbinder.processor.parser.AnnotationsParserFactory
 import com.paulrybitskyi.hiltbinder.processor.utils.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.utils.unsafeLazy
-import com.paulrybitskyi.hiltbinder.processor.validator.AnnotationsValidatorFactory
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType.AGGREGATING
 import javax.annotation.processing.AbstractProcessor
@@ -36,7 +35,6 @@ import javax.lang.model.element.TypeElement
 internal class HiltBinderProcessor : AbstractProcessor() {
 
 
-    private val annotationsValidator by unsafeLazy { AnnotationsValidatorFactory.create(processingEnv) }
     private val annotationsParser by unsafeLazy { AnnotationsParserFactory.create(processingEnv) }
     private val moduleFileGenerator by unsafeLazy { ModuleFileGeneratorFactory.create(processingEnv) }
     private val logger by unsafeLazy { Logger(processingEnv.messager) }
@@ -55,7 +53,6 @@ internal class HiltBinderProcessor : AbstractProcessor() {
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
         try {
             roundEnv.getElementsAnnotatedWith(BindType::class.java)
-                .also(annotationsValidator::validate)
                 .let(annotationsParser::parse)
                 .let(moduleFileGenerator::generateFiles)
         } catch(error: Exception) {

@@ -21,10 +21,11 @@ import com.google.testing.compile.JavaFileObjects.forResource
 import com.google.testing.compile.JavaFileObjects.forSourceLines
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.factories.ModuleInterfaceNameFactory
+import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNameFactory
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.parser.ComponentMapper
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import org.junit.Test
 
 internal class HiltBinderTest {

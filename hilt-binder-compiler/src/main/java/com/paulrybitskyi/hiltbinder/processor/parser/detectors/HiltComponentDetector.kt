@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.detectors
+package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.ComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.parser.ComponentMapper
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.utils.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.utils.getType
 import com.paulrybitskyi.hiltbinder.processor.utils.hasAnnotation
 import javax.lang.model.element.TypeElement
@@ -29,14 +31,22 @@ import javax.lang.model.util.Types
 internal class HiltComponentDetector(
     private val componentMapper: ComponentMapper,
     private val elementUtils: Elements,
-    private val typeUtils: Types
+    private val typeUtils: Types,
+    private val messageProvider: MessageProvider
 ) {
 
 
     fun detectComponent(typeElement: TypeElement): HiltComponent {
-        return detectFromScopeAnnotation(typeElement)
-            ?: detectFromMainAnnotation(typeElement.getAnnotation(BindType::class.java))
-            ?: returnDefaultComponent()
+        val mainAnnotation = typeElement.getAnnotation(BindType::class.java)
+
+        val componentDeducedFromScope = detectFromScopeAnnotation(typeElement)
+        val explicitComponent = detectExplicitlyDeclaredComponent(mainAnnotation)
+
+        if((componentDeducedFromScope != null) && (explicitComponent != null)) {
+            throw HiltBinderException(messageProvider.duplicatedComponentError(), typeElement)
+        }
+
+        return (componentDeducedFromScope ?: explicitComponent ?: returnDefaultComponent())
     }
 
 
@@ -65,7 +75,7 @@ internal class HiltComponentDetector(
     }
 
 
-    private fun detectFromMainAnnotation(annotation: BindType): HiltComponent? {
+    private fun detectExplicitlyDeclaredComponent(annotation: BindType): HiltComponent? {
         if(annotation.installIn == BindType.Component.NONE) return null
 
         return componentMapper.mapToHiltComponent(annotation.installIn)

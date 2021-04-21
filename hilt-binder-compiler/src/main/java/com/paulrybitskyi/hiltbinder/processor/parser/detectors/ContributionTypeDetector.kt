@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.detectors
+package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.model.ContributionType
 import com.paulrybitskyi.hiltbinder.processor.model.MAP_KEY_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.utils.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.utils.getType
 import com.paulrybitskyi.hiltbinder.processor.utils.hasAnnotation
 import javax.lang.model.element.TypeElement
@@ -27,7 +29,8 @@ import javax.lang.model.util.Types
 
 internal class ContributionTypeDetector(
     private val elementUtils: Elements,
-    private val typeUtils: Types
+    private val typeUtils: Types,
+    private val messageProvider: MessageProvider
 ) {
 
 
@@ -44,9 +47,9 @@ internal class ContributionTypeDetector(
 
     private fun TypeElement.createMapContributionType(): ContributionType {
         val daggerMapKeyType = elementUtils.getType(MAP_KEY_TYPE_CANON_NAME)
-        val mapKeyAnnotation = annotationMirrors.first {
-            it.annotationType.asElement().hasAnnotation(daggerMapKeyType, typeUtils)
-        }
+        val mapKeyAnnotation = annotationMirrors
+            .firstOrNull { it.annotationType.asElement().hasAnnotation(daggerMapKeyType, typeUtils) }
+            ?: throw HiltBinderException(messageProvider.noMapKeyError(), this)
 
         return ContributionType.Map(mapKeyAnnotation)
     }

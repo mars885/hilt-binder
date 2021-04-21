@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.factories
+package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
-import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
+import com.paulrybitskyi.hiltbinder.processor.utils.getPackageName
+import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Elements
 
-internal class ModuleInterfaceNameFactory {
-
-
-    private companion object {
-
-        private const val INTERFACE_NAME_TEMPLATE = "HiltBinder_%sModule"
-
-    }
+internal class BindingPackageNameDetector(private val elementUtils: Elements) {
 
 
-    fun createInterfaceName(component: HiltComponent): String {
-        return String.format(INTERFACE_NAME_TEMPLATE, component.title)
+    fun detectPackageName(typeElement: TypeElement): String {
+        return elementUtils.getPackageName(typeElement)
     }
 
 
