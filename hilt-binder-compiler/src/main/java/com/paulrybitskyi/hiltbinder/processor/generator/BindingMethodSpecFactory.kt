@@ -18,10 +18,11 @@ package com.paulrybitskyi.hiltbinder.processor.generator
 
 import com.paulrybitskyi.hiltbinder.processor.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.model.ContributionType
-import com.paulrybitskyi.hiltbinder.processor.utils.toAnnotationSpec
-import com.paulrybitskyi.hiltbinder.processor.utils.toClassName
-import com.paulrybitskyi.hiltbinder.processor.utils.toTypeName
+import com.paulrybitskyi.hiltbinder.processor.model.ReturnType
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.WildcardTypeName
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.Modifier
 
@@ -73,6 +74,25 @@ internal class BindingMethodSpecFactory {
         if(qualifierAnnotation == null) return@apply
 
         addAnnotation(qualifierAnnotation.toAnnotationSpec())
+    }
+
+
+
+    private fun ReturnType.toTypeName(): TypeName {
+        return when(this) {
+            is ReturnType.Standard -> type.toTypeName()
+            is ReturnType.Generic -> when(this) {
+                is ReturnType.Generic.Parameterized -> type.toTypeName()
+                is ReturnType.Generic.UnboundedWildcard -> {
+                    val rawType = (ParameterizedTypeName.get(type) as ParameterizedTypeName).rawType
+                    val wildcards = List(typeParamCount) {
+                        WildcardTypeName.subtypeOf(TypeName.OBJECT)
+                    }
+
+                    ParameterizedTypeName.get(rawType, *wildcards.toTypedArray())
+                }
+            }
+        }
     }
 
 

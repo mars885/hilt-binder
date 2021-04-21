@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.utils
+package com.paulrybitskyi.hiltbinder.processor.model
 
-import javax.lang.model.element.Element
+import javax.lang.model.type.TypeMirror
 
-internal class HiltBinderException(
-    message: String,
-    val element: Element? = null
-) : Exception(message)
+internal sealed class ReturnType(val type: TypeMirror) {
+
+    class Standard(type: TypeMirror): ReturnType(type)
+
+    internal sealed class Generic(type: TypeMirror): ReturnType(type) {
+
+        class Parameterized(type: TypeMirror): Generic(type)
+
+        class UnboundedWildcard(type: TypeMirror, val typeParamCount: Int): Generic(type)
+
+    }
+
+}

@@ -20,8 +20,7 @@ import com.google.auto.service.AutoService
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.generator.ModuleFileGeneratorFactory
 import com.paulrybitskyi.hiltbinder.processor.parser.AnnotationsParserFactory
-import com.paulrybitskyi.hiltbinder.processor.utils.HiltBinderException
-import com.paulrybitskyi.hiltbinder.processor.utils.unsafeLazy
+import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType.AGGREGATING
 import javax.annotation.processing.AbstractProcessor
@@ -35,9 +34,9 @@ import javax.lang.model.element.TypeElement
 internal class HiltBinderProcessor : AbstractProcessor() {
 
 
-    private val annotationsParser by unsafeLazy { AnnotationsParserFactory.create(processingEnv) }
-    private val moduleFileGenerator by unsafeLazy { ModuleFileGeneratorFactory.create(processingEnv) }
-    private val logger by unsafeLazy { Logger(processingEnv.messager) }
+    private val annotationsParser by lazy { AnnotationsParserFactory.create(processingEnv) }
+    private val moduleFileGenerator by lazy { ModuleFileGeneratorFactory.create(processingEnv) }
+    private val logger by lazy { Logger(processingEnv.messager) }
 
 
     override fun getSupportedAnnotationTypes(): Set<String> {

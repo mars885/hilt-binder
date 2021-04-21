@@ -24,3 +24,13 @@ import javax.lang.model.util.Types
 internal fun Types.asTypeElement(type: TypeMirror): TypeElement {
     return asElement(type).cast()
 }
+
+
+internal fun Types.isGenericType(type: TypeMirror): Boolean {
+    return asTypeElement(type).typeParameters.isNotEmpty()
+}
+
+
+internal fun Types.getQualifiedName(type: TypeMirror): String {
+    return asTypeElement(type).qualifiedName.toString()
+}

@@ -276,6 +276,37 @@ internal class HiltBinderTest {
 
 
     @Test
+    fun `Binds class explicitly to its direct parameterized interface`() {
+        val returnType = forResource("35/Testable.java")
+        val bindingType = forResource("35/Test.java")
+        val expectedModule = forResource("35/ExpectedModule.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType, bindingType))
+            .processedWith(HiltBinderProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
+    }
+
+
+    @Test
+    fun `Binds class explicitly to its indirect parameterized interface`() {
+        val returnType = forResource("37/Testable.java")
+        val interfaceType = forResource("37/UnitTestable.java")
+        val bindingType = forResource("37/Test.java")
+        val expectedModule = forResource("37/ExpectedModule.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType, interfaceType, bindingType))
+            .processedWith(HiltBinderProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
+    }
+
+
+    @Test
     fun `Binds class implicitly to its parameterized superclass`() {
         val returnType = forResource("16/AbstractTest.java")
         val bindingType = forResource("16/Test.java")
@@ -283,6 +314,37 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
+            .processedWith(HiltBinderProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
+    }
+
+
+    @Test
+    fun `Binds class explicitly to its direct parameterized superclass`() {
+        val returnType = forResource("36/AbstractTest.java")
+        val bindingType = forResource("36/Test.java")
+        val expectedModule = forResource("36/ExpectedModule.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType, bindingType))
+            .processedWith(HiltBinderProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
+    }
+
+
+    @Test
+    fun `Binds class explicitly to its indirect parameterized superclass`() {
+        val returnType = forResource("38/AbstractAbstractTest.java")
+        val superclassType = forResource("38/AbstractTest.java")
+        val bindingType = forResource("38/Test.java")
+        val expectedModule = forResource("38/ExpectedModule.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType, superclassType, bindingType))
             .processedWith(HiltBinderProcessor())
             .compilesWithoutError()
             .and()
@@ -525,7 +587,7 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Binds classes to multibound set`() {
+    fun `Saves bound classes into multibound set`() {
         val returnType = forResource("Testable.java")
         val bindingTypes = listOf(
             forResource("24/Test1.java"),
@@ -544,7 +606,26 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Binds classes to qualified multibound set`() {
+    fun `Saves bound parameterized classes into multibound set`() {
+        val returnType = forResource("39/Testable.java")
+        val bindingTypes = listOf(
+            forResource("39/Test1.java"),
+            forResource("39/Test2.java"),
+            forResource("39/Test3.java")
+        )
+        val expectedModule = forResource("39/ExpectedModule.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType) + bindingTypes)
+            .processedWith(HiltBinderProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
+    }
+
+
+    @Test
+    fun `Saves bound classes into qualified multibound set`() {
         val returnType = forResource("Testable.java")
         val bindingTypes = listOf(
             forResource("25/Test1.java"),
@@ -563,7 +644,7 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Fails to bind class, which does not have @MapKey annotation, to multibound map`() {
+    fun `Fails to save bound class, which does not have @MapKey annotation, into multibound map`() {
         val returnType = forResource("Testable.java")
         val bindingType = forResource("26/Test.java")
 
@@ -578,7 +659,7 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Binds classes to multibound map using standard integer key annotation`() {
+    fun `Saves bound classes into multibound map using standard integer key annotation`() {
         val returnType = forResource("Testable.java")
         val bindingTypes = listOf(
             forResource("27/Test1.java"),
@@ -597,7 +678,7 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Binds classes to multibound map using standard long key annotation`() {
+    fun `Saves bound classes into multibound map using standard long key annotation`() {
         val returnType = forResource("Testable.java")
         val bindingTypes = listOf(
             forResource("28/Test1.java"),
@@ -616,7 +697,7 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Binds classes to multibound map using standard string key annotation`() {
+    fun `Saves bound classes into multibound map using standard string key annotation`() {
         val returnType = forResource("Testable.java")
         val bindingTypes = listOf(
             forResource("29/Test1.java"),
@@ -635,7 +716,7 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Binds classes to multibound map using standard class key annotation`() {
+    fun `Saves bound classes into multibound map using standard class key annotation`() {
         val returnType = forResource("Testable.java")
         val bindingTypes = listOf(
             forResource("30/Test1.java"),
@@ -654,7 +735,26 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Binds classes to multibound map using custom @MapKey annotation`() {
+    fun `Saves bound parameterized classes into multibound map using standard class key annotation`() {
+        val returnType = forResource("40/Testable.java")
+        val bindingTypes = listOf(
+            forResource("40/Test1.java"),
+            forResource("40/Test2.java"),
+            forResource("40/Test3.java")
+        )
+        val expectedModule = forResource("40/ExpectedModule.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType) + bindingTypes)
+            .processedWith(HiltBinderProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
+    }
+
+
+    @Test
+    fun `Saves bound classes into multibound map using custom @MapKey annotation`() {
         val returnType = forResource("Testable.java")
         val customMapKey = forResource("31/TestMapKey.java")
         val bindingTypes = listOf(
@@ -674,7 +774,27 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Binds classes to qualified multibound map`() {
+    fun `Saves bound parameterized classes into multibound map using custom @MapKey annotation`() {
+        val returnType = forResource("41/Testable.java")
+        val customMapKey = forResource("41/TestMapKey.java")
+        val bindingTypes = listOf(
+            forResource("41/Test1.java"),
+            forResource("41/Test2.java"),
+            forResource("41/Test3.java")
+        )
+        val expectedModule = forResource("41/ExpectedModule.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType, customMapKey) + bindingTypes)
+            .processedWith(HiltBinderProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
+    }
+
+
+    @Test
+    fun `Saves bound classes into qualified multibound map`() {
         val returnType = forResource("Testable.java")
         val bindingTypes = listOf(
             forResource("32/Test1.java"),

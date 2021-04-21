@@ -23,25 +23,35 @@ import javax.inject.Named
 
 
 internal interface ActivityDep1
-internal interface ActivityDep2
-internal interface ActivityDep3
-internal interface ActivityDep4
 
 @ActivityScoped
 @BindType
 internal class ActivityDep1Impl @Inject constructor(): ActivityDep1
 
+
+
+internal interface ActivityDep2
+
 @BindType(installIn = BindType.Component.ACTIVITY)
 internal class ActivityDep2Impl @Inject constructor(): ActivityDep2
+
+
+
+internal interface ActivityDep3
 
 @ActivityScoped
 @BindType(withQualifier = true)
 @Named("dep3")
 internal class ActivityDep3Impl @Inject constructor(): ActivityDep3
 
+
+
+internal interface ActivityDep4
+
 @BindType(installIn = BindType.Component.ACTIVITY, withQualifier = true)
 @Named("dep4")
 internal class ActivityDep4Impl @Inject constructor(): ActivityDep4
+
 
 
 internal abstract class ActivitySuperDep

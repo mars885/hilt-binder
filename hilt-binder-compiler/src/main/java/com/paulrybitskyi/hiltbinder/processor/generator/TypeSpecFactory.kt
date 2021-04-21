@@ -17,7 +17,6 @@
 package com.paulrybitskyi.hiltbinder.processor.generator
 
 import com.paulrybitskyi.hiltbinder.processor.model.ModuleSchema
-import com.paulrybitskyi.hiltbinder.processor.utils.toClassName
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.TypeSpec
 import javax.lang.model.element.Modifier

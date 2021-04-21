@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.model
+package com.paulrybitskyi.hiltbinder.processor.generator
 
+import com.squareup.javapoet.AnnotationSpec
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.TypeName
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.TypeElement
+import javax.lang.model.type.TypeMirror
 
-internal class BindingSchema(
-    val packageName: String,
-    val component: HiltComponent,
-    val contributionType: ContributionType?,
-    val qualifierAnnotation: AnnotationMirror?,
-    val methodName: String,
-    val paramType: TypeElement,
-    val paramName: String,
-    val returnType: ReturnType
-)
+
+internal fun TypeElement.toClassName(): ClassName {
+    return ClassName.get(this)
+}
+
+
+internal fun TypeMirror.toTypeName(): TypeName {
+    return TypeName.get(this)
+}
+
+
+internal fun AnnotationMirror.toAnnotationSpec(): AnnotationSpec {
+    return AnnotationSpec.get(this)
+}
