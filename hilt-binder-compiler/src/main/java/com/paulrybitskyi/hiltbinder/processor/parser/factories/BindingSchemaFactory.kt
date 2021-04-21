@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.factories
+package com.paulrybitskyi.hiltbinder.processor.parser.factories
 
-import com.paulrybitskyi.hiltbinder.processor.detectors.*
 import com.paulrybitskyi.hiltbinder.processor.model.BindingSchema
+import com.paulrybitskyi.hiltbinder.processor.parser.detectors.*
 import javax.lang.model.element.TypeElement
 
 internal class BindingSchemaFactory(

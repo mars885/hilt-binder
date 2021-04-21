@@ -60,10 +60,10 @@ internal class BindingMethodSpecFactory {
 
 
     private fun MethodSpec.Builder.contributeToMap(
-        mapKeyAnno: AnnotationMirror
+        mapKeyAnnotation: AnnotationMirror
     ): MethodSpec.Builder = apply {
         addAnnotation(DAGGER_TYPE_INTO_MAP)
-        addAnnotation(mapKeyAnno.toAnnotationSpec())
+        addAnnotation(mapKeyAnnotation.toAnnotationSpec())
     }
 
 

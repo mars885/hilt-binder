@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.factories
+package com.paulrybitskyi.hiltbinder.processor.parser.factories
 
-import com.paulrybitskyi.hiltbinder.processor.PACKAGE_SEPARATOR
+import com.paulrybitskyi.hiltbinder.processor.parser.PACKAGE_SEPARATOR
 import javax.lang.model.element.TypeElement
 
 internal class BindingMethodNameFactory {

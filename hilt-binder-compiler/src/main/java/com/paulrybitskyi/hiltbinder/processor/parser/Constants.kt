@@ -14,22 +14,7 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.providers
-
-import com.paulrybitskyi.hiltbinder.processor.PACKAGE_SEPARATOR
-import com.paulrybitskyi.hiltbinder.processor.model.BindingSchema
-import org.apache.commons.lang3.StringUtils
-
-internal class PackageNameProvider {
+package com.paulrybitskyi.hiltbinder.processor.parser
 
 
-    fun providePackageName(bindings: List<BindingSchema>): String {
-        return bindings
-            .map(BindingSchema::packageName)
-            .toTypedArray()
-            .let(StringUtils::getCommonPrefix)
-            .trimEnd(PACKAGE_SEPARATOR)
-    }
-
-
-}
+internal const val PACKAGE_SEPARATOR = '.'

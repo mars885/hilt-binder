@@ -16,11 +16,11 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser
 
-import com.paulrybitskyi.hiltbinder.processor.factories.BindingSchemaFactory
-import com.paulrybitskyi.hiltbinder.processor.factories.ModuleSchemaFactory
 import com.paulrybitskyi.hiltbinder.processor.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.model.ModuleSchema
-import com.paulrybitskyi.hiltbinder.processor.providers.PackageNameProvider
+import com.paulrybitskyi.hiltbinder.processor.parser.factories.BindingSchemaFactory
+import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleSchemaFactory
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.PackageNameProvider
 import com.paulrybitskyi.hiltbinder.processor.utils.castEach
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement

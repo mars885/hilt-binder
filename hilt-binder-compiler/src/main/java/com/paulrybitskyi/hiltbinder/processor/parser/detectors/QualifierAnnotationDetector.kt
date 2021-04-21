@@ -14,38 +14,34 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.validator.concrete
+package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
-import com.paulrybitskyi.hiltbinder.processor.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.model.QUALIFIER_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.utils.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.utils.getType
 import com.paulrybitskyi.hiltbinder.processor.utils.hasAnnotation
+import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
-internal class ComponentDuplicationValidator(
-    private val messageProvider: MessageProvider,
+internal class QualifierAnnotationDetector(
     private val elementUtils: Elements,
-    private val typeUtils: Types
+    private val typeUtils: Types,
+    private val messageProvider: MessageProvider
 ) {
 
 
-    fun validate(typeElement: TypeElement) {
-        val mainAnnotation = typeElement.getAnnotation(BindType::class.java)
-        val hasExplicitComponent = (mainAnnotation.installIn != BindType.Component.NONE)
-        val hasAnyScopeAnnotation = HiltComponent.values().any {
-            val componentScopeType = elementUtils.getType(it.scopeName)
-            val hasScopeAnnotation = typeElement.hasAnnotation(componentScopeType, typeUtils)
+    fun detectAnnotation(typeElement: TypeElement): AnnotationMirror? {
+        if(!typeElement.getAnnotation(BindType::class.java).withQualifier) return null
 
-            hasScopeAnnotation
-        }
+        val qualifierType = elementUtils.getType(QUALIFIER_TYPE_CANON_NAME)
 
-        if(hasExplicitComponent && hasAnyScopeAnnotation) {
-            throw HiltBinderException(messageProvider.duplicatedComponentError(), typeElement)
-        }
+        return typeElement.annotationMirrors
+            .firstOrNull { it.annotationType.asElement().hasAnnotation(qualifierType, typeUtils) }
+            ?: throw HiltBinderException(messageProvider.qualifierAbsentError(), typeElement)
     }
 
 

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.validator.concrete
+package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.model.OBJECT_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.model.VOID_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.utils.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.utils.asTypeElement
 import com.paulrybitskyi.hiltbinder.processor.utils.getType
@@ -29,19 +29,21 @@ import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
-internal class ReturnTypeValidator(
-    private val messageProvider: MessageProvider,
+internal class BindingReturnTypeDetector(
     private val elementUtils: Elements,
-    private val typeUtils: Types
+    private val typeUtils: Types,
+    private val messageProvider: MessageProvider
 ) {
 
 
-    fun validate(typeElement: TypeElement) {
+    fun detectReturnType(typeElement: TypeElement): TypeMirror {
         val mainAnnotation = typeElement.getAnnotation(BindType::class.java)
         val bindingType = typeElement.asType()
         val returnType = (mainAnnotation.fetchReturnType() ?: typeElement.deduceReturnType())
 
         checkSubtypeRelation(bindingType, returnType)
+
+        return returnType
     }
 
 
