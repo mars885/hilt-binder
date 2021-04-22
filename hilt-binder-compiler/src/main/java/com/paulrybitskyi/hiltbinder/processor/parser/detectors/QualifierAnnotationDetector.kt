@@ -19,7 +19,7 @@ package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.model.QUALIFIER_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
-import com.paulrybitskyi.hiltbinder.processor.utils.HiltBinderException
+import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.utils.getType
 import com.paulrybitskyi.hiltbinder.processor.utils.hasAnnotation
 import javax.lang.model.element.AnnotationMirror

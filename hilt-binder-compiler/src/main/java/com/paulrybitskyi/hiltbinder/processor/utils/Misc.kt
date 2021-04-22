@@ -26,8 +26,3 @@ internal fun <T> Iterable<*>.castEach(): List<T> {
 internal inline fun <T> Any.cast(): T {
     return (this as T)
 }
-
-
-internal fun <T> unsafeLazy(initializer: () -> T): Lazy<T> {
-    return lazy(LazyThreadSafetyMode.NONE, initializer)
-}

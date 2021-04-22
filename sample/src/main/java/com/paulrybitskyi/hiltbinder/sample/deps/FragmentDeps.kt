@@ -24,7 +24,20 @@ import javax.inject.Qualifier
 
 
 internal interface FragmentDep1
+
+@BindType(installIn = BindType.Component.FRAGMENT)
+internal class FragmentDep1Impl @Inject constructor(): FragmentDep1
+
+
+
 internal interface FragmentDep2
+
+@FragmentScoped
+@BindType
+internal class FragmentDep2Impl @Inject constructor(): FragmentDep2
+
+
+
 internal interface FragmentDep3
 internal interface FragmentDep4
 
@@ -44,13 +57,6 @@ internal enum class DepType {
 @Retention(AnnotationRetention.BINARY)
 internal annotation class DepMapKey(val value: DepType)
 
-@BindType(installIn = BindType.Component.FRAGMENT)
-internal class FragmentDep1Impl @Inject constructor(): FragmentDep1
-
-@FragmentScoped
-@BindType
-internal class FragmentDep2Impl @Inject constructor(): FragmentDep2
-
 @BindType(installIn = BindType.Component.FRAGMENT, withQualifier = true)
 @DepMapKey(DepType.DEP3)
 internal class FragmentDep3Impl @Inject constructor(): FragmentDep3
@@ -59,6 +65,7 @@ internal class FragmentDep3Impl @Inject constructor(): FragmentDep3
 @BindType(withQualifier = true)
 @DepMapKey(DepType.DEP4)
 internal class FragmentDep4Impl @Inject constructor(): FragmentDep4
+
 
 
 internal interface FragmentSuperDep

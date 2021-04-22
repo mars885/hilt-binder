@@ -1,0 +1,1 @@
+public interface Testable<T1, T2> {}

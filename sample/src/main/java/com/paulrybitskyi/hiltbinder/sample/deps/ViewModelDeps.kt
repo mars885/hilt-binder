@@ -22,15 +22,21 @@ import javax.inject.Inject
 
 
 internal interface ViewModelDep1
-internal interface ViewModelDep2
-internal interface ViewModelDep3
 
 @ViewModelScoped
 @BindType
 class ViewModelDep1Impl @Inject constructor(): ViewModelDep1
 
+
+
+internal interface ViewModelDep2
+
 @BindType(installIn = BindType.Component.VIEW_MODEL)
 class ViewModelDep2Impl @Inject constructor(): ViewModelDep2
+
+
+
+internal interface ViewModelDep3
 
 @ViewModelScoped
 @BindType

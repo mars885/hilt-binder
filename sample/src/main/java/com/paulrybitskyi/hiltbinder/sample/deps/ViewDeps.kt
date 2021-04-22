@@ -23,20 +23,28 @@ import javax.inject.Inject
 
 
 internal interface ViewDep1
-internal interface ViewDep2
-internal interface ViewDep3
-internal interface ViewDep4
-
 
 @BindType(installIn = BindType.Component.VIEW)
 internal class ViewDep1Impl @Inject constructor(): ViewDep1
+
+
+
+internal interface ViewDep2
 
 @ViewScoped
 @BindType
 internal class ViewDep2Impl @Inject constructor(): ViewDep2
 
+
+
+internal interface ViewDep3
+
 @BindType(installIn = BindType.Component.VIEW_WITH_FRAGMENT)
 internal class ViewDep3Impl @Inject constructor(): ViewDep3
+
+
+
+internal interface ViewDep4
 
 @ViewScoped
 @WithFragmentBindings

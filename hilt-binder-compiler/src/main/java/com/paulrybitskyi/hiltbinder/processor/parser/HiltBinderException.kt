@@ -14,26 +14,11 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.utils
+package com.paulrybitskyi.hiltbinder.processor.parser
 
-import com.squareup.javapoet.AnnotationSpec
-import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.TypeName
-import javax.lang.model.element.AnnotationMirror
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
+import javax.lang.model.element.Element
 
-
-internal fun TypeElement.toClassName(): ClassName {
-    return ClassName.get(this)
-}
-
-
-internal fun TypeMirror.toTypeName(): TypeName {
-    return TypeName.get(this)
-}
-
-
-internal fun AnnotationMirror.toAnnotationSpec(): AnnotationSpec {
-    return AnnotationSpec.get(this)
-}
+internal class HiltBinderException(
+    message: String,
+    val element: Element? = null
+) : Exception(message)
