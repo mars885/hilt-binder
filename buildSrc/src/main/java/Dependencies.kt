@@ -77,8 +77,7 @@ object versions {
     const val navigation = "2.3.5"
     const val fragmentKtx = "1.3.2"
     const val constraintLayout = "2.0.4"
-    const val vanillaDagger = "2.34.1"
-    const val daggerHilt = "2.34.1-beta"
+    const val dagger = "2.35"
     const val materialComponents = "1.3.0"
     const val apacheCommons = "3.12.0"
     const val javaPoet = "1.13.0"
@@ -98,7 +97,7 @@ object deps {
 
         const val androidGradle = "com.android.tools.build:gradle:${versions.gradlePlugin}"
         const val kotlinGradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
-        const val daggerHiltGradle = "com.google.dagger:hilt-android-gradle-plugin:${versions.daggerHilt}"
+        const val daggerHiltGradle = "com.google.dagger:hilt-android-gradle-plugin:${versions.dagger}"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersionsPlugin}"
 
     }
@@ -108,8 +107,8 @@ object deps {
         const val hiltBinder = ":hilt-binder"
         const val hiltBinderCompiler = ":hilt-binder-compiler"
 
-        const val daggerHiltCore = "libs/hilt-core-${versions.daggerHilt}.jar"
-        const val daggerHiltAndroid = "libs/hilt-android-${versions.daggerHilt}.jar"
+        const val daggerHiltCore = "libs/hilt-core-${versions.dagger}.jar"
+        const val daggerHiltAndroid = "libs/hilt-android-${versions.dagger}.jar"
 
     }
 
@@ -117,9 +116,9 @@ object deps {
     const val navFragmentKtx = "androidx.navigation:navigation-fragment-ktx:${versions.navigation}"
     const val fragmentKtx = "androidx.fragment:fragment-ktx:${versions.fragmentKtx}"
     const val constraintLayout = "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}"
-    const val vanillaDagger = "com.google.dagger:dagger:${versions.vanillaDagger}"
-    const val daggerHilt = "com.google.dagger:hilt-android:${versions.daggerHilt}"
-    const val daggerHiltCompiler = "com.google.dagger:hilt-android-compiler:${versions.daggerHilt}"
+    const val vanillaDagger = "com.google.dagger:dagger:${versions.dagger}"
+    const val daggerHilt = "com.google.dagger:hilt-android:${versions.dagger}"
+    const val daggerHiltCompiler = "com.google.dagger:hilt-android-compiler:${versions.dagger}"
     const val materialComponents = "com.google.android.material:material:${versions.materialComponents}"
     const val apacheCommons = "org.apache.commons:commons-lang3:${versions.apacheCommons}"
     const val javaPoet = "com.squareup:javapoet:${versions.javaPoet}"
