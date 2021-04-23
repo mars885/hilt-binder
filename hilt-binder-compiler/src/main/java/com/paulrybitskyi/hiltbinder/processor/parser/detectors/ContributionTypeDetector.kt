@@ -19,10 +19,10 @@ package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.model.ContributionType
 import com.paulrybitskyi.hiltbinder.processor.model.MAP_KEY_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.utils.getAnnoMarkedWithSpecificAnno
 import com.paulrybitskyi.hiltbinder.processor.utils.getType
-import com.paulrybitskyi.hiltbinder.processor.utils.hasAnnotation
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -34,21 +34,20 @@ internal class ContributionTypeDetector(
 ) {
 
 
-    fun detectType(typeElement: TypeElement): ContributionType? {
-        val mainAnnotation = typeElement.getAnnotation(BindType::class.java)
+    fun detectType(annotatedElement: TypeElement): ContributionType? {
+        val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
 
-        return when(mainAnnotation.contributesTo) {
+        return when(bindAnnotation.contributesTo) {
             BindType.Collection.NONE -> null
             BindType.Collection.SET -> ContributionType.Set
-            BindType.Collection.MAP -> typeElement.createMapContributionType()
+            BindType.Collection.MAP -> annotatedElement.createMapContributionType()
         }
     }
 
 
     private fun TypeElement.createMapContributionType(): ContributionType {
         val daggerMapKeyType = elementUtils.getType(MAP_KEY_TYPE_CANON_NAME)
-        val mapKeyAnnotation = annotationMirrors
-            .firstOrNull { it.annotationType.asElement().hasAnnotation(daggerMapKeyType, typeUtils) }
+        val mapKeyAnnotation = typeUtils.getAnnoMarkedWithSpecificAnno(this, daggerMapKeyType)
             ?: throw HiltBinderException(messageProvider.noMapKeyError(), this)
 
         return ContributionType.Map(mapKeyAnnotation)

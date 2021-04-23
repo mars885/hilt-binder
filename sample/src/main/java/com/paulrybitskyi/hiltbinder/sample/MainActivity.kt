@@ -16,6 +16,7 @@
 
 package com.paulrybitskyi.hiltbinder.sample
 
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.paulrybitskyi.hiltbinder.sample.deps.*
 import com.paulrybitskyi.hiltbinder.sample.deps.ActivityDep1
@@ -38,6 +39,22 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
     @Named("dep3") @Inject lateinit var dep3: ActivityDep3
     @Named("dep4") @Inject lateinit var dep4: ActivityDep4
     @Inject lateinit var superDeps: Set<@JvmSuppressWildcards ActivitySuperDep>
+
+    @Inject lateinit var customComponentManager: CustomComponentManager
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        customComponentManager.onCreateComponent()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        customComponentManager.onDestroyComponent()
+    }
 
 
 }

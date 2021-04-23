@@ -17,6 +17,7 @@
 package com.paulrybitskyi.hiltbinder.processor.parser.factories
 
 import com.paulrybitskyi.hiltbinder.processor.parser.PACKAGE_SEPARATOR
+import com.paulrybitskyi.hiltbinder.processor.utils.getQualifiedNameStr
 import javax.lang.model.element.TypeElement
 
 internal class BindingMethodNameFactory {
@@ -30,8 +31,8 @@ internal class BindingMethodNameFactory {
     }
 
 
-    fun createMethodName(typeElement: TypeElement): String {
-        val qualifiedName = typeElement.qualifiedName.toString()
+    fun createMethodName(annotatedElement: TypeElement): String {
+        val qualifiedName = annotatedElement.getQualifiedNameStr()
         val formattedQualifiedName = qualifiedName.replace(
             PACKAGE_SEPARATOR,
             METHOD_NAME_WORD_SEPARATOR

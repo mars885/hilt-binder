@@ -37,7 +37,13 @@ internal class MessageProvider {
 
     fun duplicatedComponentError(): String {
         return "@${BindType::class.simpleName}-using type specifies the component both " +
-            "by the scope annotation and in the 'installIn' field of the annotation."
+            "by the scope annotation and in the 'installIn' parameter of the annotation."
+    }
+
+
+    fun undefinedCustomComponentError(): String {
+        return "@${BindType::class.simpleName}-using type requests to be installed in a custom " +
+            "component, but does not specify its type in the 'customComponent' parameter of the annotation."
     }
 
 

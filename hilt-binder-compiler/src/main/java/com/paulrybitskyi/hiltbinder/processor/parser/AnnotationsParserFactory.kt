@@ -16,7 +16,10 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser
 
-import com.paulrybitskyi.hiltbinder.processor.parser.detectors.*
+import com.paulrybitskyi.hiltbinder.processor.parser.detectors.BindingReturnTypeDetector
+import com.paulrybitskyi.hiltbinder.processor.parser.detectors.ContributionTypeDetector
+import com.paulrybitskyi.hiltbinder.processor.parser.detectors.HiltComponentDetector
+import com.paulrybitskyi.hiltbinder.processor.parser.detectors.QualifierAnnotationDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.factories.BindingMethodNameFactory
 import com.paulrybitskyi.hiltbinder.processor.parser.factories.BindingSchemaFactory
 import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNameFactory
@@ -39,7 +42,7 @@ internal object AnnotationsParserFactory {
 
     private fun createBindingSchemaFactory(env: ProcessingEnvironment): BindingSchemaFactory {
         return BindingSchemaFactory(
-            bindingPackageNameDetector = createBindingPackageNameDetector(env),
+            elementUtils = env.elementUtils,
             hiltComponentDetector = createHiltComponentDetector(env),
             contributionTypeDetector = createContributionTypeDetector(env),
             qualifierAnnotationDetector = createQualifierAnnotationDetector(env),
@@ -49,28 +52,23 @@ internal object AnnotationsParserFactory {
     }
 
 
-    private fun createBindingPackageNameDetector(env: ProcessingEnvironment): BindingPackageNameDetector {
-        return BindingPackageNameDetector(env.elementUtils)
-    }
-
-
     private fun createHiltComponentDetector(env: ProcessingEnvironment): HiltComponentDetector {
         return HiltComponentDetector(
-            componentMapper = createComponentMapper(),
             elementUtils = env.elementUtils,
             typeUtils = env.typeUtils,
+            predefinedHiltComponentMapper = createPredefinedHiltComponentMapper(),
             messageProvider = createMessageProvider()
         )
     }
 
 
-    private fun createMessageProvider(): MessageProvider {
-        return MessageProvider()
+    private fun createPredefinedHiltComponentMapper(): PredefinedHiltComponentMapper {
+        return PredefinedHiltComponentMapper()
     }
 
 
-    private fun createComponentMapper(): ComponentMapper {
-        return ComponentMapper()
+    private fun createMessageProvider(): MessageProvider {
+        return MessageProvider()
     }
 
 

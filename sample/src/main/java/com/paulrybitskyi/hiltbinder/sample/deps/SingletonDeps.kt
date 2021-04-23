@@ -21,7 +21,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+import dagger.hilt.DefineComponent
+import dagger.hilt.EntryPoint
+import dagger.hilt.EntryPoints
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
+import javax.inject.Scope
 import javax.inject.Singleton
 
 
@@ -100,3 +106,70 @@ internal class SingletonDep8Impl2 @Inject constructor(): SingletonDep8<Int, Frag
 @BindType(contributesTo = BindType.Collection.MAP)
 @MapClassKey(SingletonDep8Impl3::class)
 internal class SingletonDep8Impl3 @Inject constructor(): SingletonDep8<Int, View>
+
+
+
+internal interface CustomComponentDep1
+internal interface CustomComponentDep2
+
+@Scope
+@Retention(value = AnnotationRetention.RUNTIME)
+internal annotation class CustomScope
+
+@CustomScope
+@DefineComponent(parent = SingletonComponent::class)
+internal interface CustomComponent
+
+@DefineComponent.Builder
+internal interface CustomComponentBuilder {
+
+    fun build(): CustomComponent
+
+}
+
+@BindType(
+    installIn = BindType.Component.CUSTOM,
+    customComponent = CustomComponent::class
+)
+class CustomComponentDep1Impl @Inject constructor() : CustomComponentDep1
+
+@CustomScope
+@BindType
+class CustomComponentDep2Impl @Inject constructor() : CustomComponentDep2
+
+internal class CustomComponentManager @Inject constructor(
+    private val customComponentBuilder: CustomComponentBuilder
+) {
+
+    private var customComponent: CustomComponent? = null
+
+    private var customComponentDep1: CustomComponentDep1? = null
+    private var customComponentDep2: CustomComponentDep2? = null
+
+    @EntryPoint
+    @InstallIn(CustomComponent::class)
+    interface DependenciesProvider {
+
+        fun getCustomComponentDep1(): CustomComponentDep1
+
+        fun getCustomComponentDep2(): CustomComponentDep2
+
+    }
+
+    fun onCreateComponent() {
+        customComponent = customComponentBuilder.build()
+
+        val dependenciesProvider = EntryPoints.get(customComponent!!, DependenciesProvider::class.java)
+
+        customComponentDep1 = dependenciesProvider.getCustomComponentDep1()
+        customComponentDep2 = dependenciesProvider.getCustomComponentDep2()
+
+        checkNotNull(customComponent)
+        checkNotNull(customComponentDep2)
+    }
+
+    fun onDestroyComponent() {
+        customComponent = null
+    }
+
+}

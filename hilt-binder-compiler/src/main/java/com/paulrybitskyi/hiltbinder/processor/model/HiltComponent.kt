@@ -16,51 +16,28 @@
 
 package com.paulrybitskyi.hiltbinder.processor.model
 
-internal enum class HiltComponent(
-    val title: String,
-    val typeName: String,
-    val scopeName: String
-) {
 
-    SINGLETON(
-        title = "SingletonComponent",
-        typeName = "dagger.hilt.components.SingletonComponent",
-        scopeName = "javax.inject.Singleton"
-    ),
-    ACTIVITY_RETAINED(
-        title = "ActivityRetainedComponent",
-        typeName = "dagger.hilt.android.components.ActivityRetainedComponent",
-        scopeName = "dagger.hilt.android.scopes.ActivityRetainedScoped"
-    ),
-    SERVICE(
-        title = "ServiceComponent",
-        typeName = "dagger.hilt.android.components.ServiceComponent",
-        scopeName = "dagger.hilt.android.scopes.ServiceScoped"
-    ),
-    ACTIVITY(
-        title = "ActivityComponent",
-        typeName = "dagger.hilt.android.components.ActivityComponent",
-        scopeName = "dagger.hilt.android.scopes.ActivityScoped"
-    ),
-    VIEW_MODEL(
-        title = "ViewModelComponent",
-        typeName = "dagger.hilt.android.components.ViewModelComponent",
-        scopeName = "dagger.hilt.android.scopes.ViewModelScoped"
-    ),
-    FRAGMENT(
-        title = "FragmentComponent",
-        typeName = "dagger.hilt.android.components.FragmentComponent",
-        scopeName = "dagger.hilt.android.scopes.FragmentScoped"
-    ),
-    VIEW(
-        title = "ViewComponent",
-        typeName = "dagger.hilt.android.components.ViewComponent",
-        scopeName = "dagger.hilt.android.scopes.ViewScoped"
-    ),
-    VIEW_WITH_FRAGMENT(
-        title = "ViewWithFragmentComponent",
-        typeName = "dagger.hilt.android.components.ViewWithFragmentComponent",
-        scopeName = "dagger.hilt.android.scopes.ViewScoped"
-    )
+internal sealed class HiltComponent {
+
+    data class Predefined(val component: PredefinedHiltComponent): HiltComponent()
+
+    data class Custom(
+        val simpleName: String,
+        val qualifiedName: String
+    ): HiltComponent()
 
 }
+
+
+internal val HiltComponent.simpleName: String
+    get() = when(this) {
+        is HiltComponent.Predefined -> component.simpleName
+        is HiltComponent.Custom -> simpleName
+    }
+
+
+internal val HiltComponent.qualifiedName: String
+    get() = when(this) {
+        is HiltComponent.Predefined -> component.qualifiedName
+        is HiltComponent.Custom -> qualifiedName
+    }

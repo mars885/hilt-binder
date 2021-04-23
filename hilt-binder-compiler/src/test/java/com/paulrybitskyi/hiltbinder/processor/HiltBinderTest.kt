@@ -21,10 +21,11 @@ import com.google.testing.compile.JavaFileObjects.forResource
 import com.google.testing.compile.JavaFileObjects.forSourceLines
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNameFactory
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
+import com.paulrybitskyi.hiltbinder.processor.model.PredefinedHiltComponent
+import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNameFactory
 import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.parser.ComponentMapper
+import com.paulrybitskyi.hiltbinder.processor.parser.PredefinedHiltComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import org.junit.Test
 
@@ -33,13 +34,13 @@ internal class HiltBinderTest {
 
     private companion object {
 
-        private val COMPONENT_MAPPER = ComponentMapper()
+        private val PREDEFINED_HILT_COMPONENT_MAPPER = PredefinedHiltComponentMapper()
         private val MODULE_INTERFACE_NAME_FACTORY = ModuleInterfaceNameFactory()
         private val MESSAGE_PROVIDER = MessageProvider()
 
-        private val VALID_ANNOTATION_COMPONENTS = BindType.Component
+        private val VALID_ANNOTATION_PREDEFINED_COMPONENTS = BindType.Component
             .values()
-            .filter { it != BindType.Component.NONE }
+            .filter { (it != BindType.Component.NONE) && (it != BindType.Component.CUSTOM) }
 
     }
 
@@ -431,11 +432,11 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Installs binding in hilt component, which is deduced from scope annotation`() {
+    fun `Installs binding in predefined hilt component, which is deduced from scope annotation`() {
         val returnType = forResource("Testable.java")
 
-        for(hiltComponent in HiltComponent.values()) {
-            val isViewWithFragmentComponent = (hiltComponent == HiltComponent.VIEW_WITH_FRAGMENT)
+        for(component in PredefinedHiltComponent.values()) {
+            val isViewWithFragmentComponent = (component == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
             val withFragmentBindingAnnotation = if(isViewWithFragmentComponent) {
                 "@$WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME"
             } else {
@@ -447,13 +448,14 @@ internal class HiltBinderTest {
                 """
                 import com.paulrybitskyi.hiltbinder.BindType;
                 
-                @${hiltComponent.scopeName}
+                @${component.scopeQualifiedName}
                 $withFragmentBindingAnnotation
                 @BindType
                 public class Test implements Testable {}
             """.trimIndent()
             )
-            val interfaceName = MODULE_INTERFACE_NAME_FACTORY.createInterfaceName(hiltComponent)
+            val predefinedHiltComponent = HiltComponent.Predefined(component)
+            val interfaceName = MODULE_INTERFACE_NAME_FACTORY.createInterfaceName(predefinedHiltComponent)
             val expectedModule = forSourceLines(
                 interfaceName,
                 """
@@ -462,10 +464,10 @@ internal class HiltBinderTest {
                 import dagger.Binds;
                 import dagger.Module;
                 import dagger.hilt.InstallIn;
-                import ${hiltComponent.typeName};
+                import ${component.qualifiedName};
                 
                 @Module
-                @InstallIn(${hiltComponent.title}.class)
+                @InstallIn(${component.simpleName}.class)
                 public interface $interfaceName {
                   @Binds
                   Testable bind_Test(Test binding);
@@ -484,21 +486,39 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Installs binding in hilt component, which is explicitly specified in annotation`() {
+    fun `Installs binding in custom component, which is deduced from scope annotation`() {
+        val returnType = forResource("Testable.java")
+        val customComponent = forResource("42/CustomComponent.java")
+        val customScope = forResource("42/CustomScope.java")
+        val bindingType = forResource("42/Test.java")
+        val expectedModule = forResource("42/ExpectedModule.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType, customComponent, customScope, bindingType))
+            .processedWith(HiltBinderProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
+    }
+
+
+    @Test
+    fun `Installs binding in predefined hilt component, which is explicitly specified in annotation`() {
         val returnType = forResource("Testable.java")
 
-        for(component in VALID_ANNOTATION_COMPONENTS) {
+        for(predefinedComponent in VALID_ANNOTATION_PREDEFINED_COMPONENTS) {
             val bindingType = forSourceLines(
                 "Test",
                 """
                 import com.paulrybitskyi.hiltbinder.BindType;
                 
-                @BindType(installIn = BindType.Component.${component.name})
+                @BindType(installIn = BindType.Component.${predefinedComponent.name})
                 public class Test implements Testable {}
             """.trimIndent()
             )
-            val hiltComponent = COMPONENT_MAPPER.mapToHiltComponent(component)
-            val interfaceName = MODULE_INTERFACE_NAME_FACTORY.createInterfaceName(hiltComponent)
+            val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
+            val predefinedHiltComponent = HiltComponent.Predefined(mappedComponent)
+            val interfaceName = MODULE_INTERFACE_NAME_FACTORY.createInterfaceName(predefinedHiltComponent)
             val expectedModule = forSourceLines(
                 interfaceName,
                 """
@@ -507,10 +527,10 @@ internal class HiltBinderTest {
                 import dagger.Binds;
                 import dagger.Module;
                 import dagger.hilt.InstallIn;
-                import ${hiltComponent.typeName};
+                import ${mappedComponent.qualifiedName};
                 
                 @Module
-                @InstallIn(${hiltComponent.title}.class)
+                @InstallIn(${mappedComponent.simpleName}.class)
                 public interface $interfaceName {
                   @Binds
                   Testable bind_Test(Test binding);
@@ -529,18 +549,34 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Fails to install binding in hilt component, when both scope and explicit specification is present`() {
+    fun `Installs binding in custom component, which is explicitly specified in annotation`() {
+        val returnType = forResource("Testable.java")
+        val customComponent = forResource("43/CustomComponent.java")
+        val bindingType = forResource("43/Test.java")
+        val expectedModule = forResource("43/ExpectedModule.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType, customComponent, bindingType))
+            .processedWith(HiltBinderProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
+    }
+
+
+    @Test
+    fun `Fails to install binding in predefined hilt component, when both scope and explicit specification is present`() {
         val interfaceType = forResource("Testable.java")
 
-        for(component in VALID_ANNOTATION_COMPONENTS) {
-            val hiltComponent = COMPONENT_MAPPER.mapToHiltComponent(component)
+        for(predefinedComponent in VALID_ANNOTATION_PREDEFINED_COMPONENTS) {
+            val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
             val bindingType = forSourceLines(
                 "Test",
                 """
                 import com.paulrybitskyi.hiltbinder.BindType;
                 
-                @${hiltComponent.scopeName}
-                @BindType(installIn = BindType.Component.${component.name})
+                @${mappedComponent.scopeQualifiedName}
+                @BindType(installIn = BindType.Component.${predefinedComponent.name})
                 public class Test implements Testable {}
             """.trimIndent()
             )
@@ -553,6 +589,38 @@ internal class HiltBinderTest {
                 .`in`(bindingType)
                 .onLine(5)
         }
+    }
+
+
+    @Test
+    fun `Fails to install binding in custom hilt component, when both scope and explicit specification is present`() {
+        val returnType = forResource("Testable.java")
+        val customScope = forResource("44/CustomScope.java")
+        val customComponent = forResource("44/CustomComponent.java")
+        val bindingType = forResource("44/Test.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType, customScope, customComponent, bindingType))
+            .processedWith(HiltBinderProcessor())
+            .failsToCompile()
+            .withErrorContaining(MESSAGE_PROVIDER.duplicatedComponentError())
+            .`in`(bindingType)
+            .onLine(8)
+    }
+
+
+    @Test
+    fun `Fails to install binding in custom hilt component, when its type is unspecified`() {
+        val interfaceType = forResource("Testable.java")
+        val bindingType = forResource("45/Test.java")
+
+        assertAbout(javaSources())
+            .that(listOf(interfaceType, bindingType))
+            .processedWith(HiltBinderProcessor())
+            .failsToCompile()
+            .withErrorContaining(MESSAGE_PROVIDER.undefinedCustomComponentError())
+            .`in`(bindingType)
+            .onLine(4)
     }
 
 

@@ -17,6 +17,7 @@
 package com.paulrybitskyi.hiltbinder.processor.parser.factories
 
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
+import com.paulrybitskyi.hiltbinder.processor.model.simpleName
 
 internal class ModuleInterfaceNameFactory {
 
@@ -29,7 +30,7 @@ internal class ModuleInterfaceNameFactory {
 
 
     fun createInterfaceName(component: HiltComponent): String {
-        return String.format(INTERFACE_NAME_TEMPLATE, component.title)
+        return String.format(INTERFACE_NAME_TEMPLATE, component.simpleName)
     }
 
 

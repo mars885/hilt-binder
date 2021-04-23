@@ -17,18 +17,11 @@
 package com.paulrybitskyi.hiltbinder.processor.utils
 
 import javax.lang.model.element.Element
+import javax.lang.model.element.TypeElement
 import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 import kotlin.reflect.KClass
-
-
-internal fun Element.hasAnnotation(annotationType: TypeMirror, typeUtils: Types): Boolean {
-    return annotationMirrors.any {
-        typeUtils.isSameType(it.annotationType, annotationType)
-    }
-}
 
 
 internal fun Elements.getTypeSafely(classProvider: () -> KClass<*>): TypeMirror {
@@ -40,11 +33,21 @@ internal fun Elements.getTypeSafely(classProvider: () -> KClass<*>): TypeMirror 
 }
 
 
-internal fun Elements.getType(name: CharSequence): TypeMirror {
-    return getTypeElement(name).asType()
+internal fun Elements.getType(qualifiedName: CharSequence): TypeMirror {
+    return getTypeElement(qualifiedName).asType()
 }
 
 
 internal fun Elements.getPackageName(type: Element): String {
     return getPackageOf(type).qualifiedName.toString()
+}
+
+
+internal fun Element.getSimpleNameStr(): String {
+    return simpleName.toString()
+}
+
+
+internal fun TypeElement.getQualifiedNameStr(): String {
+    return qualifiedName.toString()
 }
