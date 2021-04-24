@@ -18,6 +18,9 @@ package com.paulrybitskyi.hiltbinder.keys
 
 import dagger.MapKey
 
+/**
+ *
+ */
 @MapKey
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)

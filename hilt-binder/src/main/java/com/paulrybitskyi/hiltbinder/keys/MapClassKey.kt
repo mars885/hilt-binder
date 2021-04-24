@@ -19,6 +19,9 @@ package com.paulrybitskyi.hiltbinder.keys
 import dagger.MapKey
 import kotlin.reflect.KClass
 
+/**
+ *
+ */
 @MapKey
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
