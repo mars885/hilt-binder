@@ -18,6 +18,12 @@ package com.paulrybitskyi.hiltbinder.keys
 
 import dagger.MapKey
 
+/**
+ * An analog to [dagger.multibindings.IntKey] that is used for marking
+ * a type (class or interface) being contributed to a multibound map.
+ *
+ * See [com.paulrybitskyi.hiltbinder.BindType] for examples.
+ */
 @MapKey
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
