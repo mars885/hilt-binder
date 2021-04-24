@@ -17,6 +17,7 @@
 apply(plugin = PLUGIN_JAVA_LIBRARY)
 apply(plugin = PLUGIN_MAVEN_PUBLISH)
 apply(plugin = PLUGIN_SIGNING)
+apply(plugin = PLUGIN_DOKKA)
 
 project.group = publishingConfig.artifactGroupId
 project.version = publishingConfig.artifactVersion
@@ -26,14 +27,23 @@ configure<JavaPluginExtension> {
     withSourcesJar()
 }
 
+val javadocJar by tasks.getting(Jar::class) {
+    archiveClassifier.set("javadoc")
+
+    val dokkaJavadocTask = tasks.getByName("dokkaJavadoc")
+
+    from(dokkaJavadocTask)
+    dependsOn(dokkaJavadocTask)
+}
+
 configure<PublishingExtension> {
     publications {
         create<MavenPublication>(publishingConfig.mavenPublicationName) {
-            from(components["java"])
-
             groupId = publishingConfig.artifactGroupId
             artifactId = publishingConfig.artifactName
             version = publishingConfig.artifactVersion
+
+            from(components["java"])
 
             pom {
                 name.set(publishingConfig.artifactName)

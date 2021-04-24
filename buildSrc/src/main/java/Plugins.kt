@@ -20,6 +20,7 @@ import org.gradle.plugin.use.PluginDependencySpec
 
 
 const val PLUGIN_GRADLE_VERSIONS = "com.github.ben-manes.versions"
+const val PLUGIN_DOKKA = "org.jetbrains.dokka"
 const val PLUGIN_ANDROID_APPLICATION = "com.android.application"
 const val PLUGIN_KOTLIN = "kotlin"
 const val PLUGIN_JAVA_LIBRARY = "java-library"
@@ -32,6 +33,11 @@ const val PLUGIN_SIGNING = "org.gradle.signing"
 
 fun PluginDependenciesSpec.gradleVersions(): PluginDependencySpec {
     return (id(PLUGIN_GRADLE_VERSIONS) version versions.gradleVersionsPlugin)
+}
+
+
+fun PluginDependenciesSpec.dokka(): PluginDependencySpec {
+    return (id(PLUGIN_DOKKA) version versions.dokkaPlugin)
 }
 
 
