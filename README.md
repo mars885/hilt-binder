@@ -12,8 +12,11 @@ An annotating processing library that automatically generates Dagger Hilt's `@Bi
 * [Usage](#usage)
   * [Basics](#basics)
   * [Hilt Components](#hilt-components)
+    * [Predefined](#predefined)
+    * [Custom](#custom)
   * [Multibindings](#multibindings)
   * [Qualifiers](#qualifiers)
+  * [Generic Types](#generic-types)
 * [Sample](#sample)
 * [License](#license)
 
@@ -101,7 +104,7 @@ public interface HiltBinder_SingletonComponentModule {
 }
 ````
 
-What happens if we have a class that has a superclass and also implements some interfaces? In that case, we'll have to manually specify the type we would like to bind to using `to` parameter of the annoation. For example, to bind to an interface:
+What happens if we have a class that has a superclass and also implements some interfaces? In that case, we'll have to manually specify the type we would like to bind to using `to` parameter of the annotation. For example, to bind to an interface:
 
 ````kotlin
 abstract class AbstractImageLoader
@@ -122,13 +125,17 @@ public interface HiltBinder_SingletonComponentModule {
 }
 ````
 
-The default behavior simply tries to bind to a direct superclass or interface of the annotated type. If the library cannot deduce the type on its own (e.g., class implements multiple interfaces, has a superclass and implements an interface), then the processor is going to throw an error to notify you to specify the type to bind to explicitly.
+The default behavior simply tries to bind to a direct superclass or interface of the annotated type. If the processor cannot deduce the type on its own (e.g., class implements multiple interfaces, has a superclass and implements an interface), then it is going to throw an error to notify you to specify the type to bind to explicitly.
 
-It's worth mentioning that if you need to bind to a specific type in your class hierarchy (e.g., superclass of a superclass, extented interface, etc), then you have no other option than specifying a value for the `to` parameter.
+It's worth mentioning that if you need to bind to a specific type in your class hierarchy (e.g., superclass of a superclass, extended interface, etc), then you have no other option than specifying a value for the `to` parameter.
 
 ### Hilt Components
 
-You've probably noticed that in the previous examples all the generated files had the `@InstallIn(SingletonComponent.class)` annotation. This means that by default all bindings are installed in the Hilt's `SingletonComponent`. There are two ways to change where to install the binding: either specify one of the Hilt's scope annotations or use `installIn` parameter of the annotation. For example, have a look at the following code:
+Dagger Hilt comes with predefined components for Android, but also supports creating custom ones. First, let's see how we can install a binding into predefined components.
+
+#### Predefined
+
+You've probably noticed that in the previous examples all the generated files have the `@InstallIn(SingletonComponent.class)` annotation. This means that by default all bindings are installed into the Hilt's predefined `SingletonComponent`. There are two ways to change a predefined component: either specify a scope annotation of a predefined component or use the `installIn` parameter of the annotation. For example, have a look at the following code:
 
 ````kotlin
 interface ImageLoader
@@ -157,6 +164,49 @@ public interface HiltBinder_FragmentComponentModule {
 ````
 
 Obviously, the `PicassoImageLoader` instance will also be **scoped** to the `FragmentComponent`, unlike the `AndroidLogger` instance. With the `PicassoImageLoader` example, the library simply leverages the fact that every scope is associated with its corresponding component, therefore, there is no need to specify it again using the `installIn` parameter.
+
+#### Custom
+
+Installing a binding into a custom component is similar to installing it into a predefined component: either annotate the type with a custom component's scope annotation (if the type needs to be **scoped**) or use the `installIn` and the `customComponent` parameters of the `BindType` annotation. For example, take a look at the following code:
+
+ ````kotlin
+// A custom component's scope annotation
+@Scope
+@Retention(value = AnnotationRetention.RUNTIME)
+annotation class CustomScope
+
+// Declaration of a custom component itself
+@CustomScope
+@DefineComponent(parent = SingletonComponent::class)
+interface CustomComponent
+
+interface ImageLoader
+interface Logger
+
+@CustomScope
+@BindType
+class PicassoImageLoader @Inject constructor(): ImageLoader
+
+@BindType(
+  installIn = BindType.Component.CUSTOM,
+  customComponent = CustomComponent::class
+)
+class AndroidLogger @Inject constructor(): Logger
+````
+
+Which generates the following:
+
+````java
+@Module
+@InstallIn(CustomComponent.class)
+public interface HiltBinder_CustomComponentModule {
+  @Binds
+  ImageLoader bind_PicassoImageLoader(PicassoImageLoader binding);
+
+  @Binds
+  Logger bind_AndroidLogger(AndroidLogger binding);
+}
+````
 
 ### Multibindings
 
@@ -243,9 +293,9 @@ interface SettingHandler
 
 enum class SettingType {
 
-    CHANGE_USERNAME,
-    BUY_SUBSCRIPTION,
-    LOG_OUT
+  CHANGE_USERNAME,
+  BUY_SUBSCRIPTION,
+  LOG_OUT
 
 }
 
@@ -319,6 +369,71 @@ public interface HiltBinder_SingletonComponentModule {
   @Binds
   @Named("books_remote")
   BooksDataStore bind_BooksRemoteDataStore(BooksRemoteDataStore binding);
+}
+````
+
+### Generic Types
+
+Binding generic types is identical to binding regular types. For example:
+
+````kotlin
+interface StreamingService<T>
+
+class Netflix
+class Hulu
+
+@BindType
+class NetflixService @Inject constructor(): StreamingService<Netflix>
+
+@BindType(to = StreamingService::class)
+class HuluService @Inject constructor(): StreamingService<Hulu>
+````
+
+Generates the following:
+
+````java
+@Module
+@InstallIn(SingletonComponent.class)
+public interface HiltBinder_SingletonComponentModule {
+  @Binds
+  StreamingService<Netflix> bind_NetflixService(NetflixService binding);
+
+  @Binds
+  StreamingService<Hulu> bind_HuluService(HuluService binding);
+}
+````
+
+However, if a binding is contributed to either collection (`SET` or `MAP`), then any type parameters of a generic return type will be replaced with wildcards. For example:
+
+````kotlin
+interface StreamingService<T>
+
+class Netflix
+class Hulu
+
+@BindType(contributesTo = BindType.Collection.SET)
+class NetflixService @Inject constructor(): StreamingService<Netflix>
+
+@BindType(
+  to = StreamingService::class,
+  contributesTo = BindType.Collection.SET
+)
+class HuluService @Inject constructor(): StreamingService<Hulu>
+````
+
+Generates the following:
+
+````java
+@Module
+@InstallIn(SingletonComponent.class)
+public interface HiltBinder_SingletonComponentModule {
+  @Binds
+  @IntoSet
+  StreamingService<?> bind_bindNetflixService(NetflixService binding);
+
+  @Binds
+  @IntoSet
+  StreamingService<?> bind_HuluService(HuluService binding);
 }
 ````
 
