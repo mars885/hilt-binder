@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
  * Denotes a type that should be exposed by its supertype (either a superclass or an
  * implemented interface) in a specific Dagger Hilt component.
  *
- * Let's say we want to bind a class to its superclass/interface:
+ * Let's say we want to bind a class to its superclass or interface:
  *
  * ````kotlin
  * abstract class AbstractImageLoader
@@ -73,10 +73,9 @@ import kotlin.reflect.KClass
  * ````
  *
  * The default behavior simply tries to bind to a direct superclass or interface
- * of the annotated type. If the library cannot deduce the type on its own (e.g., class
+ * of the annotated type. If the processor cannot deduce the type on its own (e.g., class
  * implements multiple interfaces, has a superclass and implements an interface), then
- * the processor is going to throw an error to notify you to specify the type to bind
- * to explicitly.
+ * it is going to throw an error to notify you to specify the type to bind to explicitly.
  *
  * It's worth mentioning that if you need to bind to a specific type in your class
  * hierarchy (e.g., superclass of a superclass, extended interface, etc), then you have
@@ -120,8 +119,8 @@ import kotlin.reflect.KClass
  *
  * Obviously, the `PicassoImageLoader` instance will also be **scoped** to the
  * `FragmentComponent`, unlike the `AndroidLogger` instance. With the
- * `PicassoImageLoader` example, the library simply leverages the fact that every
- * scope is associated with its corresponding component, therefore, there is no need
+ * `PicassoImageLoader` example, we simply leverage the fact that every scope
+ * is associated with its corresponding component, therefore, there is no need
  * to specify it again using the `installIn` parameter.
  *
  * As for custom components, then installing a binding into a custom component is
@@ -169,8 +168,8 @@ import kotlin.reflect.KClass
  * }
  * ````
  *
- * The library also supports [Dagger Multibindings](https://dagger.dev/dev-guide/multibindings.html).
- * For example, to contribute elements to a multibound set:
+ * [Dagger Multibindings](https://dagger.dev/dev-guide/multibindings.html) are
+ * supported too. For example, to contribute elements to a multibound set:
  *
  * ````kotlin
  * interface UrlOpener
@@ -308,8 +307,8 @@ import kotlin.reflect.KClass
  * }
  * ````
  *
- * Qualifiers are supported by the library as well. For the qualifier to be associated
- * with the return type, you need to provide `true` to the `withQualifier` parameter of the
+ * Qualifiers are supported as well. For the qualifier to be associated with the
+ * return type, you need to provide `true` to the `withQualifier` parameter of the
  * annotation. The default value is `false`. Let's have a look at the following example:
  *
  * ````kotlin
@@ -417,8 +416,7 @@ annotation class BindType(
 
 
     /**
-     * Denotes a Dagger Hilt's component where a binding should be
-     * installed in.
+     * Denotes a component where bindings can be installed in.
      */
     enum class Component {
 
@@ -439,7 +437,7 @@ annotation class BindType(
 
 
     /**
-     * Denotes a collection where Dagger bindings can be contributed to.
+     * Denotes a collection where bindings can be contributed to.
      */
     enum class Collection {
 
