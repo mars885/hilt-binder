@@ -73,6 +73,7 @@ object versions {
     const val kotlin = "1.4.32" // also in buildSrc build.gradle.kts file
     const val gradlePlugin = "4.1.3" // also in buildSrc build.gradle.kts file
     const val gradleVersionsPlugin = "0.38.0"
+    const val dokkaPlugin = "1.4.32"
     const val appCompat = "1.2.0"
     const val navigation = "2.3.5"
     const val fragmentKtx = "1.3.2"
@@ -99,6 +100,7 @@ object deps {
         const val kotlinGradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         const val daggerHiltGradle = "com.google.dagger:hilt-android-gradle-plugin:${versions.dagger}"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersionsPlugin}"
+        const val dokka = "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokkaPlugin}"
 
     }
 

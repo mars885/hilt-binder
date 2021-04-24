@@ -16,6 +16,7 @@
 
 plugins {
     gradleVersions()
+    dokka()
 }
 
 buildscript {
@@ -30,6 +31,7 @@ buildscript {
         classpath(deps.plugins.kotlinGradle)
         classpath(deps.plugins.daggerHiltGradle)
         classpath(deps.plugins.gradleVersions)
+        classpath(deps.plugins.dokka)
     }
 }
 
@@ -41,8 +43,6 @@ allprojects {
     }
 }
 
-tasks {
-    val clean by registering(Delete::class) {
-        delete(buildDir)
-    }
+val clean by tasks.registering(Delete::class) {
+    delete(buildDir)
 }
