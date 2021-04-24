@@ -340,7 +340,8 @@ import kotlin.reflect.KClass
  * }
  * ````
  *
- * Binding generic types is identical to binding regular types. For example:
+ * Binding generic types is supported as well. It is identical to binding regular
+ * types. For example:
  *
  * ````kotlin
  * interface StreamingService<T>
