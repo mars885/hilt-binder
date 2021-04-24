@@ -23,6 +23,7 @@ import kotlin.reflect.KClass
 annotation class BindType(
     val to: KClass<*> = Nothing::class,
     val installIn: Component = Component.NONE,
+    val customComponent: KClass<*> = Nothing::class,
     val contributesTo: Collection = Collection.NONE,
     val withQualifier: Boolean = false
 ) {
@@ -39,7 +40,9 @@ annotation class BindType(
         VIEW_MODEL,
         FRAGMENT,
         VIEW,
-        VIEW_WITH_FRAGMENT
+        VIEW_WITH_FRAGMENT,
+
+        CUSTOM
 
     }
 

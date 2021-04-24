@@ -18,10 +18,10 @@ package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.model.QUALIFIER_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.utils.getAnnoMarkedWithSpecificAnno
 import com.paulrybitskyi.hiltbinder.processor.utils.getType
-import com.paulrybitskyi.hiltbinder.processor.utils.hasAnnotation
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
@@ -34,14 +34,13 @@ internal class QualifierAnnotationDetector(
 ) {
 
 
-    fun detectAnnotation(typeElement: TypeElement): AnnotationMirror? {
-        if(!typeElement.getAnnotation(BindType::class.java).withQualifier) return null
+    fun detectAnnotation(annotatedElement: TypeElement): AnnotationMirror? {
+        if(!annotatedElement.getAnnotation(BindType::class.java).withQualifier) return null
 
         val qualifierType = elementUtils.getType(QUALIFIER_TYPE_CANON_NAME)
 
-        return typeElement.annotationMirrors
-            .firstOrNull { it.annotationType.asElement().hasAnnotation(qualifierType, typeUtils) }
-            ?: throw HiltBinderException(messageProvider.qualifierAbsentError(), typeElement)
+        return typeUtils.getAnnoMarkedWithSpecificAnno(annotatedElement, qualifierType)
+            ?: throw HiltBinderException(messageProvider.qualifierAbsentError(), annotatedElement)
     }
 
 

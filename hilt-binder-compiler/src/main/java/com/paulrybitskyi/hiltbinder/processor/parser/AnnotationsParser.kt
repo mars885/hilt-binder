@@ -32,8 +32,8 @@ internal class AnnotationsParser(
 ) {
 
 
-    fun parse(elements: Set<Element>): List<ModuleSchema> {
-        val bindings = elements.castEach<TypeElement>().map(bindingSchemaFactory::createBindingSchema)
+    fun parse(annotatedElements: Set<Element>): List<ModuleSchema> {
+        val bindings = annotatedElements.castEach<TypeElement>().map(bindingSchemaFactory::createBindingSchema)
         val packageName = packageNameProvider.providePackageName(bindings)
 
         return bindings

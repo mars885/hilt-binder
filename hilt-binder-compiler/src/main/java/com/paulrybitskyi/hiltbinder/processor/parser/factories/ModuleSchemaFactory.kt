@@ -19,6 +19,7 @@ package com.paulrybitskyi.hiltbinder.processor.parser.factories
 import com.paulrybitskyi.hiltbinder.processor.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.model.ModuleSchema
+import com.paulrybitskyi.hiltbinder.processor.model.qualifiedName
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 
@@ -43,7 +44,7 @@ internal class ModuleSchemaFactory(
 
 
     private fun HiltComponent.toTypeElement(): TypeElement {
-        return elementUtils.getTypeElement(typeName)
+        return elementUtils.getTypeElement(qualifiedName)
     }
 
 

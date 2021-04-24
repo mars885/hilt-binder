@@ -16,9 +16,27 @@
 
 package com.paulrybitskyi.hiltbinder.processor.utils
 
+import javax.lang.model.element.AnnotationMirror
+import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Types
+
+
+internal fun Types.hasAnnotation(element: Element, annotationType: TypeMirror): Boolean {
+    return element.annotationMirrors.any {
+        isSameType(it.annotationType, annotationType)
+    }
+}
+
+
+internal fun Types.getAnnoMarkedWithSpecificAnno(
+    element: Element,
+    specificAnnoType: TypeMirror
+): AnnotationMirror? {
+    return element.annotationMirrors
+        .firstOrNull { hasAnnotation(it.annotationType.asElement(), specificAnnoType) }
+}
 
 
 internal fun Types.asTypeElement(type: TypeMirror): TypeElement {
@@ -32,5 +50,5 @@ internal fun Types.isGenericType(type: TypeMirror): Boolean {
 
 
 internal fun Types.getQualifiedName(type: TypeMirror): String {
-    return asTypeElement(type).qualifiedName.toString()
+    return asTypeElement(type).getQualifiedNameStr()
 }
