@@ -432,7 +432,7 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Installs binding in predefined hilt component, which is deduced from scope annotation`() {
+    fun `Installs binding in predefined component, which is deduced from scope annotation`() {
         val returnType = forResource("Testable.java")
 
         for(component in PredefinedHiltComponent.values()) {
@@ -486,24 +486,7 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Installs binding in custom component, which is deduced from scope annotation`() {
-        val returnType = forResource("Testable.java")
-        val customComponent = forResource("42/CustomComponent.java")
-        val customScope = forResource("42/CustomScope.java")
-        val bindingType = forResource("42/Test.java")
-        val expectedModule = forResource("42/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, customComponent, customScope, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Installs binding in predefined hilt component, which is explicitly specified in annotation`() {
+    fun `Installs binding in predefined component, which is explicitly specified in annotation`() {
         val returnType = forResource("Testable.java")
 
         for(predefinedComponent in VALID_ANNOTATION_PREDEFINED_COMPONENTS) {
@@ -549,23 +532,7 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Installs binding in custom component, which is explicitly specified in annotation`() {
-        val returnType = forResource("Testable.java")
-        val customComponent = forResource("43/CustomComponent.java")
-        val bindingType = forResource("43/Test.java")
-        val expectedModule = forResource("43/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, customComponent, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Fails to install binding in predefined hilt component, when both scope and explicit specification is present`() {
+    fun `Fails to install binding in predefined component, when both scope and explicit specification is present`() {
         val interfaceType = forResource("Testable.java")
 
         for(predefinedComponent in VALID_ANNOTATION_PREDEFINED_COMPONENTS) {
@@ -593,26 +560,42 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Fails to install binding in custom hilt component, when both scope and explicit specification is present`() {
+    fun `Installs scoped binding in custom component successfully`() {
         val returnType = forResource("Testable.java")
-        val customScope = forResource("44/CustomScope.java")
-        val customComponent = forResource("44/CustomComponent.java")
-        val bindingType = forResource("44/Test.java")
+        val customComponent = forResource("42/CustomComponent.java")
+        val customScope = forResource("42/CustomScope.java")
+        val bindingType = forResource("42/Test.java")
+        val expectedModule = forResource("42/ExpectedModule.java")
 
         assertAbout(javaSources())
-            .that(listOf(returnType, customScope, customComponent, bindingType))
+            .that(listOf(returnType, customComponent, customScope, bindingType))
             .processedWith(HiltBinderProcessor())
-            .failsToCompile()
-            .withErrorContaining(MESSAGE_PROVIDER.duplicatedComponentError())
-            .`in`(bindingType)
-            .onLine(8)
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
     }
 
 
     @Test
-    fun `Fails to install binding in custom hilt component, when its type is unspecified`() {
+    fun `Installs unscoped binding in custom component successfully`() {
+        val returnType = forResource("Testable.java")
+        val customComponent = forResource("43/CustomComponent.java")
+        val bindingType = forResource("43/Test.java")
+        val expectedModule = forResource("43/ExpectedModule.java")
+
+        assertAbout(javaSources())
+            .that(listOf(returnType, customComponent, bindingType))
+            .processedWith(HiltBinderProcessor())
+            .compilesWithoutError()
+            .and()
+            .generatesSources(expectedModule)
+    }
+
+
+    @Test
+    fun `Fails to install binding in custom component, when its type is unspecified`() {
         val interfaceType = forResource("Testable.java")
-        val bindingType = forResource("45/Test.java")
+        val bindingType = forResource("44/Test.java")
 
         assertAbout(javaSources())
             .that(listOf(interfaceType, bindingType))
@@ -896,7 +879,7 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Verify that common prefix package name is used based on bindings of hilt component`() {
+    fun `Verify that common prefix package name is used based on bindings of component`() {
         val returnTypes = listOf(
             forResource("34/Testable1.java"),
             forResource("34/Testable2.java"),

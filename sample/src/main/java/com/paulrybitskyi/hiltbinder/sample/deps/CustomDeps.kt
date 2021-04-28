@@ -48,11 +48,14 @@ internal interface CustomComponentBuilder {
     installIn = BindType.Component.CUSTOM,
     customComponent = CustomComponent::class
 )
-class CustomComponentDep1Impl @Inject constructor() : CustomComponentDep1
+class CustomComponentDep1Impl @Inject constructor(): CustomComponentDep1
 
 @CustomScope
-@BindType
-class CustomComponentDep2Impl @Inject constructor() : CustomComponentDep2
+@BindType(
+    installIn = BindType.Component.CUSTOM,
+    customComponent = CustomComponent::class
+)
+class CustomComponentDep2Impl @Inject constructor(): CustomComponentDep2
 
 internal class CustomComponentManager @Inject constructor(
     private val customComponentBuilder: CustomComponentBuilder
