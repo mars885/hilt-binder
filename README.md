@@ -135,17 +135,17 @@ Dagger Hilt comes with predefined components for Android, but also supports crea
 
 #### Predefined
 
-You've probably noticed that in the previous examples all the generated files have the `@InstallIn(SingletonComponent.class)` annotation. This means that by default all bindings are installed into the Hilt's predefined `SingletonComponent`. There are two ways to change a predefined component: either specify a scope annotation of a predefined component or use the `installIn` parameter of the annotation. For example, have a look at the following code:
+You've probably noticed that in the previous examples all the generated files have the `@InstallIn(SingletonComponent.class)` annotation. This means that by default all bindings are installed into the Hilt's predefined `SingletonComponent`. There are two ways to change a predefined component: either use the `installIn` parameter of the annotation or specify a scope annotation of a predefined component. For example, have a look at the following code:
 
 ````kotlin
 interface ImageLoader
 interface Logger
 
-@FragmentScoped
-@BindType
+@BindType(installIn = BindType.Component.FRAGMENT)
 class PicassoImageLoader @Inject constructor(): ImageLoader
 
-@BindType(installIn = BindType.Component.FRAGMENT)
+@FragmentScoped
+@BindType
 class AndroidLogger @Inject constructor(): Logger
 ````
 
@@ -163,11 +163,11 @@ public interface HiltBinder_FragmentComponentModule {
 }
 ````
 
-Obviously, the `PicassoImageLoader` instance will also be **scoped** to the `FragmentComponent`, unlike the `AndroidLogger` instance. With the `PicassoImageLoader` example, the library simply leverages the fact that every scope is associated with its corresponding component, therefore, there is no need to specify it again using the `installIn` parameter.
+Obviously, the `AndroidLogger` instance will also be **scoped** to the `FragmentComponent`, unlike the `PicassoImageLoader` instance. With the `AndroidLogger` example, the library simply leverages the fact that every scope is associated with its corresponding component, therefore, there is no need to specify it again using the `installIn` parameter.
 
 #### Custom
 
-Installing a binding into a custom component is similar to installing it into a predefined component: either annotate the type with a custom component's scope annotation (if the type needs to be **scoped**) or use the `installIn` and the `customComponent` parameters of the `BindType` annotation. For example, take a look at the following code:
+To install a binding into a custom component, assign `BindType.Component.CUSTOM` as the value of the `installIn` parameter and specify a class of the custom component itself through the `customComponent` parameter. It should be mentioned that, unlike with predefined components, simply specifying a scope of the custom component won't work, since it's impossible to infer a class of the custom component from its scope annotation. For example, take a look at the following code:
 
  ````kotlin
 // A custom component's scope annotation
@@ -183,15 +183,25 @@ interface CustomComponent
 interface ImageLoader
 interface Logger
 
-@CustomScope
-@BindType
+// Binding unscoped type
+@BindType(
+  installIn = BindType.Component.CUSTOM,
+  customComponent = CustomComponent::class
+)
 class PicassoImageLoader @Inject constructor(): ImageLoader
 
+// Binding scoped type
+@CustomScope
 @BindType(
   installIn = BindType.Component.CUSTOM,
   customComponent = CustomComponent::class
 )
 class AndroidLogger @Inject constructor(): Logger
+
+// Won't work, can't infer CustomComponent from CustomScope
+// @CustomScope
+// @BindType
+// class AndroidLogger @Inject constructor(): Logger
 ````
 
 Which generates the following:
