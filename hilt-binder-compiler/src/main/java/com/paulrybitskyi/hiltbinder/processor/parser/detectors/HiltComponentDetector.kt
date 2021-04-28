@@ -22,10 +22,7 @@ import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.PredefinedHiltComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.utils.*
-import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.DeclaredType
-import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
@@ -39,7 +36,7 @@ internal class HiltComponentDetector(
 
     fun detectComponent(annotatedElement: TypeElement): HiltComponent {
         val componentDeducedFromScope = detectFromScopeAnnotation(annotatedElement)
-        val explicitComponent = detectExplicitlyComponent(annotatedElement)
+        val explicitComponent = detectExplicitComponent(annotatedElement)
 
         if((componentDeducedFromScope != null) && (explicitComponent != null)) {
             throw HiltBinderException(messageProvider.duplicatedComponentError(), annotatedElement)
@@ -49,26 +46,18 @@ internal class HiltComponentDetector(
     }
 
 
-    private fun detectFromScopeAnnotation(annotatedElement: TypeElement): HiltComponent? {
-        val scopeType = elementUtils.getType(SCOPE_TYPE_CANON_NAME)
-        val scopeAnnotation = (typeUtils.getAnnoMarkedWithSpecificAnno(annotatedElement, scopeType) ?: return null)
-        val scopeAnnotationType = scopeAnnotation.annotationType
-
-        return detectPredefinedComponentFromScopeAnno(annotatedElement, scopeAnnotationType)
-            ?: detectCustomComponentFromScopeAnno(scopeAnnotationType)
-    }
-
-
-    private fun detectPredefinedComponentFromScopeAnno(
-        annotatedElement: TypeElement,
-        scopeAnnotationType: TypeMirror
-    ): HiltComponent.Predefined? {
+    private fun detectFromScopeAnnotation(annotatedElement: TypeElement): HiltComponent.Predefined? {
         if(shouldInstallInViewWithFragmentComponent(annotatedElement)) {
             return HiltComponent.Predefined(PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
         }
 
         return PredefinedHiltComponent.values()
-            .firstOrNull { typeUtils.isSameType(scopeAnnotationType, elementUtils.getType(it.scopeQualifiedName)) }
+            .firstOrNull {
+                val scopeAnnotationType = elementUtils.getType(it.scopeQualifiedName)
+                val hasScopeAnnotation = typeUtils.hasAnnotation(annotatedElement, scopeAnnotationType)
+
+                hasScopeAnnotation
+            }
             ?.let(HiltComponent::Predefined)
 
     }
@@ -85,25 +74,7 @@ internal class HiltComponentDetector(
     }
 
 
-    private fun detectCustomComponentFromScopeAnno(scopeAnnotationType: DeclaredType): HiltComponent.Custom {
-        val defineComponentType = elementUtils.getType(DEFINE_COMPONENT_TYPE_CANON_NAME)
-        val scopeAnnotationPackage = elementUtils.getPackageOf(scopeAnnotationType.asElement())
-        val customComponentElement = scopeAnnotationPackage.enclosedElements
-            .single {
-                ((it.kind == ElementKind.CLASS) || (it.kind == ElementKind.INTERFACE)) &&
-                typeUtils.hasAnnotation(it, defineComponentType) &&
-                typeUtils.hasAnnotation(it, scopeAnnotationType)
-            }
-            .cast<TypeElement>()
-
-        return HiltComponent.Custom(
-            simpleName = customComponentElement.getSimpleNameStr(),
-            qualifiedName = customComponentElement.getQualifiedNameStr()
-        )
-    }
-
-
-    private fun detectExplicitlyComponent(annotatedElement: TypeElement): HiltComponent? {
+    private fun detectExplicitComponent(annotatedElement: TypeElement): HiltComponent? {
         val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
 
         return when {
