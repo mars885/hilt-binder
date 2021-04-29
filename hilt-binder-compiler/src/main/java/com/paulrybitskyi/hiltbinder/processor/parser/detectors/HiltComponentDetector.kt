@@ -35,18 +35,16 @@ internal class HiltComponentDetector(
 
 
     fun detectComponent(annotatedElement: TypeElement): HiltComponent {
-        val componentDeducedFromScope = detectFromScopeAnnotation(annotatedElement)
+        val componentInferredFromScope = inferFromScopeAnnotation(annotatedElement)
         val explicitComponent = detectExplicitComponent(annotatedElement)
 
-        if((componentDeducedFromScope != null) && (explicitComponent != null)) {
-            throw HiltBinderException(messageProvider.duplicatedComponentError(), annotatedElement)
-        }
+        checkComponentMismatch(componentInferredFromScope, explicitComponent, annotatedElement)
 
-        return (componentDeducedFromScope ?: explicitComponent ?: returnDefaultComponent())
+        return (componentInferredFromScope ?: explicitComponent ?: returnDefaultComponent())
     }
 
 
-    private fun detectFromScopeAnnotation(annotatedElement: TypeElement): HiltComponent.Predefined? {
+    private fun inferFromScopeAnnotation(annotatedElement: TypeElement): HiltComponent.Predefined? {
         if(shouldInstallInViewWithFragmentComponent(annotatedElement)) {
             return HiltComponent.Predefined(PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
         }
@@ -114,6 +112,23 @@ internal class HiltComponentDetector(
             simpleName = customComponentElement.getSimpleNameStr(),
             qualifiedName = customComponentElement.getQualifiedNameStr()
         )
+    }
+
+
+    private fun checkComponentMismatch(
+        componentInferredFromScope: HiltComponent?,
+        explicitComponent: HiltComponent?,
+        annotatedElement: TypeElement
+    ) {
+        val mismatchExists = (
+            (componentInferredFromScope != null) &&
+            (explicitComponent != null) &&
+            (componentInferredFromScope != explicitComponent)
+        )
+
+        if(mismatchExists) {
+            throw HiltBinderException(messageProvider.componentMismatchError(), annotatedElement)
+        }
     }
 
 

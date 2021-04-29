@@ -35,9 +35,9 @@ internal class MessageProvider {
     }
 
 
-    fun duplicatedComponentError(): String {
-        return "@${BindType::class.simpleName}-using type specifies the component both " +
-            "by the scope annotation and in the 'installIn' parameter of the annotation."
+    fun componentMismatchError(): String {
+        return "@${BindType::class.simpleName}-using type is annotated with a scope of " +
+            "one component and specifies a different component in the `installIn` parameter."
     }
 
 

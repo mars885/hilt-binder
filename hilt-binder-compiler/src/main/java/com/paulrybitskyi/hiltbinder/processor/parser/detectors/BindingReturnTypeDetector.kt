@@ -39,7 +39,7 @@ internal class BindingReturnTypeDetector(
     fun detectReturnType(annotatedElement: TypeElement): ReturnType {
         val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
         val returnType = detectExplicitReturnType(bindAnnotation, annotatedElement)
-            ?: deduceReturnType(annotatedElement)
+            ?: inferReturnType(annotatedElement)
 
         checkSubtypeRelation(annotatedElement.asType(), returnType)
 
@@ -118,7 +118,7 @@ internal class BindingReturnTypeDetector(
     }
 
 
-    private fun deduceReturnType(annotatedElement: TypeElement): TypeMirror {
+    private fun inferReturnType(annotatedElement: TypeElement): TypeMirror {
         val superclass = annotatedElement.superclass
         val interfaces = annotatedElement.interfaces
 
