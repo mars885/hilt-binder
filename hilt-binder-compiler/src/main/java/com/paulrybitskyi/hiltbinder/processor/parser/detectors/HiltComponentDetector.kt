@@ -17,7 +17,10 @@
 package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.model.*
+import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
+import com.paulrybitskyi.hiltbinder.processor.model.PredefinedHiltComponent
+import com.paulrybitskyi.hiltbinder.processor.model.VOID_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.PredefinedHiltComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
