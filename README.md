@@ -163,7 +163,7 @@ public interface HiltBinder_FragmentComponentModule {
 }
 ````
 
-Obviously, the `AndroidLogger` instance will also be **scoped** to the `FragmentComponent`, unlike the `PicassoImageLoader` instance. With the `AndroidLogger` example, the library simply leverages the fact that every scope is associated with its corresponding component, therefore, there is no need to specify it again using the `installIn` parameter.
+Obviously, the `AndroidLogger` instance will also be **scoped** to the `FragmentComponent`, unlike the `PicassoImageLoader` instance. With the `AndroidLogger` example, the library simply leverages the fact that every scope is associated with its corresponding component, therefore, there is no need to specify it again using the `installIn` parameter, though you can.
 
 #### Custom
 

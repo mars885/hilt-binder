@@ -95,11 +95,11 @@ import kotlin.reflect.KClass
  * interface ImageLoader
  * interface Logger
  *
- * @FragmentScoped
- * @BindType
+ * @BindType(installIn = BindType.Component.FRAGMENT)
  * class PicassoImageLoader @Inject constructor(): ImageLoader
  *
- * @BindType(installIn = BindType.Component.FRAGMENT)
+ * @FragmentScoped
+ * @BindType
  * class AndroidLogger @Inject constructor(): Logger
  * ````
  *
@@ -117,17 +117,16 @@ import kotlin.reflect.KClass
  * }
  * ````
  *
- * Obviously, the `PicassoImageLoader` instance will also be **scoped** to the
- * `FragmentComponent`, unlike the `AndroidLogger` instance. With the
- * `PicassoImageLoader` example, we simply leverage the fact that every scope
+ * Obviously, the `AndroidLogger` instance will also be **scoped** to the
+ * `FragmentComponent`, unlike the `PicassoImageLoader` instance. With the
+ * `AndroidLogger` example, we simply leverage the fact that every scope
  * is associated with its corresponding component, therefore, there is no need
- * to specify it again using the `installIn` parameter.
+ * to specify it again using the `installIn` parameter, though you can.
  *
- * As for custom components, then installing a binding into a custom component is
- * similar to installing it into a predefined component: either annotate the type
- * with a custom component's scope annotation (if the type needs to be **scoped**)
- * or use the `installIn` and the `customComponent` parameters of the `BindType`
- * annotation. For example, take a look at the following code:
+ * To install a binding into a custom component, assign `BindType.Component.CUSTOM`
+ * as the value of the `installIn` parameter and specify a class of the custom
+ * component itself through the `customComponent` parameter. For example, take a
+ * look at the following code:
  *
  * ````kotlin
  * // A custom component's scope annotation
@@ -143,10 +142,15 @@ import kotlin.reflect.KClass
  * interface ImageLoader
  * interface Logger
  *
- * @CustomScope
- * @BindType
+ * // Binding unscoped type
+ * @BindType(
+ *   installIn = BindType.Component.CUSTOM,
+ *   customComponent = CustomComponent::class
+ * )
  * class PicassoImageLoader @Inject constructor(): ImageLoader
  *
+ * // Binding scoped type
+ * @CustomScope
  * @BindType(
  *   installIn = BindType.Component.CUSTOM,
  *   customComponent = CustomComponent::class
