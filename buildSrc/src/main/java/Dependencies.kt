@@ -54,11 +54,11 @@ object publishingConfig {
     const val hostRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
 
     const val hiltBinderArtifactName = "hilt-binder"
-    const val hiltBinderArtifactVersion = "1.0.0-alpha02"
+    const val hiltBinderArtifactVersion = "1.0.0-alpha03"
     const val hiltBinderArtifactDesc = "A public API of the library that automatically generates Dagger Hilt's @Binds methods."
 
     const val hiltBinderCompilerArtifactName = "hilt-binder-compiler"
-    const val hiltBinderCompilerArtifactVersion = "1.0.0-alpha02"
+    const val hiltBinderCompilerArtifactVersion = "1.0.0-alpha03"
     const val hiltBinderCompilerArtifactDesc = "An annotation processor of the library that automatically generates Dagger Hilt's @Binds methods."
 
     var artifactName = ""
