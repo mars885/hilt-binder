@@ -400,7 +400,7 @@ import kotlin.reflect.KClass
  * public interface HiltBinder_SingletonComponentModule {
  *   @Binds
  *   @IntoSet
- *   StreamingService<?> bind_bindNetflixService(NetflixService binding);
+ *   StreamingService<?> bind_NetflixService(NetflixService binding);
  *
  *   @Binds
  *   @IntoSet
