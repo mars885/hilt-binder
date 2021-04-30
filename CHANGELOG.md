@@ -1,6 +1,58 @@
 Change Log
 ==========
 
+## Version 1.0.0-alpha03 *(2021-04-30)*
+
+Third Alpha Release.
+
+* New: It is now possible to specify both scope annotation (e.g., `FragmentScoped`) and predefined component explicitly (the `to` parameter of the `BindType` annotation) at the same time as long as they match (e.g., `ActivityScoped` and `BindType.Component.ACTIVITY`, `ServiceScoped` and `BindType.Component.SERVICE`, and so on). For example:
+
+   ````kotlin
+   interface ImageLoader
+
+   // Now possible, previously only either scope or explicit declaration had to be present
+   @ActivityScoped
+   @BindType(installIn = BindType.Component.ACTIVITY)
+   class PicassoImageLoader @Inject constructor(): ImageLoader
+   ````
+
+* New: From now on, when installing a binding into a custom component, the `installIn` and the `customComponent` parameters of the `BindType` annotation should be set regardless if the binding is scoped or unscoped. For example:
+
+   ````kotlin
+   // A custom component's scope annotation
+   @Scope
+   @Retention(value = AnnotationRetention.RUNTIME)
+   annotation class CustomScope
+
+   // Declaration of a custom component itself
+   @CustomScope
+   @DefineComponent(parent = SingletonComponent::class)
+   interface CustomComponent
+
+   interface ImageLoader
+   interface Logger
+
+   // Binding unscoped type
+   @BindType(
+     installIn = BindType.Component.CUSTOM,
+     customComponent = CustomComponent::class
+   )
+   class PicassoImageLoader @Inject constructor(): ImageLoader
+
+   // Binding scoped type
+   @CustomScope
+   @BindType(
+     installIn = BindType.Component.CUSTOM,
+     customComponent = CustomComponent::class
+   )
+   class AndroidLogger @Inject constructor(): Logger
+
+   // Won't work, can't infer CustomComponent from CustomScope
+   // @CustomScope
+   // @BindType
+   // class AndroidLogger @Inject constructor(): Logger
+   ````
+
 ## Version 1.0.0-alpha02 *(2021-04-25)*
 
 Second Alpha Release.
