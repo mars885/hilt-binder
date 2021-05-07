@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+## Version 1.0.0-beta01 *(2021-05-07)*
+
+First Beta Release.
+
+* Upgrade: [Kotlin 1.5.0](https://github.com/JetBrains/kotlin/releases/tag/v1.5.0).
+* Upgrade: [Dagger Hilt 2.35.1](https://github.com/google/dagger/releases/tag/dagger-2.35.1).
+
 ## Version 1.0.0-alpha03 *(2021-04-30)*
 
 Third Alpha Release.
@@ -166,7 +173,7 @@ Second Alpha Release.
   ````
 * New: Added Javadoc documentation for public API.
 * Upgrade: [Kotlin 1.4.32](https://github.com/JetBrains/kotlin/releases/tag/v1.4.32).
-* Upgrade: [Dagger Hilt 2.35.](https://github.com/google/dagger/releases/tag/dagger-2.35).
+* Upgrade: [Dagger Hilt 2.35](https://github.com/google/dagger/releases/tag/dagger-2.35).
 
 
 ## Version 1.0.0-alpha01 *(2021-01-24)*
