@@ -24,7 +24,7 @@ object appConfig {
     const val compileSdkVersion = 30
     const val targetSdkVersion = 30
     const val minSdkVersion = 21
-    const val buildToolsVersion = "30.0.0"
+    const val buildToolsVersion = "30.0.2"
     const val applicationId = "com.paulrybitskyi.hiltbinder.sample"
     const val versionCode = 1
     const val versionName = "1.0.0"
@@ -70,15 +70,15 @@ object publishingConfig {
 
 object versions {
 
-    const val kotlin = "1.4.32" // also in buildSrc build.gradle.kts file
-    const val gradlePlugin = "4.1.3" // also in buildSrc build.gradle.kts file
+    const val kotlin = "1.5.0" // also in buildSrc build.gradle.kts file
+    const val gradlePlugin = "4.2.0" // also in buildSrc build.gradle.kts file
     const val gradleVersionsPlugin = "0.38.0"
     const val dokkaPlugin = "1.4.32"
     const val appCompat = "1.2.0"
     const val navigation = "2.3.5"
-    const val fragmentKtx = "1.3.2"
+    const val fragmentKtx = "1.3.3"
     const val constraintLayout = "2.0.4"
-    const val dagger = "2.35"
+    const val dagger = "2.35.1"
     const val materialComponents = "1.3.0"
     const val apacheCommons = "3.12.0"
     const val javaPoet = "1.13.0"
