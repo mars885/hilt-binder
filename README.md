@@ -22,7 +22,7 @@ An annotating processing library that automatically generates Dagger Hilt's `@Bi
 
 ## Motivation
 
-The main motivation behind this library is to eliminate boilerplate code when binding types in the Dagger Hilt library. Every now and then we have a type that should be exposed only by its supertype (a superclass or an implemented interface). In order to bind the type to its supertype in the Dagger Hilt, we have to write something like this:
+The main motivation behind this library is to eliminate boilerplate code when binding types in the Dagger Hilt library. Occasionally we have a type that should be exposed only by its supertype (a superclass or an implemented interface). In order to bind the type to its supertype in the Dagger Hilt, we have to write something like this:
 
 ````kotlin
 @Module
@@ -75,7 +75,7 @@ dependencies {
 
 ### Basics
 
-The main annotation of the library is [@BindType](https://github.com/mars885/hilt-binder/blob/master/hilt-binder/src/main/java/com/paulrybitskyi/hiltbinder/BindType.kt). The annotation has 4 optional parameters, which are gonna be explained in the following examples.
+The main annotation of the library is [@BindType](https://github.com/mars885/hilt-binder/blob/master/hilt-binder/src/main/java/com/paulrybitskyi/hiltbinder/BindType.kt). The annotation has 4 optional parameters, which are going to be explained in the following examples.
 
 Let's say we want to bind a class to its superclass/interface:
 
@@ -127,7 +127,7 @@ public interface HiltBinder_SingletonComponentModule {
 
 The default behavior simply tries to bind to a direct superclass or interface of the annotated type. If the processor cannot deduce the type on its own (e.g., class implements multiple interfaces, has a superclass and implements an interface), then it is going to throw an error to notify you to specify the type to bind to explicitly.
 
-It's worth mentioning that if you need to bind to a specific type in your class hierarchy (e.g., superclass of a superclass, extended interface, etc), then you have no other option than specifying a value for the `to` parameter.
+It's worth mentioning that if you need to bind to a specific type in your class hierarchy (e.g., superclass of a superclass, extended interface, etc.), then you have no other option than specifying a value for the `to` parameter.
 
 ### Hilt Components
 
