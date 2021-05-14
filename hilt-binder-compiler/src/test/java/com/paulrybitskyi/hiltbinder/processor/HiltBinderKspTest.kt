@@ -16,12 +16,8 @@
 
 package com.paulrybitskyi.hiltbinder.processor
 
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
-import com.google.testing.compile.JavaFileObjects
-import com.google.testing.compile.JavaSourcesSubjectFactory
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.javac.HiltBinderJavacProcessor
 import com.paulrybitskyi.hiltbinder.processor.javac.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.javac.model.PredefinedHiltComponent
 import com.paulrybitskyi.hiltbinder.processor.javac.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
