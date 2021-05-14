@@ -262,10 +262,7 @@ internal class HiltBinderKspTest {
     @Test
     fun `Binds class implicitly to its parameterized interface`() {
         val expectedModule = getFile("15/ExpectedModule.java")
-        val compilation = setupCompilation(
-            "15/Testable.java",
-            "15/Test.java"
-        )
+        val compilation = setupCompilation("15/Testable.java", "15/Test.java")
         val result = compilation.compile()
         val generatedFile = File(compilation.kspSourcesDir, "HiltBinder_SingletonComponentModule.java")
 
@@ -278,10 +275,7 @@ internal class HiltBinderKspTest {
     @Test
     fun `Binds class explicitly to its direct parameterized interface`() {
         val expectedModule = getFile("35/ExpectedModule.java")
-        val compilation = setupCompilation(
-            "35/Testable.java",
-            "35/Test.java"
-        )
+        val compilation = setupCompilation("35/Testable.java", "35/Test.java")
         val result = compilation.compile()
         val generatedFile = File(compilation.kspSourcesDir, "HiltBinder_SingletonComponentModule.java")
 
@@ -311,10 +305,7 @@ internal class HiltBinderKspTest {
     @Test
     fun `Binds class implicitly to its parameterized superclass`() {
         val expectedModule = getFile("16/ExpectedModule.java")
-        val compilation = setupCompilation(
-            "16/AbstractTest.java",
-            "16/Test.java"
-        )
+        val compilation = setupCompilation("16/AbstractTest.java", "16/Test.java")
         val result = compilation.compile()
         val generatedFile = File(compilation.kspSourcesDir, "HiltBinder_SingletonComponentModule.java")
 
@@ -327,10 +318,7 @@ internal class HiltBinderKspTest {
     @Test
     fun `Binds class explicitly to its direct parameterized superclass`() {
         val expectedModule = getFile("36/ExpectedModule.java")
-        val compilation = setupCompilation(
-            "36/AbstractTest.java",
-            "36/Test.java"
-        )
+        val compilation = setupCompilation("36/AbstractTest.java", "36/Test.java")
         val result = compilation.compile()
         val generatedFile = File(compilation.kspSourcesDir, "HiltBinder_SingletonComponentModule.java")
 
@@ -656,10 +644,7 @@ internal class HiltBinderKspTest {
     @Test
     fun `Binds class with qualifier to its single interface`() {
         val expectedModule = getFile("22/ExpectedModule.java")
-        val compilation = setupCompilation(
-            "Testable.java",
-            "22/Test.java"
-        )
+        val compilation = setupCompilation("Testable.java", "22/Test.java")
         val result = compilation.compile()
         val generatedFile = File(compilation.kspSourcesDir, "HiltBinder_SingletonComponentModule.java")
 
@@ -801,6 +786,7 @@ internal class HiltBinderKspTest {
     fun `Saves bound classes into multibound map using standard class key annotation`() {
         val expectedModule = getFile("30/ExpectedModule.java")
         val compilation = setupCompilation(
+            "Testable.java",
             "30/Test1.java",
             "30/Test2.java",
             "30/Test3.java"
@@ -855,7 +841,7 @@ internal class HiltBinderKspTest {
     fun `Saves bound parameterized classes into multibound map using custom @MapKey annotation`() {
         val expectedModule = getFile("41/ExpectedModule.java")
         val compilation = setupCompilation(
-            "Testable.java",
+            "41/Testable.java",
             "41/TestMapKey.java",
             "41/Test1.java",
             "41/Test2.java",
@@ -891,7 +877,7 @@ internal class HiltBinderKspTest {
     @Test
     fun `Verify that binding method is properly formatted`() {
         val expectedModule = getFile("33/ExpectedModule.java")
-        val compilation = setupCompilation("Testable.java", "33/Test.java")
+        val compilation = setupCompilation("33/Testable.java", "33/Test.java")
         val result = compilation.compile()
         val generatedFile = File(compilation.kspSourcesDir, "HiltBinder_SingletonComponentModule.java")
 
