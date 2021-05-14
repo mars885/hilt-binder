@@ -35,6 +35,7 @@ dependencies {
     compileOnly(deps.autoService)
     kapt(deps.autoService)
 
+    testImplementation(deps.kspApi)
     testImplementation(deps.jUnit)
     testImplementation(deps.truth)
     testImplementation(deps.compileTesting)

@@ -32,7 +32,10 @@ internal class HiltBinderKspProcessorProvider : SymbolProcessorProvider {
         codeGenerator: CodeGenerator,
         logger: KSPLogger
     ): SymbolProcessor {
-        return HiltBinderKspProcessor()
+        return HiltBinderKspProcessor(
+            codeGenerator = codeGenerator,
+            logger = logger
+        )
     }
 
 

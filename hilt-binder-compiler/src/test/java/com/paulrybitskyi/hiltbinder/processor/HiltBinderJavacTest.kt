@@ -30,7 +30,7 @@ import com.paulrybitskyi.hiltbinder.processor.javac.parser.PredefinedHiltCompone
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.providers.MessageProvider
 import org.junit.Test
 
-internal class HiltBinderTest {
+internal class HiltBinderJavacTest {
 
 
     private companion object {
