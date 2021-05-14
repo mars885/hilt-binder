@@ -21,12 +21,13 @@ import com.google.testing.compile.JavaFileObjects.forResource
 import com.google.testing.compile.JavaFileObjects.forSourceLines
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
-import com.paulrybitskyi.hiltbinder.processor.model.PredefinedHiltComponent
-import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNameFactory
-import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.parser.PredefinedHiltComponentMapper
-import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.javac.HiltBinderJavacProcessor
+import com.paulrybitskyi.hiltbinder.processor.javac.model.HiltComponent
+import com.paulrybitskyi.hiltbinder.processor.javac.model.PredefinedHiltComponent
+import com.paulrybitskyi.hiltbinder.processor.javac.parser.factories.ModuleInterfaceNameFactory
+import com.paulrybitskyi.hiltbinder.processor.javac.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.javac.parser.PredefinedHiltComponentMapper
+import com.paulrybitskyi.hiltbinder.processor.javac.parser.providers.MessageProvider
 import org.junit.Test
 
 internal class HiltBinderTest {
@@ -53,7 +54,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -68,7 +69,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -83,7 +84,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -98,7 +99,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -114,7 +115,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -130,7 +131,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -146,7 +147,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, superclassType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -160,7 +161,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -175,7 +176,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(superclassType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -190,7 +191,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -206,7 +207,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(superclassType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -222,7 +223,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, superclassType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -238,7 +239,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, superclassType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -254,7 +255,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -269,7 +270,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -284,7 +285,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -300,7 +301,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -315,7 +316,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -330,7 +331,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -346,7 +347,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, superclassType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -359,7 +360,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .failsToCompile()
             .withErrorContaining(MESSAGE_PROVIDER.undefinedReturnTypeError())
             .`in`(bindingType)
@@ -377,7 +378,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(interfaceTypes + listOf(bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .failsToCompile()
             .withErrorContaining(MESSAGE_PROVIDER.undefinedReturnTypeError())
             .`in`(bindingType)
@@ -393,7 +394,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(superclassType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .failsToCompile()
             .withErrorContaining(MESSAGE_PROVIDER.undefinedReturnTypeError())
             .`in`(bindingType)
@@ -408,7 +409,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .failsToCompile()
             .withErrorContaining(MESSAGE_PROVIDER.noSubtypeRelationError("Test", "Testable"))
             .`in`(bindingType)
@@ -423,7 +424,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(classType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .failsToCompile()
             .withErrorContaining(MESSAGE_PROVIDER.noSubtypeRelationError("Test", "AbstractTest"))
             .`in`(bindingType)
@@ -477,7 +478,7 @@ internal class HiltBinderTest {
 
             assertAbout(javaSources())
                 .that(listOf(returnType, bindingType))
-                .processedWith(HiltBinderProcessor())
+                .processedWith(HiltBinderJavacProcessor())
                 .compilesWithoutError()
                 .and()
                 .generatesSources(expectedModule)
@@ -523,7 +524,7 @@ internal class HiltBinderTest {
 
             assertAbout(javaSources())
                 .that(listOf(returnType, bindingType))
-                .processedWith(HiltBinderProcessor())
+                .processedWith(HiltBinderJavacProcessor())
                 .compilesWithoutError()
                 .and()
                 .generatesSources(expectedModule)
@@ -578,7 +579,7 @@ internal class HiltBinderTest {
 
             assertAbout(javaSources())
                 .that(listOf(returnType, bindingType))
-                .processedWith(HiltBinderProcessor())
+                .processedWith(HiltBinderJavacProcessor())
                 .compilesWithoutError()
                 .and()
                 .generatesSources(expectedModule)
@@ -623,7 +624,7 @@ internal class HiltBinderTest {
 
             assertAbout(javaSources())
                 .that(listOf(returnType, bindingType))
-                .processedWith(HiltBinderProcessor())
+                .processedWith(HiltBinderJavacProcessor())
                 .failsToCompile()
                 .withErrorContaining(MESSAGE_PROVIDER.componentMismatchError())
                 .`in`(bindingType)
@@ -642,7 +643,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, customComponent, customScope, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -658,7 +659,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, customComponent, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -672,7 +673,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .failsToCompile()
             .withErrorContaining(MESSAGE_PROVIDER.undefinedCustomComponentError())
             .`in`(bindingType)
@@ -688,7 +689,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -702,7 +703,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .failsToCompile()
             .withErrorContaining(MESSAGE_PROVIDER.qualifierAbsentError())
             .`in`(bindingType)
@@ -722,7 +723,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -741,7 +742,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -760,7 +761,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -774,7 +775,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .failsToCompile()
             .withErrorContaining(MESSAGE_PROVIDER.noMapKeyError())
             .`in`(bindingType)
@@ -794,7 +795,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -813,7 +814,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -832,7 +833,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -851,7 +852,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -870,7 +871,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -890,7 +891,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, customMapKey) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -910,7 +911,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, customMapKey) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -929,7 +930,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -944,7 +945,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)
@@ -967,7 +968,7 @@ internal class HiltBinderTest {
 
         assertAbout(javaSources())
             .that(returnTypes + bindingTypes)
-            .processedWith(HiltBinderProcessor())
+            .processedWith(HiltBinderJavacProcessor())
             .compilesWithoutError()
             .and()
             .generatesSources(expectedModule)

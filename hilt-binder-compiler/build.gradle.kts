@@ -27,6 +27,8 @@ dependencies {
     implementation(deps.apacheCommons)
     implementation(deps.javaPoet)
 
+    compileOnly(deps.kspApi)
+
     compileOnly(deps.incap)
     kapt(deps.incapCompiler)
 
@@ -36,6 +38,7 @@ dependencies {
     testImplementation(deps.jUnit)
     testImplementation(deps.truth)
     testImplementation(deps.compileTesting)
+    testImplementation(deps.ktCompileTesting)
 
     // Some Hilt Android classes have to be present on the classpath
     // when testing. Since hilt-binder-compiler is a jar artifact and

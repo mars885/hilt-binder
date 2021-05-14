@@ -84,10 +84,12 @@ object versions {
     const val javaPoet = "1.13.0"
     const val incap = "0.3"
     const val autoService = "1.0"
+    const val ksp = "1.5.0-1.0.0-alpha10"
     const val jUnit = "4.13.2"
     const val jUnitExt = "1.1.2"
     const val truth = "1.1.2"
     const val compileTesting = "0.19"
+    const val ktCompileTesting = "1.4.0"
 
 }
 
@@ -127,9 +129,11 @@ object deps {
     const val incap = "net.ltgt.gradle.incap:incap:${versions.incap}"
     const val incapCompiler = "net.ltgt.gradle.incap:incap-processor:${versions.incap}"
     const val autoService = "com.google.auto.service:auto-service:${versions.autoService}"
+    const val kspApi = "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}"
     const val jUnit = "junit:junit:${versions.jUnit}"
     const val jUnitExt = "androidx.test.ext:junit:${versions.jUnitExt}"
     const val truth = "com.google.truth:truth:${versions.truth}"
     const val compileTesting = "com.google.testing.compile:compile-testing:${versions.compileTesting}"
+    const val ktCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.ktCompileTesting}"
 
 }
