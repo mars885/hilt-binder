@@ -453,7 +453,7 @@ internal class HiltBinderJavacTest {
                 $withFragmentBindingAnnotation
                 @BindType
                 public class Test implements Testable {}
-            """.trimIndent()
+                """.trimIndent()
             )
             val predefinedHiltComponent = HiltComponent.Predefined(component)
             val interfaceName = MODULE_INTERFACE_NAME_FACTORY.createInterfaceName(predefinedHiltComponent)
@@ -498,7 +498,7 @@ internal class HiltBinderJavacTest {
                 
                 @BindType(installIn = BindType.Component.${predefinedComponent.name})
                 public class Test implements Testable {}
-            """.trimIndent()
+                """.trimIndent()
             )
             val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
             val predefinedHiltComponent = HiltComponent.Predefined(mappedComponent)
