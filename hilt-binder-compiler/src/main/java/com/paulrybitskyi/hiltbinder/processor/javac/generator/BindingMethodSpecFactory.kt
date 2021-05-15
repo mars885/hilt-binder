@@ -19,6 +19,7 @@ package com.paulrybitskyi.hiltbinder.processor.javac.generator
 import com.paulrybitskyi.hiltbinder.processor.javac.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.javac.model.ContributionType
 import com.paulrybitskyi.hiltbinder.processor.javac.model.ReturnType
+import com.paulrybitskyi.hiltbinder.processor.javac.utils.cast
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
@@ -84,7 +85,7 @@ internal class BindingMethodSpecFactory {
             is ReturnType.Generic -> when(this) {
                 is ReturnType.Generic.Parameterized -> type.toTypeName()
                 is ReturnType.Generic.UnboundedWildcard -> {
-                    val rawType = (ParameterizedTypeName.get(type) as ParameterizedTypeName).rawType
+                    val rawType = (ParameterizedTypeName.get(type).cast<ParameterizedTypeName>()).rawType
                     val wildcards = List(typeParamCount) {
                         WildcardTypeName.subtypeOf(TypeName.OBJECT)
                     }

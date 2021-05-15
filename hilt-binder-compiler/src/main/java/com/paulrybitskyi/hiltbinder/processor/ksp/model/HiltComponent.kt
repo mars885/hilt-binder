@@ -16,15 +16,16 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.model
 
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.qualifiedNameStr
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.simpleNameStr
+
 
 internal sealed class HiltComponent {
 
     data class Predefined(val component: PredefinedHiltComponent): HiltComponent()
 
-    data class Custom(
-        val simpleName: String,
-        val qualifiedName: String
-    ): HiltComponent()
+    data class Custom(val component: KSClassDeclaration): HiltComponent()
 
 }
 
@@ -32,12 +33,12 @@ internal sealed class HiltComponent {
 internal val HiltComponent.simpleName: String
     get() = when(this) {
         is HiltComponent.Predefined -> component.simpleName
-        is HiltComponent.Custom -> simpleName
+        is HiltComponent.Custom -> component.simpleNameStr
     }
 
 
 internal val HiltComponent.qualifiedName: String
     get() = when(this) {
         is HiltComponent.Predefined -> component.qualifiedName
-        is HiltComponent.Custom -> qualifiedName
+        is HiltComponent.Custom -> component.qualifiedNameStr
     }

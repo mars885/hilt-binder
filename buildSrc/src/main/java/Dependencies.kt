@@ -82,14 +82,14 @@ object versions {
     const val materialComponents = "1.3.0"
     const val apacheCommons = "3.12.0"
     const val javaPoet = "1.13.0"
+    const val kotlinPoet = "1.8.0"
     const val incap = "0.3"
     const val autoService = "1.0"
     const val ksp = "1.5.0-1.0.0-alpha10"
     const val jUnit = "4.13.2"
     const val jUnitExt = "1.1.2"
     const val truth = "1.1.2"
-    const val compileTesting = "0.19"
-    const val ktCompileTesting = "1.4.0"
+    const val ktCompileTesting = "1.4.1"
 
 }
 
@@ -126,6 +126,7 @@ object deps {
     const val materialComponents = "com.google.android.material:material:${versions.materialComponents}"
     const val apacheCommons = "org.apache.commons:commons-lang3:${versions.apacheCommons}"
     const val javaPoet = "com.squareup:javapoet:${versions.javaPoet}"
+    const val kotlinPoet = "com.squareup:kotlinpoet:${versions.kotlinPoet}"
     const val incap = "net.ltgt.gradle.incap:incap:${versions.incap}"
     const val incapCompiler = "net.ltgt.gradle.incap:incap-processor:${versions.incap}"
     const val autoService = "com.google.auto.service:auto-service:${versions.autoService}"
@@ -134,7 +135,6 @@ object deps {
     const val jUnit = "junit:junit:${versions.jUnit}"
     const val jUnitExt = "androidx.test.ext:junit:${versions.jUnitExt}"
     const val truth = "com.google.truth:truth:${versions.truth}"
-    const val compileTesting = "com.google.testing.compile:compile-testing:${versions.compileTesting}"
     const val kspCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.ktCompileTesting}"
 
 }

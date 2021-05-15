@@ -16,17 +16,15 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.parser.factories
 
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.getPackageName
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.detectors.BindingReturnTypeDetector
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.detectors.ContributionTypeDetector
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.detectors.HiltComponentDetector
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.detectors.QualifierAnnotationDetector
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.validPackageName
 
 internal class BindingSchemaFactory(
-    private val elementUtils: Elements,
     private val hiltComponentDetector: HiltComponentDetector,
     private val contributionTypeDetector: ContributionTypeDetector,
     private val qualifierAnnotationDetector: QualifierAnnotationDetector,
@@ -42,13 +40,13 @@ internal class BindingSchemaFactory(
     }
 
 
-    fun createBindingSchema(annotatedElement: TypeElement): BindingSchema {
-        val packageName = elementUtils.getPackageName(annotatedElement)
-        val component = hiltComponentDetector.detectComponent(annotatedElement)
-        val contributionType = contributionTypeDetector.detectType(annotatedElement)
-        val qualifierAnnotation = qualifierAnnotationDetector.detectAnnotation(annotatedElement)
-        val returnType = bindingReturnTypeDetector.detectReturnType(annotatedElement)
-        val methodName = bindingMethodNameFactory.createMethodName(annotatedElement)
+    fun createBindingSchema(annotatedSymbol: KSClassDeclaration): BindingSchema {
+        val packageName = annotatedSymbol.validPackageName
+        val component = hiltComponentDetector.detectComponent(annotatedSymbol)
+        val contributionType = contributionTypeDetector.detectType(annotatedSymbol)
+        val qualifierAnnotation = qualifierAnnotationDetector.detectAnnotation(annotatedSymbol)
+        val returnType = bindingReturnTypeDetector.detectReturnType(annotatedSymbol)
+        val methodName = bindingMethodNameFactory.createMethodName(annotatedSymbol)
 
         return BindingSchema(
             packageName = packageName,
@@ -56,7 +54,7 @@ internal class BindingSchemaFactory(
             contributionType = contributionType,
             qualifierAnnotation = qualifierAnnotation,
             methodName = methodName,
-            paramType = annotatedElement,
+            paramType = annotatedSymbol,
             paramName = BINDING_PARAM_NAME,
             returnType = returnType
         )

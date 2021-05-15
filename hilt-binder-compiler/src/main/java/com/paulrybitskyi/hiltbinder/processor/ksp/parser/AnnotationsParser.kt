@@ -16,14 +16,14 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.parser
 
+import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.castEach
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.ModuleSchema
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.factories.BindingSchemaFactory
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.factories.ModuleSchemaFactory
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.providers.PackageNameProvider
-import javax.lang.model.element.Element
-import javax.lang.model.element.TypeElement
 
 internal class AnnotationsParser(
     private val bindingSchemaFactory: BindingSchemaFactory,
@@ -32,8 +32,9 @@ internal class AnnotationsParser(
 ) {
 
 
-    fun parse(annotatedElements: Set<Element>): List<ModuleSchema> {
-        val bindings = annotatedElements.castEach<TypeElement>().map(bindingSchemaFactory::createBindingSchema)
+    fun parse(annotatedSymbols: Sequence<KSAnnotated>): List<ModuleSchema> {
+        val classSymbols = annotatedSymbols.castEach<KSClassDeclaration>()
+        val bindings = classSymbols.map(bindingSchemaFactory::createBindingSchema)
         val packageName = packageNameProvider.providePackageName(bindings)
 
         return bindings

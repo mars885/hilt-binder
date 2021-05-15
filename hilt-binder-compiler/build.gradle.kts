@@ -26,6 +26,7 @@ dependencies {
 
     implementation(deps.apacheCommons)
     implementation(deps.javaPoet)
+    implementation(deps.kotlinPoet)
 
     compileOnly(deps.kspApi)
 
@@ -37,7 +38,6 @@ dependencies {
 
     testImplementation(deps.jUnit)
     testImplementation(deps.truth)
-    testImplementation(deps.compileTesting)
     testImplementation(deps.kspCore)
     testImplementation(deps.kspApi)
     testImplementation(deps.kspCompileTesting)
@@ -56,6 +56,8 @@ dependencies {
     // by adding local jars in which they are contained.
     testImplementation(files(deps.local.daggerHiltCore))
     testImplementation(files(deps.local.daggerHiltAndroid))
+    testImplementation(files("libs/hilt-android-classes-2.35.1.jar"))
+    testImplementation(files("libs/hilt-core-classes-2.35.1.jar"))
 
     // https://github.com/google/compile-testing/issues/28
     if(Jvm.current().javaVersion?.isJava9Compatible == false) {

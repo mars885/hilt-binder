@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.javac.parser
+package com.paulrybitskyi.hiltbinder.processor.ksp.generator
+
+import com.squareup.kotlinpoet.ClassName
 
 
-internal const val PACKAGE_SEPARATOR = '.'
+internal val DAGGER_TYPE_MODULE = ClassName("dagger", "Module")
+internal val DAGGER_TYPE_INSTALL_IN = ClassName("dagger.hilt", "InstallIn")
+internal val DAGGER_TYPE_BINDS = ClassName("dagger", "Binds")
+internal val DAGGER_TYPE_INTO_SET = ClassName("dagger.multibindings", "IntoSet")
+internal val DAGGER_TYPE_INTO_MAP = ClassName("dagger.multibindings", "IntoMap")

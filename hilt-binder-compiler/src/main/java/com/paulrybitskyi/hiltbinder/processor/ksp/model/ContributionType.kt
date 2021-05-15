@@ -16,12 +16,12 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.model
 
-import javax.lang.model.element.AnnotationMirror
+import com.google.devtools.ksp.symbol.KSAnnotation
 
 internal sealed class ContributionType {
 
     object Set : ContributionType()
 
-    class Map(val mapKeyAnnotation: AnnotationMirror): ContributionType()
+    class Map(val mapKeyAnnotation: KSAnnotation): ContributionType()
 
 }

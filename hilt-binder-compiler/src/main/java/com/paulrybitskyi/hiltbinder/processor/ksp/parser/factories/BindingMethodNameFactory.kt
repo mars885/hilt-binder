@@ -16,9 +16,9 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.parser.factories
 
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.getQualifiedNameStr
-import com.paulrybitskyi.hiltbinder.processor.ksp.parser.PACKAGE_SEPARATOR
-import javax.lang.model.element.TypeElement
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.paulrybitskyi.hiltbinder.processor.common.PACKAGE_SEPARATOR
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.qualifiedNameStr
 
 internal class BindingMethodNameFactory {
 
@@ -31,8 +31,8 @@ internal class BindingMethodNameFactory {
     }
 
 
-    fun createMethodName(annotatedElement: TypeElement): String {
-        val qualifiedName = annotatedElement.getQualifiedNameStr()
+    fun createMethodName(annotatedSymbol: KSClassDeclaration): String {
+        val qualifiedName = annotatedSymbol.qualifiedNameStr
         val formattedQualifiedName = qualifiedName.replace(
             PACKAGE_SEPARATOR,
             METHOD_NAME_WORD_SEPARATOR

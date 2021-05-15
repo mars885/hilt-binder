@@ -16,7 +16,7 @@
 
 package com.paulrybitskyi.hiltbinder.processor.javac.parser.factories
 
-import com.paulrybitskyi.hiltbinder.processor.javac.parser.PACKAGE_SEPARATOR
+import com.paulrybitskyi.hiltbinder.processor.common.PACKAGE_SEPARATOR
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.getQualifiedNameStr
 import javax.lang.model.element.TypeElement
 

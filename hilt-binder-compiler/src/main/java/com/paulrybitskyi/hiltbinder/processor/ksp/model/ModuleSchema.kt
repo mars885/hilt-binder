@@ -16,11 +16,11 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.model
 
-import javax.lang.model.element.TypeElement
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 
 internal class ModuleSchema(
     val packageName: String,
     val interfaceName: String,
-    val componentType: TypeElement,
+    val componentType: KSClassDeclaration,
     val bindings: List<BindingSchema>
 )

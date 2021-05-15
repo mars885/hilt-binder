@@ -21,6 +21,8 @@ import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
+import com.paulrybitskyi.hiltbinder.processor.ksp.generator.ModuleFileGeneratorFactory
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.AnnotationsParserFactory
 
 @AutoService(SymbolProcessorProvider::class)
 internal class HiltBinderKspProcessorProvider : SymbolProcessorProvider {
@@ -33,7 +35,8 @@ internal class HiltBinderKspProcessorProvider : SymbolProcessorProvider {
         logger: KSPLogger
     ): SymbolProcessor {
         return HiltBinderKspProcessor(
-            codeGenerator = codeGenerator,
+            annotationsParserFactory = AnnotationsParserFactory,
+            moduleFileGenerator = ModuleFileGeneratorFactory.create(codeGenerator),
             logger = logger
         )
     }

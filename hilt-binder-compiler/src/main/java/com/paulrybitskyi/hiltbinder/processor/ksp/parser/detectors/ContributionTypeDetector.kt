@@ -16,38 +16,38 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.parser.detectors
 
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.getAnnoMarkedWithSpecificAnno
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.getType
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.ContributionType
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.MAP_KEY_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.providers.MessageProvider
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.getAnnoMarkedWithAnotherAnno
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.getBindAnnotation
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.getContributesToArg
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.getTypeByName
 
 internal class ContributionTypeDetector(
-    private val elementUtils: Elements,
-    private val typeUtils: Types,
+    private val resolver: Resolver,
     private val messageProvider: MessageProvider
 ) {
 
 
-    fun detectType(annotatedElement: TypeElement): ContributionType? {
-        val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
+    fun detectType(annotatedSymbol: KSClassDeclaration): ContributionType? {
+        val collection = resolver.getBindAnnotation(annotatedSymbol).getContributesToArg()
 
-        return when(bindAnnotation.contributesTo) {
+        return when(collection) {
             BindType.Collection.NONE -> null
             BindType.Collection.SET -> ContributionType.Set
-            BindType.Collection.MAP -> annotatedElement.createMapContributionType()
+            BindType.Collection.MAP -> annotatedSymbol.createMapContributionType()
         }
     }
 
 
-    private fun TypeElement.createMapContributionType(): ContributionType {
-        val daggerMapKeyType = elementUtils.getType(MAP_KEY_TYPE_CANON_NAME)
-        val mapKeyAnnotation = typeUtils.getAnnoMarkedWithSpecificAnno(this, daggerMapKeyType)
+    private fun KSClassDeclaration.createMapContributionType(): ContributionType {
+        val daggerMapKeyType = resolver.getTypeByName(MAP_KEY_TYPE_CANON_NAME)
+        val mapKeyAnnotation = getAnnoMarkedWithAnotherAnno(daggerMapKeyType)
             ?: throw HiltBinderException(messageProvider.noMapKeyError(), this)
 
         return ContributionType.Map(mapKeyAnnotation)

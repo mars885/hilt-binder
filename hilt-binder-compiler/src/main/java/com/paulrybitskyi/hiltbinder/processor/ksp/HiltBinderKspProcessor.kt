@@ -16,20 +16,43 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp
 
-import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.paulrybitskyi.hiltbinder.processor.common.BIND_TYPE_QUALIFIED_NAME
+import com.paulrybitskyi.hiltbinder.processor.ksp.generator.ModuleFileGenerator
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.AnnotationsParserFactory
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.HiltBinderException
 
 internal class HiltBinderKspProcessor(
-    private val codeGenerator: CodeGenerator,
+    private val annotationsParserFactory: AnnotationsParserFactory,
+    private val moduleFileGenerator: ModuleFileGenerator,
     private val logger: KSPLogger
 ) : SymbolProcessor {
 
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        try {
+            val annotationsParser = annotationsParserFactory.create(resolver)
+            val symbols = resolver.getSymbolsWithAnnotation(BIND_TYPE_QUALIFIED_NAME)
+            val moduleSchemas = annotationsParser.parse(symbols)
+
+            moduleFileGenerator.generateFiles(moduleSchemas)
+        } catch(error: Throwable) {
+            reportError(error)
+        }
+
         return emptyList()
+    }
+
+
+    private fun reportError(error: Throwable) {
+        if(error is HiltBinderException) {
+            logger.error(checkNotNull(error.message), error.symbol)
+        } else {
+            logger.error(error.message ?: error.toString())
+        }
     }
 
 

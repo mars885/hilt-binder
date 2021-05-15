@@ -17,8 +17,6 @@
 package com.paulrybitskyi.hiltbinder.processor.ksp.model
 
 
-internal const val OBJECT_TYPE_CANON_NAME = "java.lang.Object"
-internal const val VOID_TYPE_CANON_NAME = "java.lang.Void"
 internal const val QUALIFIER_TYPE_CANON_NAME = "javax.inject.Qualifier"
 internal const val WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME = "dagger.hilt.android.WithFragmentBindings"
 internal const val MAP_KEY_TYPE_CANON_NAME = "dagger.MapKey"

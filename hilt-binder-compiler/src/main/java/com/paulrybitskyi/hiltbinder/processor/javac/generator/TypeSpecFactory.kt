@@ -37,7 +37,7 @@ internal class TypeSpecFactory(
 
 
     private fun ModuleSchema.createComponentInstallationAnnotation(): AnnotationSpec {
-        return AnnotationSpec.builder(com.paulrybitskyi.hiltbinder.processor.javac.generator.DAGGER_TYPE_INSTALL_IN)
+        return AnnotationSpec.builder(DAGGER_TYPE_INSTALL_IN)
             .addMember("value", "\$T.class", componentType.toClassName())
             .build()
     }

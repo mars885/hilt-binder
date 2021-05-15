@@ -16,16 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.parser.factories
 
+import com.google.devtools.ksp.getClassDeclarationByName
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.ModuleSchema
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.qualifiedName
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
 
 internal class ModuleSchemaFactory(
-    private val moduleInterfaceNameFactory: ModuleInterfaceNameFactory,
-    private val elementUtils: Elements
+    private val resolver: Resolver,
+    private val moduleInterfaceNameFactory: ModuleInterfaceNameFactory
 ) {
 
 
@@ -37,14 +38,14 @@ internal class ModuleSchemaFactory(
         return ModuleSchema(
             packageName = packageName,
             interfaceName = moduleInterfaceNameFactory.createInterfaceName(component),
-            componentType = component.toTypeElement(),
+            componentType = component.toClassDeclaration(),
             bindings = bindings
         )
     }
 
 
-    private fun HiltComponent.toTypeElement(): TypeElement {
-        return elementUtils.getTypeElement(qualifiedName)
+    private fun HiltComponent.toClassDeclaration(): KSClassDeclaration {
+        return checkNotNull(resolver.getClassDeclarationByName(qualifiedName))
     }
 
 

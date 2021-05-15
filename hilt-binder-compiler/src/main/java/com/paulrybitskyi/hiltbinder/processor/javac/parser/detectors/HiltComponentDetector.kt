@@ -60,7 +60,6 @@ internal class HiltComponentDetector(
                 hasScopeAnnotation
             }
             ?.let(HiltComponent::Predefined)
-
     }
 
 

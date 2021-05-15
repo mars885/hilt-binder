@@ -26,3 +26,8 @@ internal fun <T> Iterable<*>.castEach(): List<T> {
 internal inline fun <T> Any.cast(): T {
     return (this as T)
 }
+
+
+internal fun <T> Sequence<*>.castEach(): Sequence<T> {
+    return mapNotNull { it?.cast() }
+}

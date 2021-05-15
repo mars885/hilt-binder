@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.ksp.parser
+package com.paulrybitskyi.hiltbinder.processor.common
+
+import com.paulrybitskyi.hiltbinder.BindType
 
 
 internal const val PACKAGE_SEPARATOR = '.'
+
+internal val BIND_TYPE_QUALIFIED_NAME = BindType::class.qualifiedName!!
+internal val BIND_TYPE_SIMPLE_NAME = BindType::class.simpleName!!

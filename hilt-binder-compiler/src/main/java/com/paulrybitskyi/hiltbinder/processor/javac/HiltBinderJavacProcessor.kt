@@ -18,6 +18,7 @@ package com.paulrybitskyi.hiltbinder.processor.javac
 
 import com.google.auto.service.AutoService
 import com.paulrybitskyi.hiltbinder.BindType
+import com.paulrybitskyi.hiltbinder.processor.common.BIND_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.javac.generator.ModuleFileGeneratorFactory
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.AnnotationsParserFactory
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.HiltBinderException
@@ -40,7 +41,7 @@ internal class HiltBinderJavacProcessor : AbstractProcessor() {
 
 
     override fun getSupportedAnnotationTypes(): Set<String> {
-        return setOf(BindType::class.java.canonicalName)
+        return setOf(BIND_TYPE_QUALIFIED_NAME)
     }
 
 
@@ -54,7 +55,7 @@ internal class HiltBinderJavacProcessor : AbstractProcessor() {
             roundEnv.getElementsAnnotatedWith(BindType::class.java)
                 .let(annotationsParser::parse)
                 .let(moduleFileGenerator::generateFiles)
-        } catch(error: Exception) {
+        } catch(error: Throwable) {
             reportError(error)
         }
 
@@ -62,7 +63,7 @@ internal class HiltBinderJavacProcessor : AbstractProcessor() {
     }
 
 
-    private fun reportError(error: Exception) {
+    private fun reportError(error: Throwable) {
         if(error is HiltBinderException) {
             logger.error(checkNotNull(error.message), error.element)
         } else {

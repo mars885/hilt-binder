@@ -16,17 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.model
 
-import javax.lang.model.type.TypeMirror
+import com.google.devtools.ksp.symbol.KSType
 
-internal sealed class ReturnType(val type: TypeMirror) {
+internal sealed class ReturnType(val type: KSType) {
 
-    class Standard(type: TypeMirror): ReturnType(type)
+    class Standard(type: KSType): ReturnType(type)
 
-    internal sealed class Generic(type: TypeMirror): ReturnType(type) {
+    internal sealed class Generic(type: KSType): ReturnType(type) {
 
-        class Parameterized(type: TypeMirror): Generic(type)
+        class Parameterized(type: KSType): Generic(type)
 
-        class UnboundedWildcard(type: TypeMirror, val typeParamCount: Int): Generic(type)
+        class UnboundedWildcard(type: KSType, val typeParamCount: Int): Generic(type)
 
     }
 

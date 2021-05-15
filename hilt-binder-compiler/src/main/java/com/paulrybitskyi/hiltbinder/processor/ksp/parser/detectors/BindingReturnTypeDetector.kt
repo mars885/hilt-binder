@@ -16,100 +16,99 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.parser.detectors
 
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.ClassKind
+import com.google.devtools.ksp.symbol.KSAnnotation
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSType
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.*
-import com.paulrybitskyi.hiltbinder.processor.ksp.model.OBJECT_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.ReturnType
-import com.paulrybitskyi.hiltbinder.processor.ksp.model.VOID_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.providers.MessageProvider
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.*
 
 internal class BindingReturnTypeDetector(
-    private val elementUtils: Elements,
-    private val typeUtils: Types,
+    private val resolver: Resolver,
     private val messageProvider: MessageProvider
 ) {
 
 
-    fun detectReturnType(annotatedElement: TypeElement): ReturnType {
-        val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
-        val returnType = detectExplicitReturnType(bindAnnotation, annotatedElement)
-            ?: inferReturnType(annotatedElement)
+    fun detectReturnType(annotatedSymbol: KSClassDeclaration): ReturnType {
+        val bindAnnotation = resolver.getBindAnnotation(annotatedSymbol)
+        val collection = bindAnnotation.getContributesToArg()
+        val returnType = detectExplicitReturnType(bindAnnotation, annotatedSymbol)
+            ?: inferReturnType(annotatedSymbol)
 
-        checkSubtypeRelation(annotatedElement.asType(), returnType)
+        checkSubtypeRelation(annotatedSymbol.asType(), returnType)
 
         return when {
-            !typeUtils.isGenericType(returnType) -> ReturnType.Standard(returnType)
-            (bindAnnotation.contributesTo == BindType.Collection.NONE) -> ReturnType.Generic.Parameterized(returnType)
+            !returnType.isGenericType -> ReturnType.Standard(returnType)
+            (collection == BindType.Collection.NONE) -> ReturnType.Generic.Parameterized(returnType)
             else -> ReturnType.Generic.UnboundedWildcard(
                 type = returnType,
-                typeParamCount = typeUtils.asTypeElement(returnType).typeParameters.size
+                typeParamCount = returnType.arguments.size
             )
         }
     }
 
 
     private fun detectExplicitReturnType(
-        bindAnnotation: BindType,
-        annotatedElement: TypeElement
-    ): TypeMirror? {
+        bindAnnotation: KSAnnotation,
+        annotatedSymbol: KSClassDeclaration
+    ): KSType? {
         if(!bindAnnotation.hasExplicitReturnType()) return null
 
-        val explicitReturnType = elementUtils.getTypeSafely(bindAnnotation::to)
+        val explicitReturnType = checkNotNull(bindAnnotation.getToArg())
 
-        if(!typeUtils.isGenericType(explicitReturnType)) return explicitReturnType
+        if(!explicitReturnType.isGenericType) return explicitReturnType
 
         val parameterizedReturnType = findParameterizedReturnType(
-            annotatedElement,
-            typeUtils.getQualifiedName(explicitReturnType)
+            annotatedSymbol,
+            explicitReturnType.qualifiedName
         )
 
         return (parameterizedReturnType ?: explicitReturnType)
     }
 
 
-    private fun BindType.hasExplicitReturnType(): Boolean {
-        val toParamType = elementUtils.getTypeSafely(::to)
-        val voidType = elementUtils.getType(VOID_TYPE_CANON_NAME)
+    private fun KSAnnotation.hasExplicitReturnType(): Boolean {
+        val toParamType = (getToArg() ?: resolver.builtIns.nothingType)
+        val nothingType = resolver.builtIns.nothingType
 
-        return !typeUtils.isSameType(toParamType, voidType)
+        return (toParamType != nothingType)
     }
 
 
     private fun findParameterizedReturnType(
-        annotatedElement: TypeElement,
+        annotatedSymbol: KSClassDeclaration,
         parameterizedTypeName: String
-    ): TypeMirror? {
-        fun MutableList<TypeMirror>.addTypeElement(typeElement: TypeElement) {
-            if(typeElement.kind == ElementKind.CLASS) {
-                add(typeElement.superclass)
+    ): KSType? {
+        fun MutableList<KSType>.addType(classDeclaration: KSClassDeclaration) {
+            if(classDeclaration.classKind == ClassKind.CLASS) {
+                classDeclaration.getSuperclass()?.let(::add)
             }
 
-            addAll(typeElement.interfaces)
+            addAll(classDeclaration.getInterfaces())
         }
 
-        val possibleReturnTypes = mutableListOf<TypeMirror>().apply {
-            addTypeElement(annotatedElement)
+        val possibleReturnTypes = mutableListOf<KSType>().apply {
+            addType(annotatedSymbol)
         }
         val traversedPossibleReturnTypes = mutableSetOf<String>()
-        val objectType = elementUtils.getType(OBJECT_TYPE_CANON_NAME)
+        val anyType = resolver.builtIns.anyType
 
         while(possibleReturnTypes.isNotEmpty()) {
             val possibleReturnType = possibleReturnTypes.removeFirst()
-            val possibleReturnTypeName = typeUtils.getQualifiedName(possibleReturnType)
+            val possibleReturnTypeClassDeclaration = possibleReturnType.classDeclaration
+            val possibleReturnTypeName = possibleReturnTypeClassDeclaration.qualifiedNameStr
 
             when {
-                typeUtils.isSameType(possibleReturnType, objectType) -> continue
+                (possibleReturnType == anyType) -> continue
                 traversedPossibleReturnTypes.contains(possibleReturnTypeName) -> continue
                 (possibleReturnTypeName == parameterizedTypeName) -> return possibleReturnType
                 else -> {
                     traversedPossibleReturnTypes.add(possibleReturnTypeName)
-                    possibleReturnTypes.addTypeElement(typeUtils.asTypeElement(possibleReturnType))
+                    possibleReturnTypes.addType(possibleReturnTypeClassDeclaration)
                 }
             }
         }
@@ -118,32 +117,31 @@ internal class BindingReturnTypeDetector(
     }
 
 
-    private fun inferReturnType(annotatedElement: TypeElement): TypeMirror {
-        val superclass = annotatedElement.superclass
-        val interfaces = annotatedElement.interfaces
+    private fun inferReturnType(annotatedSymbol: KSClassDeclaration): KSType {
+        val superclass = annotatedSymbol.getSuperclass()
+        val interfaces = annotatedSymbol.getInterfaces().toList()
 
-        val hasSuperclass = (superclass != elementUtils.getType(OBJECT_TYPE_CANON_NAME))
+        val hasSuperclass = (superclass != null)
         val hasInterfaces = interfaces.isNotEmpty()
 
-        if(hasSuperclass && !hasInterfaces) return superclass
+        if(hasSuperclass && !hasInterfaces) return checkNotNull(superclass)
         if(!hasSuperclass && (interfaces.size == 1)) return interfaces.single()
 
-        throw HiltBinderException(messageProvider.undefinedReturnTypeError(), annotatedElement)
+        throw HiltBinderException(messageProvider.undefinedReturnTypeError(), annotatedSymbol)
     }
 
 
-    private fun checkSubtypeRelation(bindingType: TypeMirror, returnType: TypeMirror) {
-        if(typeUtils.isSubtype(bindingType, returnType)) return
+    private fun checkSubtypeRelation(bindingType: KSType, returnType: KSType) {
+        if(returnType.isAssignableFrom(bindingType)) return
 
-        val bindingTypeElement = typeUtils.asTypeElement(bindingType)
-        val bindingTypeName = bindingTypeElement.getQualifiedNameStr()
-        val returnTypeName = typeUtils.getQualifiedName(returnType)
+        val bindingTypeName = bindingType.qualifiedName
+        val returnTypeName = returnType.qualifiedName
         val errorMessage = messageProvider.noSubtypeRelationError(
             bindingTypeName = bindingTypeName,
             returnTypeName = returnTypeName
         )
 
-        throw HiltBinderException(errorMessage, bindingTypeElement)
+        throw HiltBinderException(errorMessage, bindingType.declaration)
     }
 
 

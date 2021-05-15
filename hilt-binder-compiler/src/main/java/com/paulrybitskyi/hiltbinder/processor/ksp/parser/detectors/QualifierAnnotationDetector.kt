@@ -16,31 +16,30 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.parser.detectors
 
-import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.getAnnoMarkedWithSpecificAnno
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.getType
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSAnnotation
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.QUALIFIER_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.providers.MessageProvider
-import javax.lang.model.element.AnnotationMirror
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.getAnnoMarkedWithAnotherAnno
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.getBindAnnotation
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.getTypeByName
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.getWithQualifierArg
 
 internal class QualifierAnnotationDetector(
-    private val elementUtils: Elements,
-    private val typeUtils: Types,
+    private val resolver: Resolver,
     private val messageProvider: MessageProvider
 ) {
 
 
-    fun detectAnnotation(annotatedElement: TypeElement): AnnotationMirror? {
-        if(!annotatedElement.getAnnotation(BindType::class.java).withQualifier) return null
+    fun detectAnnotation(annotatedSymbol: KSClassDeclaration): KSAnnotation? {
+        if(!resolver.getBindAnnotation(annotatedSymbol).getWithQualifierArg()) return null
 
-        val qualifierType = elementUtils.getType(QUALIFIER_TYPE_CANON_NAME)
+        val qualifierType = resolver.getTypeByName(QUALIFIER_TYPE_CANON_NAME)
 
-        return typeUtils.getAnnoMarkedWithSpecificAnno(annotatedElement, qualifierType)
-            ?: throw HiltBinderException(messageProvider.qualifierAbsentError(), annotatedElement)
+        return annotatedSymbol.getAnnoMarkedWithAnotherAnno(qualifierType)
+            ?: throw HiltBinderException(messageProvider.qualifierAbsentError(), annotatedSymbol)
     }
 
 

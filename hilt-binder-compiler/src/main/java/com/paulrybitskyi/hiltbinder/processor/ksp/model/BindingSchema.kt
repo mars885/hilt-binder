@@ -16,16 +16,16 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.model
 
-import javax.lang.model.element.AnnotationMirror
-import javax.lang.model.element.TypeElement
+import com.google.devtools.ksp.symbol.KSAnnotation
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 
 internal class BindingSchema(
     val packageName: String,
     val component: HiltComponent,
     val contributionType: ContributionType?,
-    val qualifierAnnotation: AnnotationMirror?,
+    val qualifierAnnotation: KSAnnotation?,
     val methodName: String,
-    val paramType: TypeElement,
+    val paramType: KSClassDeclaration,
     val paramName: String,
     val returnType: ReturnType
 )

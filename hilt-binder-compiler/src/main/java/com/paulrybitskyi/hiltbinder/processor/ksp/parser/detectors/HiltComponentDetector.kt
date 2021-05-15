@@ -16,112 +16,101 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.parser.detectors
 
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSAnnotation
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.*
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.PredefinedHiltComponent
-import com.paulrybitskyi.hiltbinder.processor.ksp.model.VOID_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.PredefinedHiltComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.providers.MessageProvider
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import com.paulrybitskyi.hiltbinder.processor.ksp.utils.*
 
 internal class HiltComponentDetector(
-    private val elementUtils: Elements,
-    private val typeUtils: Types,
+    private val resolver: Resolver,
     private val predefinedHiltComponentMapper: PredefinedHiltComponentMapper,
     private val messageProvider: MessageProvider
 ) {
 
 
-    fun detectComponent(annotatedElement: TypeElement): HiltComponent {
-        val componentInferredFromScope = inferFromScopeAnnotation(annotatedElement)
-        val explicitComponent = detectExplicitComponent(annotatedElement)
+    fun detectComponent(annotatedSymbol: KSClassDeclaration): HiltComponent {
+        val componentInferredFromScope = inferFromScopeAnnotation(annotatedSymbol)
+        val explicitComponent = detectExplicitComponent(annotatedSymbol)
 
-        checkComponentMismatch(componentInferredFromScope, explicitComponent, annotatedElement)
+        checkComponentMismatch(componentInferredFromScope, explicitComponent, annotatedSymbol)
 
         return (componentInferredFromScope ?: explicitComponent ?: returnDefaultComponent())
     }
 
 
-    private fun inferFromScopeAnnotation(annotatedElement: TypeElement): HiltComponent.Predefined? {
+    private fun inferFromScopeAnnotation(annotatedElement: KSClassDeclaration): HiltComponent.Predefined? {
         if(shouldInstallInViewWithFragmentComponent(annotatedElement)) {
             return HiltComponent.Predefined(PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
         }
 
         return PredefinedHiltComponent.values()
             .firstOrNull {
-                val scopeAnnotationType = elementUtils.getType(it.scopeQualifiedName)
-                val hasScopeAnnotation = typeUtils.hasAnnotation(annotatedElement, scopeAnnotationType)
+                val scopeAnnotationType = resolver.getTypeByName(it.scopeQualifiedName)
+                val hasScopeAnnotation = annotatedElement.hasAnnotation(scopeAnnotationType)
 
                 hasScopeAnnotation
             }
             ?.let(HiltComponent::Predefined)
-
     }
 
 
-    private fun shouldInstallInViewWithFragmentComponent(annotatedElement: TypeElement): Boolean {
-        val viewScopeType = elementUtils.getType(PredefinedHiltComponent.VIEW.scopeQualifiedName)
-        val hasViewScope = typeUtils.hasAnnotation(annotatedElement, viewScopeType)
+    private fun shouldInstallInViewWithFragmentComponent(annotatedElement: KSClassDeclaration): Boolean {
+        val viewScopeType = resolver.getTypeByName(PredefinedHiltComponent.VIEW.scopeQualifiedName)
+        val hasViewScope = annotatedElement.hasAnnotation(viewScopeType)
 
-        val withFragmentBindingsType = elementUtils.getType(WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME)
-        val hasWithFragmentBindingsAnno = typeUtils.hasAnnotation(annotatedElement, withFragmentBindingsType)
+        val withFragmentBindingsType = resolver.getTypeByName(WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME)
+        val hasWithFragmentBindingsAnno = annotatedElement.hasAnnotation(withFragmentBindingsType)
 
         return (hasViewScope && hasWithFragmentBindingsAnno)
     }
 
 
-    private fun detectExplicitComponent(annotatedElement: TypeElement): HiltComponent? {
-        val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
+    private fun detectExplicitComponent(annotatedSymbol: KSClassDeclaration): HiltComponent? {
+        val bindAnnotation = resolver.getBindAnnotation(annotatedSymbol)
+        val component = bindAnnotation.getInstallInArg()
 
         return when {
-            (bindAnnotation.installIn == BindType.Component.NONE) -> null
-            (bindAnnotation.installIn != BindType.Component.CUSTOM) -> detectExplicitPredefinedComponent(bindAnnotation)
-            else -> detectExplicitCustomComponent(bindAnnotation, annotatedElement)
+            (component == BindType.Component.NONE) -> null
+            (component != BindType.Component.CUSTOM) -> detectExplicitPredefinedComponent(component)
+            else -> detectExplicitCustomComponent(bindAnnotation, annotatedSymbol)
         }
     }
 
 
-    private fun detectExplicitPredefinedComponent(bindAnnotation: BindType): HiltComponent.Predefined {
-        return HiltComponent.Predefined(
-            predefinedHiltComponentMapper.mapToPredefinedComponent(
-                bindAnnotation.installIn
-            )
-        )
+    private fun detectExplicitPredefinedComponent(component: BindType.Component): HiltComponent.Predefined {
+        return HiltComponent.Predefined(predefinedHiltComponentMapper.mapToPredefinedComponent(component))
     }
 
 
     private fun detectExplicitCustomComponent(
-        bindAnnotation: BindType,
-        annotatedElement: TypeElement
+        bindAnnotation: KSAnnotation,
+        annotatedSymbol: KSClassDeclaration
     ): HiltComponent.Custom {
-        val customComponentType = elementUtils.getTypeSafely(bindAnnotation::customComponent)
-        val voidType = elementUtils.getType(VOID_TYPE_CANON_NAME)
+        val customComponentType = bindAnnotation.getCustomComponentArg()
+        val nothingType = resolver.builtIns.nothingType
 
-        if(typeUtils.isSameType(customComponentType, voidType)) {
+        if((customComponentType == null) || customComponentType == nothingType) {
             throw HiltBinderException(
                 messageProvider.undefinedCustomComponentError(),
-                annotatedElement
+                annotatedSymbol
             )
         }
 
-        val customComponentElement = typeUtils.asTypeElement(customComponentType)
-
-        return HiltComponent.Custom(
-            simpleName = customComponentElement.getSimpleNameStr(),
-            qualifiedName = customComponentElement.getQualifiedNameStr()
-        )
+        return HiltComponent.Custom(customComponentType.classDeclaration)
     }
 
 
     private fun checkComponentMismatch(
         componentInferredFromScope: HiltComponent?,
         explicitComponent: HiltComponent?,
-        annotatedElement: TypeElement
+        annotatedSymbol: KSClassDeclaration
     ) {
         val mismatchExists = (
             (componentInferredFromScope != null) &&
@@ -130,7 +119,7 @@ internal class HiltComponentDetector(
         )
 
         if(mismatchExists) {
-            throw HiltBinderException(messageProvider.componentMismatchError(), annotatedElement)
+            throw HiltBinderException(messageProvider.componentMismatchError(), annotatedSymbol)
         }
     }
 

@@ -16,9 +16,9 @@
 
 package com.paulrybitskyi.hiltbinder.processor.ksp.parser
 
-import javax.lang.model.element.Element
+import com.google.devtools.ksp.symbol.KSAnnotated
 
 internal class HiltBinderException(
     message: String,
-    val element: Element? = null
+    val symbol: KSAnnotated? = null
 ) : Exception(message)
