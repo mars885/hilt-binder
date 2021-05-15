@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.javac.parser.detectors
+package com.paulrybitskyi.hiltbinder.processor.ksp.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.javac.model.OBJECT_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.javac.model.ReturnType
-import com.paulrybitskyi.hiltbinder.processor.javac.model.VOID_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.javac.parser.HiltBinderException
-import com.paulrybitskyi.hiltbinder.processor.javac.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.*
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.OBJECT_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.ReturnType
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.VOID_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.HiltBinderException
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.providers.MessageProvider
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror

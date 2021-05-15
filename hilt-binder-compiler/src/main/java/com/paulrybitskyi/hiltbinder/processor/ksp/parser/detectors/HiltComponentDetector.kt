@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.javac.parser.detectors
+package com.paulrybitskyi.hiltbinder.processor.ksp.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.javac.model.HiltComponent
-import com.paulrybitskyi.hiltbinder.processor.javac.model.PredefinedHiltComponent
-import com.paulrybitskyi.hiltbinder.processor.javac.model.VOID_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.javac.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.javac.parser.HiltBinderException
-import com.paulrybitskyi.hiltbinder.processor.javac.parser.PredefinedHiltComponentMapper
-import com.paulrybitskyi.hiltbinder.processor.javac.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.*
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.HiltComponent
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.PredefinedHiltComponent
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.VOID_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.HiltBinderException
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.PredefinedHiltComponentMapper
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.providers.MessageProvider
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types

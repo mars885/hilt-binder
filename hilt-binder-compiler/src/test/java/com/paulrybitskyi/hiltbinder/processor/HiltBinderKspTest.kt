@@ -18,13 +18,13 @@ package com.paulrybitskyi.hiltbinder.processor
 
 import com.google.common.truth.Truth.assertThat
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.javac.model.HiltComponent
-import com.paulrybitskyi.hiltbinder.processor.javac.model.PredefinedHiltComponent
-import com.paulrybitskyi.hiltbinder.processor.javac.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.javac.parser.PredefinedHiltComponentMapper
-import com.paulrybitskyi.hiltbinder.processor.javac.parser.factories.ModuleInterfaceNameFactory
-import com.paulrybitskyi.hiltbinder.processor.javac.parser.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.HiltComponent
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.PredefinedHiltComponent
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.PredefinedHiltComponentMapper
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.factories.ModuleInterfaceNameFactory
+import com.paulrybitskyi.hiltbinder.processor.ksp.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.ksp.HiltBinderKspProcessorProvider
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.KotlinCompilation.ExitCode
 import com.tschuchort.compiletesting.SourceFile
