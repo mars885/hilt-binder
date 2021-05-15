@@ -50,6 +50,33 @@ internal class HiltBinderKspTest {
 
 
     @Test
+    fun `Test kotlin sources`() {
+        val expectedModule = getFile("1/ExpectedModule.java")
+        val compilation = setupCompilation(
+            SourceFile.kotlin(
+                "Testable.kt",
+                "interface Testable"
+            ),
+            SourceFile.kotlin(
+                "Test.kt",
+                """
+                import com.paulrybitskyi.hiltbinder.BindType
+                
+                @BindType
+                class Test : Testable
+                """.trimIndent()
+            )
+        )
+        val result = compilation.compile()
+        val generatedFile = File(compilation.kspSourcesDir, "HiltBinder_SingletonComponentModule.java")
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(generatedFile.exists()).isTrue()
+        assertThat(generatedFile.readText()).isEqualTo(expectedModule.readText())
+    }
+
+
+    @Test
     fun `Binds class implicitly to its single interface`() {
         val expectedModule = getFile("1/ExpectedModule.java")
         val compilation = setupCompilation("Testable.java", "1/Test.java")

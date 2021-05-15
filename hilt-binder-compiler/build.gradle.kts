@@ -35,11 +35,12 @@ dependencies {
     compileOnly(deps.autoService)
     kapt(deps.autoService)
 
-    testImplementation(deps.kspApi)
     testImplementation(deps.jUnit)
     testImplementation(deps.truth)
     testImplementation(deps.compileTesting)
-    testImplementation(deps.ktCompileTesting)
+    testImplementation(deps.kspCore)
+    testImplementation(deps.kspApi)
+    testImplementation(deps.kspCompileTesting)
 
     // Some Hilt Android classes have to be present on the classpath
     // when testing. Since hilt-binder-compiler is a jar artifact and

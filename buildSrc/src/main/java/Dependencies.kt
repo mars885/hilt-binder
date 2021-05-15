@@ -129,11 +129,12 @@ object deps {
     const val incap = "net.ltgt.gradle.incap:incap:${versions.incap}"
     const val incapCompiler = "net.ltgt.gradle.incap:incap-processor:${versions.incap}"
     const val autoService = "com.google.auto.service:auto-service:${versions.autoService}"
+    const val kspCore = "com.google.devtools.ksp:symbol-processing:${versions.ksp}"
     const val kspApi = "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}"
     const val jUnit = "junit:junit:${versions.jUnit}"
     const val jUnitExt = "androidx.test.ext:junit:${versions.jUnitExt}"
     const val truth = "com.google.truth:truth:${versions.truth}"
     const val compileTesting = "com.google.testing.compile:compile-testing:${versions.compileTesting}"
-    const val ktCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.ktCompileTesting}"
+    const val kspCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.ktCompileTesting}"
 
 }
