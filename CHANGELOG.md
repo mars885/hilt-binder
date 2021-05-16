@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+## Version 1.0.0 *(2021-05-17)*
+
+First Stable Release.
+
 ## Version 1.0.0-beta01 *(2021-05-07)*
 
 First Beta Release.

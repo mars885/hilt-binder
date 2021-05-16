@@ -57,8 +57,8 @@ Then, if you are using Java, add the following to your module-level `build.gradl
 
 ````groovy
 dependencies {
-    implementation "com.paulrybitskyi:hilt-binder:1.0.0-beta01"
-    annotationProcessor "com.paulrybitskyi:hilt-binder-compiler:1.0.0-beta01"
+    implementation "com.paulrybitskyi:hilt-binder:1.0.0"
+    annotationProcessor "com.paulrybitskyi:hilt-binder-compiler:1.0.0"
 }
 ````
 
@@ -66,8 +66,8 @@ If you are using Kotlin, then apply the [kapt plugin](https://kotlinlang.org/doc
 
 ````groovy
 dependencies {
-    implementation "com.paulrybitskyi:hilt-binder:1.0.0-beta01"
-    kapt "com.paulrybitskyi:hilt-binder-compiler:1.0.0-beta01"
+    implementation "com.paulrybitskyi:hilt-binder:1.0.0"
+    kapt "com.paulrybitskyi:hilt-binder-compiler:1.0.0"
 }
 ````
 
