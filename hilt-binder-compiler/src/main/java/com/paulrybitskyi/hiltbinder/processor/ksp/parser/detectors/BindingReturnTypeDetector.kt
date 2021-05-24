@@ -22,6 +22,7 @@ import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.paulrybitskyi.hiltbinder.BindType
+import com.paulrybitskyi.hiltbinder.processor.ksp.model.OBJECT_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.ReturnType
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.providers.MessageProvider
@@ -36,8 +37,7 @@ internal class BindingReturnTypeDetector(
     fun detectReturnType(annotatedSymbol: KSClassDeclaration): ReturnType {
         val bindAnnotation = resolver.getBindAnnotation(annotatedSymbol)
         val collection = bindAnnotation.getContributesToArg()
-        val returnType = detectExplicitReturnType(bindAnnotation, annotatedSymbol)
-            ?: inferReturnType(annotatedSymbol)
+        val returnType = retrieveReturnType(bindAnnotation, annotatedSymbol)
 
         checkSubtypeRelation(annotatedSymbol.asType(), returnType)
 
@@ -48,6 +48,23 @@ internal class BindingReturnTypeDetector(
                 type = returnType,
                 typeParamCount = returnType.arguments.size
             )
+        }
+    }
+
+
+    private fun retrieveReturnType(
+        bindAnnotation: KSAnnotation,
+        annotatedSymbol: KSClassDeclaration
+    ): KSType {
+        val returnType = detectExplicitReturnType(bindAnnotation, annotatedSymbol)
+            ?: inferReturnType(annotatedSymbol)
+
+        return returnType.let { type ->
+            if(type == resolver.getTypeByName(OBJECT_TYPE_CANON_NAME)) {
+                resolver.builtIns.anyType
+            } else {
+                type
+            }
         }
     }
 
@@ -85,7 +102,7 @@ internal class BindingReturnTypeDetector(
     ): KSType? {
         fun MutableList<KSType>.addType(classDeclaration: KSClassDeclaration) {
             if(classDeclaration.classKind == ClassKind.CLASS) {
-                classDeclaration.getSuperclass()?.let(::add)
+                resolver.getSuperclass(classDeclaration)?.let(::add)
             }
 
             addAll(classDeclaration.getInterfaces())
@@ -118,7 +135,7 @@ internal class BindingReturnTypeDetector(
 
 
     private fun inferReturnType(annotatedSymbol: KSClassDeclaration): KSType {
-        val superclass = annotatedSymbol.getSuperclass()
+        val superclass = resolver.getSuperclass(annotatedSymbol)
         val interfaces = annotatedSymbol.getInterfaces().toList()
 
         val hasSuperclass = (superclass != null)

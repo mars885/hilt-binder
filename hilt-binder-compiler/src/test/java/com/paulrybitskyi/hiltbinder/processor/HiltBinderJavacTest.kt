@@ -539,7 +539,6 @@ internal class HiltBinderJavacTest {
     @Test
     fun `Binds class explicitly, which has superclass, to its superclass's superclass`() {
         val compilation = setupCompilation(
-            TESTABLE_FILE,
             java(
                 "AbstractAbstractTest.java",
                 "public abstract class AbstractAbstractTest {}"

@@ -90,6 +90,7 @@ object versions {
     const val jUnitExt = "1.1.2"
     const val truth = "1.1.2"
     const val ktCompileTesting = "1.4.1"
+    const val burst = "1.2.0"
 
 }
 
@@ -136,5 +137,6 @@ object deps {
     const val jUnitExt = "androidx.test.ext:junit:${versions.jUnitExt}"
     const val truth = "com.google.truth:truth:${versions.truth}"
     const val kspCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.ktCompileTesting}"
+    const val burst = "com.squareup.burst:burst-junit4:${versions.burst}"
 
 }

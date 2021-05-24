@@ -74,17 +74,29 @@ internal fun KSAnnotated.getAnnoMarkedWithAnotherAnno(
 }
 
 
-internal fun KSClassDeclaration.getSuperclass(): KSType? {
+internal fun KSClassDeclaration.getSuperclass(anyType: KSType): KSType? {
     return superTypes
-        .firstOrNull { it.resolve().classDeclaration.classKind == ClassKind.CLASS }
-        ?.resolve()
+        .withNotNullablePlatformTypes()
+        .firstOrNull { it.classDeclaration.classKind == ClassKind.CLASS && it != anyType }
 }
 
 
 internal fun KSClassDeclaration.getInterfaces(): Sequence<KSType> {
     return superTypes
-        .filter { it.resolve().classDeclaration.classKind == ClassKind.INTERFACE }
-        .map(KSTypeReference::resolve)
+        .withNotNullablePlatformTypes()
+        .filter { it.classDeclaration.classKind == ClassKind.INTERFACE }
+}
+
+
+private fun Sequence<KSTypeReference>.withNotNullablePlatformTypes(): Sequence<KSType> {
+    return map { typeReference ->
+        val type = typeReference.resolve()
+
+        when(type.nullability) {
+            Nullability.PLATFORM -> type.makeNotNullable()
+            else -> type
+        }
+    }
 }
 
 

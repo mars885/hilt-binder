@@ -18,9 +18,15 @@ package com.paulrybitskyi.hiltbinder.processor.ksp.utils
 
 import com.google.devtools.ksp.getClassDeclarationByName
 import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
 
 
 internal fun Resolver.getTypeByName(name: String): KSType {
     return checkNotNull(getClassDeclarationByName(name)).asType()
+}
+
+
+internal fun Resolver.getSuperclass(classDeclaration: KSClassDeclaration): KSType? {
+    return classDeclaration.getSuperclass(builtIns.anyType)
 }

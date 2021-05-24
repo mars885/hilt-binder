@@ -38,7 +38,7 @@ internal class ModuleSchemaFactory(
             packageName = packageName,
             interfaceName = moduleInterfaceNameFactory.createInterfaceName(component),
             componentType = component.toTypeElement(),
-            bindings = bindings
+            bindings = bindings.sortedBy(BindingSchema::methodName)
         )
     }
 

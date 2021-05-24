@@ -47,13 +47,11 @@ internal fun KSAnnotation.getToArg(): KSType? {
 
 
 internal fun KSAnnotation.getInstallInArg(): BindType.Component {
-    val componentType = args[BIND_ANNOTATION_PARAM_INSTALL_IN]
-        ?.cast<KSType>()
-        ?: return BindType.Component.NONE
-
-    val componentName = componentType.declaration.simpleName.asString()
-
-    return BindType.Component.valueOf(componentName)
+    return when(val component = args[BIND_ANNOTATION_PARAM_INSTALL_IN]) {
+        is BindType.Component -> component
+        is KSType -> BindType.Component.valueOf(component.simpleName)
+        else -> BindType.Component.NONE
+    }
 }
 
 
@@ -63,13 +61,11 @@ internal fun KSAnnotation.getCustomComponentArg(): KSType? {
 
 
 internal fun KSAnnotation.getContributesToArg(): BindType.Collection {
-    val collectionType = args[BIND_ANNOTATION_PARAM_CONTRIBUTES_TO]
-        ?.cast<KSType>()
-        ?: return BindType.Collection.NONE
-
-    val collectionName = collectionType.declaration.simpleName.asString()
-
-    return BindType.Collection.valueOf(collectionName)
+    return when(val collection = args[BIND_ANNOTATION_PARAM_CONTRIBUTES_TO]) {
+        is BindType.Collection -> collection
+        is KSType -> BindType.Collection.valueOf(collection.simpleName)
+        else -> BindType.Collection.NONE
+    }
 }
 
 

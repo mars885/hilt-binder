@@ -41,6 +41,7 @@ dependencies {
     testImplementation(deps.kspCore)
     testImplementation(deps.kspApi)
     testImplementation(deps.kspCompileTesting)
+    testImplementation(deps.burst)
 
     // Some Hilt Android classes have to be present on the classpath
     // when testing. Since hilt-binder-compiler is a jar artifact and
@@ -58,11 +59,6 @@ dependencies {
     testImplementation(files(deps.local.daggerHiltAndroid))
     testImplementation(files("libs/hilt-android-classes-2.35.1.jar"))
     testImplementation(files("libs/hilt-core-classes-2.35.1.jar"))
-
-    // https://github.com/google/compile-testing/issues/28
-    if(Jvm.current().javaVersion?.isJava9Compatible == false) {
-        testImplementation(files(Jvm.current().toolsJar))
-    }
 }
 
 publishingConfig.artifactName = publishingConfig.hiltBinderCompilerArtifactName

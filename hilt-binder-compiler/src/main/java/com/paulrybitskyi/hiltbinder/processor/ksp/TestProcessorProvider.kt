@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.ksp.model
+package com.paulrybitskyi.hiltbinder.processor.ksp
+
+import com.google.devtools.ksp.processing.CodeGenerator
+import com.google.devtools.ksp.processing.KSPLogger
+import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.processing.SymbolProcessorProvider
+
+class TestProcessorProvider : SymbolProcessorProvider {
 
 
-internal const val OBJECT_TYPE_CANON_NAME = "java.lang.Object"
-internal const val QUALIFIER_TYPE_CANON_NAME = "javax.inject.Qualifier"
-internal const val WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME = "dagger.hilt.android.WithFragmentBindings"
-internal const val MAP_KEY_TYPE_CANON_NAME = "dagger.MapKey"
+    override fun create(
+        options: Map<String, String>,
+        kotlinVersion: KotlinVersion,
+        codeGenerator: CodeGenerator,
+        logger: KSPLogger
+    ): SymbolProcessor {
+        return TestProcessor()
+    }
+
+
+}

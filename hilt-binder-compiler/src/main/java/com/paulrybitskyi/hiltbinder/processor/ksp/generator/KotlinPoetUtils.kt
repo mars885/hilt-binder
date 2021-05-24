@@ -77,8 +77,7 @@ private fun KSType.toCodeBlock(argName: String): CodeBlock {
     val argValueClassKind = argValueDeclaration.classKind
     val argValueFormat = when(argValueClassKind) {
         ClassKind.ENUM_ENTRY -> "%T"
-        ClassKind.CLASS -> "%T::class"
-        else -> throw IllegalStateException("Unexpected class kind = $argValueClassKind.")
+        else -> "%T::class"
     }
 
     return CodeBlock.create(argName, argValueFormat, argValueClassName)
