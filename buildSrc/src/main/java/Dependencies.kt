@@ -111,6 +111,9 @@ object deps {
 
         const val hiltBinder = ":hilt-binder"
         const val hiltBinderCompiler = ":hilt-binder-compiler"
+        const val sampleDepsJavac = ":sample-deps-javac"
+        const val sampleDepsKapt = ":sample-deps-kapt"
+        const val sampleDepsKsp = ":sample-deps-ksp"
 
         const val daggerHiltCore = "libs/hilt-core-${versions.dagger}.jar"
         const val daggerHiltAndroid = "libs/hilt-android-${versions.dagger}.jar"
@@ -125,6 +128,7 @@ object deps {
     const val daggerHilt = "com.google.dagger:hilt-android:${versions.dagger}"
     const val daggerHiltCompiler = "com.google.dagger:hilt-android-compiler:${versions.dagger}"
     const val materialComponents = "com.google.android.material:material:${versions.materialComponents}"
+    const val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}"
     const val apacheCommons = "org.apache.commons:commons-lang3:${versions.apacheCommons}"
     const val javaPoet = "com.squareup:javapoet:${versions.javaPoet}"
     const val kotlinPoet = "com.squareup:kotlinpoet:${versions.kotlinPoet}"

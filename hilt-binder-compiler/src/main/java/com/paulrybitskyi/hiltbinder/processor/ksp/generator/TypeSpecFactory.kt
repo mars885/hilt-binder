@@ -28,7 +28,7 @@ internal class TypeSpecFactory(
 
     fun createTypeSpec(moduleSchema: ModuleSchema): TypeSpec {
         return TypeSpec.interfaceBuilder(moduleSchema.interfaceName)
-            .addModifiers(KModifier.PUBLIC)
+            .addModifiers(KModifier.INTERNAL)
             .addAnnotation(DAGGER_TYPE_MODULE)
             .addAnnotation(moduleSchema.createComponentInstallationAnnotation())
             .addFunctions(bindingMethodSpecFactory.create(moduleSchema.bindings))

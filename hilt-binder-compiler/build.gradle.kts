@@ -24,6 +24,7 @@ plugins {
 dependencies {
     implementation(project(deps.local.hiltBinder))
 
+    implementation(deps.kotlinReflect)
     implementation(deps.apacheCommons)
     implementation(deps.javaPoet)
     implementation(deps.kotlinPoet)

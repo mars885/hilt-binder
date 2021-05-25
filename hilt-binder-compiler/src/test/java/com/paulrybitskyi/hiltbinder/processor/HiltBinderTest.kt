@@ -134,7 +134,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable
                 }
@@ -207,7 +207,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable
                 }
@@ -280,7 +280,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): AbstractTest
                 }
@@ -353,7 +353,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): AbstractTest
                 }
@@ -440,7 +440,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable1
                 }
@@ -515,7 +515,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): AbstractTest
                 }
@@ -590,7 +590,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable
                 }
@@ -663,7 +663,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Any
                 }
@@ -738,7 +738,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Any
                 }
@@ -813,7 +813,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Any
                 }
@@ -890,7 +890,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Any
                 }
@@ -971,7 +971,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable
                 }
@@ -1058,7 +1058,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): AbstractAbstractTest
                 }
@@ -1139,7 +1139,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable
                 }
@@ -1220,7 +1220,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable<Long>
                 }
@@ -1301,7 +1301,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable<Long>
                 }
@@ -1390,7 +1390,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable<Float>
                 }
@@ -1471,7 +1471,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): AbstractTest<Long>
                 }
@@ -1552,7 +1552,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): AbstractTest<Long>
                 }
@@ -1641,7 +1641,7 @@ internal class HiltBinderTest {
                 
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): AbstractAbstractTest<Int>
                 }
@@ -1759,7 +1759,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable<Testable1<Int, Float, String>, Testable2<Int, Float,
                       String>, Testable3<*, *, *>>
@@ -2040,7 +2040,7 @@ internal class HiltBinderTest {
                     
                     @Module
                     @InstallIn(${component.simpleName}::class)
-                    public interface $interfaceName {
+                    internal interface $interfaceName {
                       @Binds
                       public fun bind_Test(binding: Test): Testable
                     }
@@ -2118,7 +2118,7 @@ internal class HiltBinderTest {
                     
                     @Module
                     @InstallIn(${mappedComponent.simpleName}::class)
-                    public interface $interfaceName {
+                    internal interface $interfaceName {
                       @Binds
                       public fun bind_Test(binding: Test): Testable
                     }
@@ -2206,7 +2206,7 @@ internal class HiltBinderTest {
                     
                     @Module
                     @InstallIn(${mappedComponent.simpleName}::class)
-                    public interface $interfaceName {
+                    internal interface $interfaceName {
                       @Binds
                       public fun bind_Test(binding: Test): Testable
                     }
@@ -2390,7 +2390,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(CustomComponent::class)
-                public interface HiltBinder_CustomComponentModule {
+                internal interface HiltBinder_CustomComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable
                 }
@@ -2487,7 +2487,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(CustomComponent::class)
-                public interface HiltBinder_CustomComponentModule {
+                internal interface HiltBinder_CustomComponentModule {
                   @Binds
                   public fun bind_Test(binding: Test): Testable
                 }
@@ -2605,7 +2605,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @Named("test")
                   public fun bind_Test(binding: Test): Testable
@@ -2722,7 +2722,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @CustomQualifier(CustomQualifier.Type.ONE)
                   public fun bind_Test(binding: Test): Testable
@@ -3134,7 +3134,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @CustomQualifier(
                     boolValue = true,
@@ -3282,7 +3282,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoSet
                   public fun bind_Test1(binding: Test1): Testable
@@ -3417,7 +3417,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoSet
                   public fun bind_Test1(binding: Test1): Testable<*>
@@ -3587,7 +3587,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoSet
                   @Named("one")
@@ -3772,7 +3772,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
                   @MapIntKey(1)
@@ -3921,7 +3921,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
                   @MapLongKey(1)
@@ -4070,7 +4070,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
                   @MapStringKey("one")
@@ -4219,7 +4219,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
                   @MapClassKey(Test1::class)
@@ -4374,7 +4374,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
                   @MapClassKey(Test1::class)
@@ -4560,7 +4560,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
                   @TestMapKey(TestMapKey.Type.ONE)
@@ -4752,7 +4752,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
                   @TestMapKey(TestMapKey.Type.ONE)
@@ -4942,7 +4942,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
                   @MapClassKey(Test1::class)
@@ -5061,7 +5061,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @Named("test")
                   public fun bind_com_paulrybitskyi_hiltbinder_test_Test(binding: Test): Testable
@@ -5253,7 +5253,7 @@ internal class HiltBinderTest {
     
                 @Module
                 @InstallIn(SingletonComponent::class)
-                public interface HiltBinder_SingletonComponentModule {
+                internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   public
                       fun bind_com_paulrybitskyi_hiltbinder_testing_feature1_interfaces_testing_Test1(binding: Test1):
