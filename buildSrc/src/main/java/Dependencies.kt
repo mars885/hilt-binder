@@ -111,6 +111,8 @@ object deps {
 
         const val hiltBinder = ":hilt-binder"
         const val hiltBinderCompiler = ":hilt-binder-compiler"
+        const val commonUtils = ":common-utils"
+        const val compilerProcessing = ":compiler-processing"
         const val sampleDepsJavac = ":sample-deps-javac"
         const val sampleDepsKapt = ":sample-deps-kapt"
         const val sampleDepsKsp = ":sample-deps-ksp"

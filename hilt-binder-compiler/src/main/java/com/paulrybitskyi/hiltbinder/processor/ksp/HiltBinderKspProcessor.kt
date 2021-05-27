@@ -20,7 +20,6 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
-import com.paulrybitskyi.hiltbinder.processor.common.BIND_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.ksp.generator.ModuleFileGenerator
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.AnnotationsParserFactory
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.HiltBinderException
@@ -33,15 +32,15 @@ internal class HiltBinderKspProcessor(
 
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        try {
+/*        try {
             val annotationsParser = annotationsParserFactory.create(resolver)
-            val symbols = resolver.getSymbolsWithAnnotation(BIND_TYPE_QUALIFIED_NAME)
+            val symbols = resolver.getSymbolsWithAnnotation("com.paulrybitskyi.hiltbinder.BindType")
             val moduleSchemas = annotationsParser.parse(symbols)
 
             moduleFileGenerator.generateFiles(moduleSchemas)
         } catch(error: Throwable) {
             reportError(error)
-        }
+        }*/
 
         return emptyList()
     }

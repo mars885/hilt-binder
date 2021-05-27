@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import org.gradle.internal.jvm.Jvm
-
 plugins {
     kotlin()
     kotlinKapt()
@@ -23,6 +21,8 @@ plugins {
 
 dependencies {
     implementation(project(deps.local.hiltBinder))
+    implementation(project(deps.local.compilerProcessing))
+    implementation(project(deps.local.commonUtils))
 
     implementation(deps.kotlinReflect)
     implementation(deps.apacheCommons)

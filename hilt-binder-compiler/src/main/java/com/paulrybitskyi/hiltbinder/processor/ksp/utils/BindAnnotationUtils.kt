@@ -21,7 +21,6 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSType
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.common.BIND_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.cast
 
 
@@ -34,7 +33,7 @@ private const val BIND_ANNOTATION_PARAM_WITH_QUALIFIER = "withQualifier"
 
 
 internal fun Resolver.getBindAnnotation(symbol: KSAnnotated): KSAnnotation {
-    val bindAnnotationType = getTypeByName(BIND_TYPE_QUALIFIED_NAME)
+    val bindAnnotationType = getTypeByName("com.paulrybitskyi.hiltbinder.BindType")
     val bindAnnotation = symbol.getAnnotation(bindAnnotationType)
 
     return checkNotNull(bindAnnotation)

@@ -25,6 +25,7 @@ import com.paulrybitskyi.hiltbinder.processor.javac.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.PredefinedHiltComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.*
+import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -75,33 +76,30 @@ internal class HiltComponentDetector(
 
 
     private fun detectExplicitComponent(annotatedElement: TypeElement): HiltComponent? {
-        val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
+        val bindAnnotation = annotatedElement.getBindAnnotation(elementUtils, typeUtils)
+        val component = bindAnnotation.getInstallInArg()
 
         return when {
-            (bindAnnotation.installIn == BindType.Component.NONE) -> null
-            (bindAnnotation.installIn != BindType.Component.CUSTOM) -> detectExplicitPredefinedComponent(bindAnnotation)
+            (component == BindType.Component.NONE) -> null
+            (component != BindType.Component.CUSTOM) -> detectExplicitPredefinedComponent(component)
             else -> detectExplicitCustomComponent(bindAnnotation, annotatedElement)
         }
     }
 
 
-    private fun detectExplicitPredefinedComponent(bindAnnotation: BindType): HiltComponent.Predefined {
-        return HiltComponent.Predefined(
-            predefinedHiltComponentMapper.mapToPredefinedComponent(
-                bindAnnotation.installIn
-            )
-        )
+    private fun detectExplicitPredefinedComponent(component: BindType.Component): HiltComponent.Predefined {
+        return HiltComponent.Predefined(predefinedHiltComponentMapper.mapToPredefinedComponent(component))
     }
 
 
     private fun detectExplicitCustomComponent(
-        bindAnnotation: BindType,
+        bindAnnotation: AnnotationMirror,
         annotatedElement: TypeElement
     ): HiltComponent.Custom {
-        val customComponentType = elementUtils.getTypeSafely(bindAnnotation::customComponent)
+        val customComponentType = bindAnnotation.getCustomComponentArg()
         val voidType = elementUtils.getType(VOID_TYPE_CANON_NAME)
 
-        if(typeUtils.isSameType(customComponentType, voidType)) {
+        if((customComponentType == null) || typeUtils.isSameType(customComponentType, voidType)) {
             throw HiltBinderException(
                 messageProvider.undefinedCustomComponentError(),
                 annotatedElement
@@ -124,9 +122,9 @@ internal class HiltComponentDetector(
     ) {
         val mismatchExists = (
             (componentInferredFromScope != null) &&
-            (explicitComponent != null) &&
-            (componentInferredFromScope != explicitComponent)
-        )
+                (explicitComponent != null) &&
+                (componentInferredFromScope != explicitComponent)
+            )
 
         if(mismatchExists) {
             throw HiltBinderException(messageProvider.componentMismatchError(), annotatedElement)

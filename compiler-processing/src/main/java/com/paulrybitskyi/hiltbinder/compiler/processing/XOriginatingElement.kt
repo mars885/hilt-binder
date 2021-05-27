@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder;
+package com.paulrybitskyi.hiltbinder.compiler.processing
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Retention(RetentionPolicy.RUNTIME)
-public @interface InterestingAnnotation {}
+interface XOriginatingElement

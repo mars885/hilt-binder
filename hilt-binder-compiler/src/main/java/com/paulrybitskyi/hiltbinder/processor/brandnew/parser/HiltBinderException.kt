@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.common
+package com.paulrybitskyi.hiltbinder.processor.brandnew.parser
 
-import com.paulrybitskyi.hiltbinder.BindType
+import com.paulrybitskyi.hiltbinder.compiler.processing.XElement
 
-
-internal const val PACKAGE_SEPARATOR = '.'
-
-internal val BIND_TYPE_QUALIFIED_NAME = BindType::class.qualifiedName!!
-internal val BIND_TYPE_SIMPLE_NAME = BindType::class.simpleName!!
+internal class HiltBinderException(
+    message: String,
+    val element: XElement? = null
+) : Exception(message)

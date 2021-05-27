@@ -22,6 +22,8 @@ import com.paulrybitskyi.hiltbinder.processor.javac.model.MAP_KEY_TYPE_CANON_NAM
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.getAnnoMarkedWithSpecificAnno
+import com.paulrybitskyi.hiltbinder.processor.javac.utils.getBindAnnotation
+import com.paulrybitskyi.hiltbinder.processor.javac.utils.getContributesToArg
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.getType
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
@@ -35,9 +37,9 @@ internal class ContributionTypeDetector(
 
 
     fun detectType(annotatedElement: TypeElement): ContributionType? {
-        val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
+        val collection = annotatedElement.getBindAnnotation(elementUtils, typeUtils).getContributesToArg()
 
-        return when(bindAnnotation.contributesTo) {
+        return when(collection) {
             BindType.Collection.NONE -> null
             BindType.Collection.SET -> ContributionType.Set
             BindType.Collection.MAP -> annotatedElement.createMapContributionType()

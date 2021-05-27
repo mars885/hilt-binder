@@ -16,7 +16,7 @@
 
 package com.paulrybitskyi.hiltbinder.processor.javac.parser.providers
 
-import com.paulrybitskyi.hiltbinder.processor.common.PACKAGE_SEPARATOR
+import com.paulrybitskyi.hiltbinder.common.utils.PACKAGE_SEPARATOR
 import com.paulrybitskyi.hiltbinder.processor.javac.model.BindingSchema
 import org.apache.commons.lang3.StringUtils
 

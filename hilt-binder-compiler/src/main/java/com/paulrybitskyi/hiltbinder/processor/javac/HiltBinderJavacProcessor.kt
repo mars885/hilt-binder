@@ -18,7 +18,6 @@ package com.paulrybitskyi.hiltbinder.processor.javac
 
 import com.google.auto.service.AutoService
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.common.BIND_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.javac.generator.ModuleFileGeneratorFactory
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.AnnotationsParserFactory
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.HiltBinderException
@@ -41,7 +40,7 @@ internal class HiltBinderJavacProcessor : AbstractProcessor() {
 
 
     override fun getSupportedAnnotationTypes(): Set<String> {
-        return setOf(BIND_TYPE_QUALIFIED_NAME)
+        return setOf("com.paulrybitskyi.hiltbinder.BindType")
     }
 
 
@@ -51,13 +50,13 @@ internal class HiltBinderJavacProcessor : AbstractProcessor() {
 
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        try {
+/*        try {
             roundEnv.getElementsAnnotatedWith(BindType::class.java)
                 .let(annotationsParser::parse)
                 .let(moduleFileGenerator::generateFiles)
         } catch(error: Throwable) {
             reportError(error)
-        }
+        }*/
 
         return false
     }

@@ -16,12 +16,13 @@
 
 package com.paulrybitskyi.hiltbinder.processor.javac.parser.detectors
 
-import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.javac.model.QUALIFIER_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.getAnnoMarkedWithSpecificAnno
+import com.paulrybitskyi.hiltbinder.processor.javac.utils.getBindAnnotation
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.getType
+import com.paulrybitskyi.hiltbinder.processor.javac.utils.getWithQualifierArg
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
@@ -35,7 +36,7 @@ internal class QualifierAnnotationDetector(
 
 
     fun detectAnnotation(annotatedElement: TypeElement): AnnotationMirror? {
-        if(!annotatedElement.getAnnotation(BindType::class.java).withQualifier) return null
+        if(!annotatedElement.getBindAnnotation(elementUtils, typeUtils).getWithQualifierArg()) return null
 
         val qualifierType = elementUtils.getType(QUALIFIER_TYPE_CANON_NAME)
 

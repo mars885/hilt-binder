@@ -46,7 +46,6 @@ internal val KSDeclaration.simpleNameStr: String
 internal val KSDeclaration.qualifiedNameStr: String
     get() = checkNotNull(qualifiedName).asString()
 
-//TODO to be removed once KSP fixes this
 internal val KSDeclaration.validPackageName: String
     get() = packageName.asString().let {
         if(it == "<root>") "" else it

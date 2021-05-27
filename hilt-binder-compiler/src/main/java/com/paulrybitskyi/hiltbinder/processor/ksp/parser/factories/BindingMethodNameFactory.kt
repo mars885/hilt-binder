@@ -17,7 +17,7 @@
 package com.paulrybitskyi.hiltbinder.processor.ksp.parser.factories
 
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.paulrybitskyi.hiltbinder.processor.common.PACKAGE_SEPARATOR
+import com.paulrybitskyi.hiltbinder.common.utils.PACKAGE_SEPARATOR
 import com.paulrybitskyi.hiltbinder.processor.ksp.utils.qualifiedNameStr
 
 internal class BindingMethodNameFactory {

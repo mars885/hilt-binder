@@ -23,8 +23,20 @@ import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Types
 
 
+internal fun AnnotationMirror.getArgs(): Map<String, Any?> {
+    return elementValues
+        .mapKeys { it.key.simpleName.toString() }
+        .mapValues { it.value.value }
+}
+
+
 internal fun Types.hasAnnotation(element: Element, annotationType: TypeMirror): Boolean {
-    return element.annotationMirrors.any {
+    return (getAnnotation(element, annotationType) != null)
+}
+
+
+internal fun Types.getAnnotation(element: Element, annotationType: TypeMirror): AnnotationMirror? {
+    return element.annotationMirrors.firstOrNull {
         isSameType(it.annotationType, annotationType)
     }
 }

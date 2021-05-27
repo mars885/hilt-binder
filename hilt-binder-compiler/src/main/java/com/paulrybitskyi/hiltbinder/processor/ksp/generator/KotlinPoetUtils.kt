@@ -18,7 +18,7 @@ package com.paulrybitskyi.hiltbinder.processor.ksp.generator
 
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.visitor.KSEmptyVisitor
-import com.paulrybitskyi.hiltbinder.processor.common.PACKAGE_SEPARATOR
+import com.paulrybitskyi.hiltbinder.common.utils.PACKAGE_SEPARATOR
 import com.paulrybitskyi.hiltbinder.processor.ksp.utils.classDeclaration
 import com.paulrybitskyi.hiltbinder.processor.ksp.utils.qualifiedNameStr
 import com.paulrybitskyi.hiltbinder.processor.ksp.utils.validPackageName

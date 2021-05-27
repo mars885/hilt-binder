@@ -21,7 +21,7 @@ import com.paulrybitskyi.hiltbinder.BindType;
 import javax.inject.Inject;
 
 @BindType(installIn = BindType.Component.ACTIVITY)
-public class JavacJavaActivityDep9Impl extends JavacJavaActivityDep9<Float>  {
+public class JavacJavaActivityDep9Impl extends JavacJavaActivityDep9<Float> {
 
     @Inject
     public JavacJavaActivityDep9Impl() {}

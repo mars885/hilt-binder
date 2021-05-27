@@ -23,6 +23,7 @@ import com.paulrybitskyi.hiltbinder.processor.javac.model.VOID_TYPE_CANON_NAME
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.javac.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.javac.utils.*
+import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
@@ -37,15 +38,17 @@ internal class BindingReturnTypeDetector(
 
 
     fun detectReturnType(annotatedElement: TypeElement): ReturnType {
-        val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
+        val bindAnnotation = annotatedElement.getBindAnnotation(elementUtils, typeUtils)
+        val collection = bindAnnotation.getContributesToArg()
         val returnType = detectExplicitReturnType(bindAnnotation, annotatedElement)
             ?: inferReturnType(annotatedElement)
+
 
         checkSubtypeRelation(annotatedElement.asType(), returnType)
 
         return when {
             !typeUtils.isGenericType(returnType) -> ReturnType.Standard(returnType)
-            (bindAnnotation.contributesTo == BindType.Collection.NONE) -> ReturnType.Generic.Parameterized(returnType)
+            (collection == BindType.Collection.NONE) -> ReturnType.Generic.Parameterized(returnType)
             else -> ReturnType.Generic.UnboundedWildcard(
                 type = returnType,
                 typeParamCount = typeUtils.asTypeElement(returnType).typeParameters.size
@@ -55,12 +58,12 @@ internal class BindingReturnTypeDetector(
 
 
     private fun detectExplicitReturnType(
-        bindAnnotation: BindType,
+        bindAnnotation: AnnotationMirror,
         annotatedElement: TypeElement
     ): TypeMirror? {
         if(!bindAnnotation.hasExplicitReturnType()) return null
 
-        val explicitReturnType = elementUtils.getTypeSafely(bindAnnotation::to)
+        val explicitReturnType = checkNotNull(bindAnnotation.getToArg())
 
         if(!typeUtils.isGenericType(explicitReturnType)) return explicitReturnType
 
@@ -73,11 +76,11 @@ internal class BindingReturnTypeDetector(
     }
 
 
-    private fun BindType.hasExplicitReturnType(): Boolean {
-        val toParamType = elementUtils.getTypeSafely(::to)
+    private fun AnnotationMirror.hasExplicitReturnType(): Boolean {
+        val toParamType = getToArg()
         val voidType = elementUtils.getType(VOID_TYPE_CANON_NAME)
 
-        return !typeUtils.isSameType(toParamType, voidType)
+        return ((toParamType != null) && !typeUtils.isSameType(toParamType, voidType))
     }
 
 
