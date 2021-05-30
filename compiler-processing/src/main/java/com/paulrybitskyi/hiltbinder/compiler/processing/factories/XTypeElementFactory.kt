@@ -27,13 +27,13 @@ import javax.lang.model.element.TypeElement
 internal object XTypeElementFactory {
 
 
-    fun createJavacTypeElement(env: JavacProcessingEnv, typeElement: TypeElement): XTypeElement {
-        return JavacTypeElement(env, typeElement)
+    fun createJavacTypeElement(env: JavacProcessingEnv, delegate: TypeElement): XTypeElement {
+        return JavacTypeElement(env, delegate)
     }
 
 
-    fun createKspTypeElement(env: KspProcessingEnv, typeElement: KSClassDeclaration): XTypeElement {
-        return KspTypeElement(env, typeElement)
+    fun createKspTypeElement(env: KspProcessingEnv, delegate: KSClassDeclaration): XTypeElement {
+        return KspTypeElement(env, delegate)
     }
 
 

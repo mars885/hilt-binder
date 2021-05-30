@@ -27,23 +27,23 @@ import javax.lang.model.type.TypeMirror
 internal object XTypeFactory {
 
 
-    fun createJavacType(env: JavacProcessingEnv, typeMirror: TypeMirror): XType {
-        return JavacType(env, typeMirror)
+    fun createJavacType(env: JavacProcessingEnv, delegate: TypeMirror): XType {
+        return JavacType(env, delegate)
     }
 
 
-    fun createJavacTypes(env: JavacProcessingEnv, typeMirrors: List<TypeMirror>): List<XType> {
-        return typeMirrors.map { createJavacType(env, it) }
+    fun createJavacTypes(env: JavacProcessingEnv, delegates: List<TypeMirror>): List<XType> {
+        return delegates.map { createJavacType(env, it) }
     }
 
 
-    fun createKspType(env: KspProcessingEnv, type: KSType): XType {
-        return KspType(env, type)
+    fun createKspType(env: KspProcessingEnv, delegate: KSType): XType {
+        return KspType(env, delegate)
     }
 
 
-    fun createKspTypes(env: KspProcessingEnv, types: List<KSType>): List<XType> {
-        return types.map { createKspType(env, it) }
+    fun createKspTypes(env: KspProcessingEnv, delegates: List<KSType>): List<XType> {
+        return delegates.map { createKspType(env, it) }
     }
 
 

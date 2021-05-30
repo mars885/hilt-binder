@@ -21,12 +21,12 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinClassName
 
 interface XTypeElement : XElement {
 
-    val isClass: Boolean
     override val qualifiedName: String
+
+    val isClass: Boolean
     val type: XType
     val superclass: XType?
     val interfaces: List<XType>
-
     val javaClassName: JavaClassName
     val kotlinClassName: KotlinClassName
 

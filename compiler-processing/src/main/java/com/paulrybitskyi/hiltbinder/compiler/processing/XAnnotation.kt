@@ -23,7 +23,6 @@ interface XAnnotation {
 
     val type: XType
     val args: Map<String, XAnnotationValue>
-
     val javaAnnoSpec: JavaAnnotationSpec
     val kotlinAnnoSpec: KotlinAnnotationSpec
 

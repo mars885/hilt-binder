@@ -22,7 +22,6 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinTypeName
 interface XType {
 
     val element: XElement
-
     val javaTypeName: JavaTypeName
     val kotlinTypeName: KotlinTypeName
 

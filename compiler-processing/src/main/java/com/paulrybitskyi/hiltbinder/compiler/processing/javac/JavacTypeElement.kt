@@ -33,13 +33,13 @@ internal class JavacTypeElement(
     override val delegate: TypeElement
 ): JavacElement(env, delegate), XTypeElement {
 
-
-    override val isClass: Boolean
-        get() = delegate.kind.isClass
-
+    
     override val qualifiedName: String by lazy {
         delegate.getQualifiedNameStr()
     }
+
+    override val isClass: Boolean
+        get() = delegate.kind.isClass
 
     override val type: XType by lazy {
         XTypeFactory.createJavacType(env, delegate.asType())

@@ -23,12 +23,12 @@ import com.paulrybitskyi.hiltbinder.common.utils.safeCast
 import com.paulrybitskyi.hiltbinder.compiler.processing.XFiler
 
 internal class KspFiler(
-    private val codeGenerator: CodeGenerator
+    private val delegate: CodeGenerator
 ) : XFiler {
 
 
     override fun createSourceFile(file: XFiler.File) {
-        codeGenerator.createNewFile(
+        delegate.createNewFile(
             dependencies = Dependencies(
                 aggregating = true,
                 sources = file.getOriginatingSourceFiles()

@@ -30,7 +30,7 @@ import javax.lang.model.element.AnnotationMirror
 
 internal class JavacAnnotation(
     private val env: JavacProcessingEnv,
-    val delegate: AnnotationMirror
+    private val delegate: AnnotationMirror
 ): XAnnotation {
 
 

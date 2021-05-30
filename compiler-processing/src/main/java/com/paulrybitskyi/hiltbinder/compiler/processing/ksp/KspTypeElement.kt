@@ -31,12 +31,12 @@ internal class KspTypeElement(
 ) : KspElement(env, delegate), XTypeElement {
 
 
-    override val isClass: Boolean
-        get() = delegate.isClass
-
     override val qualifiedName: String by lazy {
         checkNotNull(super.qualifiedName)
     }
+
+    override val isClass: Boolean
+        get() = delegate.isClass
 
     override val type: XType by lazy {
         XTypeFactory.createKspType(env, delegate.asType())

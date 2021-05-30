@@ -28,7 +28,7 @@ import javax.lang.model.type.TypeMirror
 
 internal class JavacType(
     private val env: JavacProcessingEnv,
-    val delegate: TypeMirror
+    private val delegate: TypeMirror
 ): XType {
 
 

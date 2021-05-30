@@ -23,7 +23,7 @@ import javax.annotation.processing.Filer
 import javax.lang.model.element.Element
 
 internal class JavacFiler(
-    private val filer: Filer
+    private val delegate: Filer
 ): XFiler {
 
 
@@ -31,7 +31,7 @@ internal class JavacFiler(
         val qualifiedFileName = file.createQualifiedFileName()
         val originatingElements = file.getOriginatingElements()
 
-        filer.createSourceFile(qualifiedFileName, *originatingElements)
+        delegate.createSourceFile(qualifiedFileName, *originatingElements)
             .openWriter()
             .use { writer -> writer.write(file.content) }
     }

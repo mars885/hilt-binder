@@ -29,7 +29,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinAnnotationSp
 
 internal class KspAnnotation(
     private val env: KspProcessingEnv,
-    val delegate: KSAnnotation
+    private val delegate: KSAnnotation
 ): XAnnotation {
 
 

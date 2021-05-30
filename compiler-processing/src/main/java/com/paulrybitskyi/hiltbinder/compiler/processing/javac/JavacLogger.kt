@@ -24,22 +24,22 @@ import javax.lang.model.element.Element
 import javax.tools.Diagnostic
 
 internal class JavacLogger(
-    private val messager: Messager
+    private val delegate: Messager
 ): XLogger {
 
 
     override fun info(message: String, element: XElement?) {
-        messager.printMessage(Diagnostic.Kind.NOTE, message, element?.asJavacElement())
+        delegate.printMessage(Diagnostic.Kind.NOTE, message, element?.asJavacElement())
     }
 
 
     override fun warning(message: String, element: XElement?) {
-        messager.printMessage(Diagnostic.Kind.WARNING, message, element?.asJavacElement())
+        delegate.printMessage(Diagnostic.Kind.WARNING, message, element?.asJavacElement())
     }
 
 
     override fun error(message: String, element: XElement?) {
-        messager.printMessage(Diagnostic.Kind.ERROR, message, element?.asJavacElement())
+        delegate.printMessage(Diagnostic.Kind.ERROR, message, element?.asJavacElement())
     }
 
 

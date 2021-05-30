@@ -21,9 +21,6 @@ import com.paulrybitskyi.hiltbinder.common.utils.KOTLIN_ENUM_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.common.utils.unsafeCast
 
 
-internal val KSType.isGenericType: Boolean
-    get() = arguments.isNotEmpty()
-
 internal val KSType.simpleName: String
     get() = declaration.simpleNameStr
 
@@ -32,14 +29,6 @@ internal val KSType.qualifiedName: String
 
 internal val KSType.classDeclaration: KSClassDeclaration
     get() = declaration.unsafeCast()
-
-internal val KSAnnotation.args: Map<String, Any?>
-    get() = arguments
-        .filter { it.name != null }
-        .associate {it.name!!.asString() to it.value }
-
-internal val KSAnnotation.declaration: KSDeclaration
-    get() = annotationType.resolve().declaration
 
 internal val KSDeclaration.simpleNameStr: String
     get() = simpleName.asString()
@@ -61,23 +50,9 @@ internal val KSDeclaration.validPackageName: String
     }
 
 
-internal fun KSAnnotated.hasAnnotation(annotationType: KSType): Boolean {
-    return (getAnnotation(annotationType) != null)
-}
-
-
 internal fun KSAnnotated.getAnnotation(annotationType: KSType): KSAnnotation? {
     return annotations.firstOrNull {
         it.annotationType.resolve() == annotationType
-    }
-}
-
-
-internal fun KSAnnotated.getAnnoMarkedWithAnotherAnno(
-    anotherAnnoType: KSType
-): KSAnnotation? {
-    return annotations.firstOrNull {
-        it.annotationType.resolve().declaration.hasAnnotation(anotherAnnoType)
     }
 }
 
