@@ -58,8 +58,6 @@ dependencies {
     // by adding local jars in which they are contained.
     testImplementation(files(deps.local.daggerHiltCore))
     testImplementation(files(deps.local.daggerHiltAndroid))
-    testImplementation(files("libs/hilt-android-classes-2.35.1.jar"))
-    testImplementation(files("libs/hilt-core-classes-2.35.1.jar"))
 }
 
 publishingConfig.artifactName = publishingConfig.hiltBinderCompilerArtifactName

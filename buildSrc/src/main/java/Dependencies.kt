@@ -117,8 +117,8 @@ object deps {
         const val sampleDepsKapt = ":sample-deps-kapt"
         const val sampleDepsKsp = ":sample-deps-ksp"
 
-        const val daggerHiltCore = "libs/hilt-core-${versions.dagger}.jar"
-        const val daggerHiltAndroid = "libs/hilt-android-${versions.dagger}.jar"
+        const val daggerHiltCore = "libs/hilt-core-classes-${versions.dagger}.jar"
+        const val daggerHiltAndroid = "libs/hilt-android-classes-${versions.dagger}.jar"
 
     }
 
