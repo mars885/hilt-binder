@@ -25,9 +25,12 @@ plugins {
 // Custom configuration used for dependencies that are copied
 // into the library jar instead of adding it as a POM dependency.
 val shadowed: Configuration = configurations.create("shadowed") {
-    // Make sure shadowed dependencies show up as "implementation""
-    // so that normal compilation works.
-    configurations.getByName("implementation").extendsFrom(this)
+    // Make sure shadowed dependencies show up as "compileOnly"
+    // so they won't be included in the POM file.
+    configurations.getByName("compileOnly").extendsFrom(this)
+    // Compiler tests run without shadowed classes, so we should
+    // add those dependencies into test configuration.
+    configurations.getByName("testImplementation").extendsFrom(this)
 }
 
 val shadowJar by tasks.getting(ShadowJar::class) {
