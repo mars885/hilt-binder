@@ -17,24 +17,22 @@
 package com.paulrybitskyi.hiltbinder.compiler.processing.ksp
 
 import com.google.devtools.ksp.getClassDeclarationByName
-import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.paulrybitskyi.hiltbinder.compiler.processing.*
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.*
 import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.getTypeByName
 
 internal class KspProcessingEnv(
-    val resolver: Resolver,
-    private val codeGenerator: CodeGenerator,
-    private val kspLogger: KSPLogger
+    private val delegate: SymbolProcessorEnvironment,
+    val resolver: Resolver
 ): XProcessingEnv {
 
 
     override val backend = XBackend.KSP
 
     override val logger: XLogger by lazy {
-        XLoggerFactory.createKspLogger(kspLogger)
+        XLoggerFactory.createKspLogger(delegate.logger)
     }
 
     override val roundEnv: XRoundEnv by lazy {
@@ -42,7 +40,7 @@ internal class KspProcessingEnv(
     }
 
     override val filer: XFiler by lazy {
-        XFilerFactory.createKspFiler(codeGenerator)
+        XFilerFactory.createKspFiler(delegate.codeGenerator)
     }
 
 

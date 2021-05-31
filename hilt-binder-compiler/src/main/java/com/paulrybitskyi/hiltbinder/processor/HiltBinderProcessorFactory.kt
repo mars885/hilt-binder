@@ -16,9 +16,8 @@
 
 package com.paulrybitskyi.hiltbinder.processor
 
-import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XProcessingEnvFactory
 import com.paulrybitskyi.hiltbinder.processor.generator.ModuleFileGeneratorFactory
@@ -40,12 +39,11 @@ internal object HiltBinderProcessorFactory {
 
 
     fun createKspProcessor(
-        resolver: Resolver,
-        codeGenerator: CodeGenerator,
-        kspLogger: KSPLogger
+        processingEnv: SymbolProcessorEnvironment,
+        resolver: Resolver
     ): HiltBinderProcessor {
         return createProcessor(
-            processingEnv = XProcessingEnvFactory.createKspEnv(resolver, codeGenerator, kspLogger)
+            processingEnv = XProcessingEnvFactory.createKspEnv(processingEnv, resolver)
         )
     }
 

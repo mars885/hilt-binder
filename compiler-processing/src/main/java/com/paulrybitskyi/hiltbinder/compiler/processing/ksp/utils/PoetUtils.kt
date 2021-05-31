@@ -29,7 +29,7 @@ private const val ANNOTATION_INDICATOR_SYMBOL = '@'
 
 
 internal fun KSClassDeclaration.toKotlinClassName(): KotlinClassName {
-    val packageName = validPackageName
+    val packageName = packageNameStr
     val typesStr = qualifiedNameStr.removePrefix("$packageName$PACKAGE_SEPARATOR")
     val simpleNames = typesStr.split(INNER_TYPE_SEPARATOR)
 

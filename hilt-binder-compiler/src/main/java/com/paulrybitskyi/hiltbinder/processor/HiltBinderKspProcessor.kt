@@ -21,13 +21,12 @@ import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.KSAnnotated
 
 internal class HiltBinderKspProcessor(
-    private val codeGenerator: CodeGenerator,
-    private val logger: KSPLogger
+    private val processingEnv: SymbolProcessorEnvironment
 ): SymbolProcessor {
 
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        HiltBinderProcessorFactory.createKspProcessor(resolver, codeGenerator, logger)
+        HiltBinderProcessorFactory.createKspProcessor(processingEnv, resolver)
             .process()
 
         return emptyList()
@@ -37,16 +36,8 @@ internal class HiltBinderKspProcessor(
     @AutoService(SymbolProcessorProvider::class)
     class Provider : SymbolProcessorProvider {
 
-        override fun create(
-            options: Map<String, String>,
-            kotlinVersion: KotlinVersion,
-            codeGenerator: CodeGenerator,
-            logger: KSPLogger
-        ): SymbolProcessor {
-            return HiltBinderKspProcessor(
-                codeGenerator = codeGenerator,
-                logger = logger
-            )
+        override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
+            return HiltBinderKspProcessor(environment)
         }
 
     }
