@@ -28,7 +28,7 @@ internal class PackageNameProvider {
             .map(BindingSchema::packageName)
             .toList()
             .toTypedArray()
-            .let(StringUtils::getCommonPrefix)
+            .let { StringUtils.getCommonPrefix(*it) }
             .trimEnd(PACKAGE_SEPARATOR)
     }
 
