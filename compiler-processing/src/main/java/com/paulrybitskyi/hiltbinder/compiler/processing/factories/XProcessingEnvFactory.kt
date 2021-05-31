@@ -16,9 +16,8 @@
 
 package com.paulrybitskyi.hiltbinder.compiler.processing.factories
 
-import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
 import com.paulrybitskyi.hiltbinder.compiler.processing.javac.JavacProcessingEnv
 import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.KspProcessingEnv
@@ -37,15 +36,10 @@ object XProcessingEnvFactory {
 
 
     fun createKspEnv(
-        resolver: Resolver,
-        codeGenerator: CodeGenerator,
-        kspLogger: KSPLogger
+        processingEnv: SymbolProcessorEnvironment,
+        resolver: Resolver
     ): XProcessingEnv {
-        return KspProcessingEnv(
-            resolver = resolver,
-            codeGenerator = codeGenerator,
-            kspLogger = kspLogger
-        )
+        return KspProcessingEnv(processingEnv, resolver)
     }
 
 

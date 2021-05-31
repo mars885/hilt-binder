@@ -25,7 +25,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XOriginatingEl
 import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.getAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.getTypeByName
 import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.simpleNameStr
-import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.validPackageName
+import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.packageNameStr
 
 internal abstract class KspElement(
     protected val env: KspProcessingEnv,
@@ -34,7 +34,7 @@ internal abstract class KspElement(
 
 
     override val packageName: String
-        get() = delegate.validPackageName
+        get() = delegate.packageNameStr
 
     override val simpleName: String
         get() = delegate.simpleNameStr

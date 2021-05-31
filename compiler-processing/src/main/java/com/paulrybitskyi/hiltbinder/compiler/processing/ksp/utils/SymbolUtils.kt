@@ -43,11 +43,8 @@ internal val KSClassDeclaration.isClass: Boolean
         ClassKind.OBJECT
     )
 
-//TODO to be removed once KSP fixes this
-internal val KSDeclaration.validPackageName: String
-    get() = packageName.asString().let {
-        if(it == "<root>") "" else it
-    }
+internal val KSDeclaration.packageNameStr: String
+    get() = packageName.asString()
 
 
 internal fun KSAnnotated.getAnnotation(annotationType: KSType): KSAnnotation? {
