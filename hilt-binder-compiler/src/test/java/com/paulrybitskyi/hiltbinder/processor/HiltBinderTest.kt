@@ -18,14 +18,12 @@ package com.paulrybitskyi.hiltbinder.processor
 
 import com.google.common.truth.Truth.assertThat
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.brandnew.HiltBinderJavacProcessor
-import com.paulrybitskyi.hiltbinder.processor.brandnew.HiltBinderKspProcessor
-import com.paulrybitskyi.hiltbinder.processor.brandnew.model.HiltComponent
-import com.paulrybitskyi.hiltbinder.processor.brandnew.model.PredefinedHiltComponent
-import com.paulrybitskyi.hiltbinder.processor.brandnew.model.WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME
-import com.paulrybitskyi.hiltbinder.processor.brandnew.parser.PredefinedHiltComponentMapper
-import com.paulrybitskyi.hiltbinder.processor.brandnew.parser.factories.ModuleInterfaceNameFactory
-import com.paulrybitskyi.hiltbinder.processor.brandnew.parser.providers.MessageProvider
+import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
+import com.paulrybitskyi.hiltbinder.processor.model.PredefinedHiltComponent
+import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME
+import com.paulrybitskyi.hiltbinder.processor.parser.PredefinedHiltComponentMapper
+import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNameFactory
+import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import com.squareup.burst.BurstJUnit4
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.KotlinCompilation.ExitCode
