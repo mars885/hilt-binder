@@ -20,7 +20,7 @@ import com.google.common.truth.Truth.assertThat
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.brandnew.HiltBinderJavacProcessor
 import com.paulrybitskyi.hiltbinder.processor.brandnew.HiltBinderKspProcessor
-import com.paulrybitskyi.hiltbinder.processor.javac.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.brandnew.model.WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.PredefinedHiltComponent
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.PredefinedHiltComponentMapper
@@ -2368,7 +2368,7 @@ internal class HiltBinderTest {
         for(component in PredefinedHiltComponent.values()) {
             val isViewWithFragmentComponent = (component == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
             val withFragmentBindingAnnotation = if(isViewWithFragmentComponent) {
-                "@$WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME"
+                "@$WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME"
             } else {
                 ""
             }
@@ -2534,7 +2534,7 @@ internal class HiltBinderTest {
             val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
             val isViewWithFragmentComponent = (mappedComponent == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
             val withFragmentBindingAnnotation = if(isViewWithFragmentComponent) {
-                "@$WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME"
+                "@$WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME"
             } else {
                 ""
             }
@@ -2622,7 +2622,7 @@ internal class HiltBinderTest {
             val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
             val isViewWithFragmentComponent = (mappedComponent == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
             val withFragmentBindingAnnotation = if(isViewWithFragmentComponent) {
-                "@$WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME"
+                "@$WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME"
             } else {
                 ""
             }

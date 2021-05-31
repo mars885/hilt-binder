@@ -16,6 +16,7 @@
 
 package com.paulrybitskyi.hiltbinder.processor.brandnew.parser
 
+import com.paulrybitskyi.hiltbinder.common.utils.safeCastEach
 import com.paulrybitskyi.hiltbinder.compiler.processing.XElement
 import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 import com.paulrybitskyi.hiltbinder.processor.brandnew.model.BindingSchema
@@ -23,7 +24,6 @@ import com.paulrybitskyi.hiltbinder.processor.brandnew.model.ModuleSchema
 import com.paulrybitskyi.hiltbinder.processor.brandnew.parser.factories.BindingSchemaFactory
 import com.paulrybitskyi.hiltbinder.processor.brandnew.parser.factories.ModuleSchemaFactory
 import com.paulrybitskyi.hiltbinder.processor.brandnew.parser.providers.PackageNameProvider
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.castEach
 
 internal class AnnotationsParser(
     private val bindingSchemaFactory: BindingSchemaFactory,
@@ -33,7 +33,7 @@ internal class AnnotationsParser(
 
 
     fun parse(annotatedElements: Sequence<XElement>): List<ModuleSchema> {
-        val typeElements = annotatedElements.castEach<XTypeElement>()
+        val typeElements = annotatedElements.safeCastEach<XTypeElement>()
         val bindings = typeElements.map(bindingSchemaFactory::createBindingSchema)
         val packageName = packageNameProvider.providePackageName(bindings)
 

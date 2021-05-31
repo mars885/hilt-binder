@@ -23,6 +23,12 @@ inline fun <T> Any.safeCast(): T? {
 }
 
 
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T> Sequence<*>.safeCastEach(): Sequence<T> {
+    return mapNotNull { it?.safeCast() }
+}
+
+
 @Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
 inline fun <T> Any.unsafeCast(): T {
     return (this as T)

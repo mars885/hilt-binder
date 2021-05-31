@@ -21,7 +21,7 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSType
 import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.cast
+import com.paulrybitskyi.hiltbinder.common.utils.safeCast
 
 
 private const val BIND_ANNOTATION_PARAM_TO = "to"
@@ -41,7 +41,7 @@ internal fun Resolver.getBindAnnotation(symbol: KSAnnotated): KSAnnotation {
 
 
 internal fun KSAnnotation.getToArg(): KSType? {
-    return args[BIND_ANNOTATION_PARAM_TO]?.cast()
+    return args[BIND_ANNOTATION_PARAM_TO]?.safeCast()
 }
 
 
@@ -55,7 +55,7 @@ internal fun KSAnnotation.getInstallInArg(): BindType.Component {
 
 
 internal fun KSAnnotation.getCustomComponentArg(): KSType? {
-    return args[BIND_ANNOTATION_PARAM_CUSTOM_COMPONENT]?.cast()
+    return args[BIND_ANNOTATION_PARAM_CUSTOM_COMPONENT]?.safeCast()
 }
 
 
@@ -69,5 +69,5 @@ internal fun KSAnnotation.getContributesToArg(): BindType.Collection {
 
 
 internal fun KSAnnotation.getWithQualifierArg(): Boolean {
-    return (args[BIND_ANNOTATION_PARAM_WITH_QUALIFIER]?.cast() ?: false)
+    return (args[BIND_ANNOTATION_PARAM_WITH_QUALIFIER]?.safeCast() ?: false)
 }

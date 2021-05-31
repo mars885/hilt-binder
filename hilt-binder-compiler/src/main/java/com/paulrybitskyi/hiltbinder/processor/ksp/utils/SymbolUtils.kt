@@ -17,7 +17,7 @@
 package com.paulrybitskyi.hiltbinder.processor.ksp.utils
 
 import com.google.devtools.ksp.symbol.*
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.cast
+import com.paulrybitskyi.hiltbinder.common.utils.unsafeCast
 
 
 internal val KSType.isGenericType: Boolean
@@ -30,7 +30,7 @@ internal val KSType.qualifiedName: String
     get() = declaration.qualifiedNameStr
 
 internal val KSType.classDeclaration: KSClassDeclaration
-    get() = declaration.cast()
+    get() = declaration.unsafeCast()
 
 internal val KSAnnotation.args: Map<String, Any?>
     get() = arguments

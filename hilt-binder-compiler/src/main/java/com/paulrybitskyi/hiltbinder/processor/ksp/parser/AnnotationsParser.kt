@@ -18,7 +18,7 @@ package com.paulrybitskyi.hiltbinder.processor.ksp.parser
 
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.paulrybitskyi.hiltbinder.processor.javac.utils.castEach
+import com.paulrybitskyi.hiltbinder.common.utils.safeCastEach
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.ModuleSchema
 import com.paulrybitskyi.hiltbinder.processor.ksp.parser.factories.BindingSchemaFactory
@@ -33,7 +33,7 @@ internal class AnnotationsParser(
 
 
     fun parse(annotatedSymbols: Sequence<KSAnnotated>): List<ModuleSchema> {
-        val classSymbols = annotatedSymbols.castEach<KSClassDeclaration>()
+        val classSymbols = annotatedSymbols.safeCastEach<KSClassDeclaration>()
         val bindings = classSymbols.map(bindingSchemaFactory::createBindingSchema)
         val packageName = packageNameProvider.providePackageName(bindings)
 
