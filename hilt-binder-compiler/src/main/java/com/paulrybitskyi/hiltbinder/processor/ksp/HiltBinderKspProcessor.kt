@@ -28,7 +28,7 @@ internal class HiltBinderKspProcessor(
     private val annotationsParserFactory: AnnotationsParserFactory,
     private val moduleFileGenerator: ModuleFileGenerator,
     private val logger: KSPLogger
-) : SymbolProcessor {
+): SymbolProcessor {
 
 
     override fun process(resolver: Resolver): List<KSAnnotated> {

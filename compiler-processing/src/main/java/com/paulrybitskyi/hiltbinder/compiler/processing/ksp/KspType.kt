@@ -29,7 +29,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinTypeName
 internal class KspType(
     private val env: KspProcessingEnv,
     val delegate: KSType
-) : XType {
+): XType {
 
 
     override val element: XElement by lazy {

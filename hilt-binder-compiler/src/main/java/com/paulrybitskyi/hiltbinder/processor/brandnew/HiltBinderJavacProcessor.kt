@@ -17,6 +17,7 @@
 package com.paulrybitskyi.hiltbinder.processor.brandnew
 
 import com.google.auto.service.AutoService
+import com.paulrybitskyi.hiltbinder.processor.brandnew.utils.BIND_TYPE_QUALIFIED_NAME
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import javax.annotation.processing.AbstractProcessor

@@ -27,7 +27,7 @@ import javax.lang.model.element.Modifier
 
 internal class JavaTypeSpecFactory(
     private val bindingMethodSpecFactory: JavaBindingMethodSpecFactory
-) : TypeSpecFactory<TypeSpec> {
+): TypeSpecFactory<TypeSpec> {
 
 
     override fun createTypeSpec(moduleSchema: ModuleSchema): TypeSpec {

@@ -63,9 +63,9 @@ private fun Any.toCodeBlock(argName: String = ""): CodeBlock {
         is Char -> CodeBlock.create(argName, "'%L'", this)
         is Float -> CodeBlock.create(argName, "%Lf", this)
         is String -> CodeBlock.create(argName, "%S", this)
-        is KSType -> this.toCodeBlock(argName)
-        is KSAnnotation -> CodeBlock.create(argName, "%L", this.toAnnotationSpec())
-        is ArrayList<*> -> this.toCodeBlock(argName)
+        is KSType -> toCodeBlock(argName)
+        is KSAnnotation -> CodeBlock.create(argName, "%L", toAnnotationSpec())
+        is ArrayList<*> -> toCodeBlock(argName)
         else -> CodeBlock.create(argName, "%L", this)
     }
 }

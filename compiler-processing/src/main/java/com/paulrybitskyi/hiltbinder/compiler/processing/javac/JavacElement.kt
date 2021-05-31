@@ -24,22 +24,22 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XAnnotationFac
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XOriginatingElementFactory
 import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.getAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.getPackageName
-import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.getSimpleNameStr
 import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.getType
+import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.simpleNameStr
 import javax.lang.model.element.Element
 import javax.lang.model.element.Parameterizable
 
 internal abstract class JavacElement(
     protected val env: JavacProcessingEnv,
     open val delegate: Element
-) : XElement {
+): XElement {
 
 
     override val packageName: String
         get() = env.elementUtils.getPackageName(delegate)
 
     override val simpleName: String
-        get() = delegate.getSimpleNameStr()
+        get() = delegate.simpleNameStr
 
     override val qualifiedName: String?
         get() = null

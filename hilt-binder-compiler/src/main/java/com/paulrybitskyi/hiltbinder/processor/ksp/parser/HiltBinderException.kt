@@ -21,4 +21,4 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 internal class HiltBinderException(
     message: String,
     val symbol: KSAnnotated? = null
-) : Exception(message)
+): Exception(message)

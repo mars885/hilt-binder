@@ -20,8 +20,8 @@ import com.paulrybitskyi.hiltbinder.common.utils.safeCast
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XTypeFactory
-import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.getQualifiedNameStr
 import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.getSuperclass
+import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.qualifiedNameStr
 import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.toJavaClassName
 import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.toKotlinClassName
 import com.paulrybitskyi.hiltbinder.compiler.processing.utils.JavaClassName
@@ -35,7 +35,7 @@ internal class JavacTypeElement(
 
     
     override val qualifiedName: String by lazy {
-        delegate.getQualifiedNameStr()
+        delegate.qualifiedNameStr
     }
 
     override val isClass: Boolean

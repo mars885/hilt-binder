@@ -23,7 +23,7 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 internal class HiltBinderKspProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
-) : SymbolProcessor {
+): SymbolProcessor {
 
 
     override fun process(resolver: Resolver): List<KSAnnotated> {

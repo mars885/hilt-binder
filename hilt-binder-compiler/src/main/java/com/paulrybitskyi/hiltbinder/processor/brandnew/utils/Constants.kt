@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.brandnew
+package com.paulrybitskyi.hiltbinder.processor.brandnew.utils
 
 import com.paulrybitskyi.hiltbinder.BindType
 

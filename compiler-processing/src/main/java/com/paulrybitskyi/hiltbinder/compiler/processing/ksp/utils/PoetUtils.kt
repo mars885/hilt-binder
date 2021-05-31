@@ -62,7 +62,11 @@ private fun KSTypeArgument.toKotlinTypeName(): KotlinTypeName {
             override fun visitTypeArgument(typeArgument: KSTypeArgument, data: Unit): TypeName {
                 return when {
                     (typeArgument.variance == Variance.STAR) -> STAR
-                    else -> typeArgument.type!!.resolve().toKotlinTypeName()
+                    else -> {
+                        typeArgument.type?.resolve()
+                            ?.toKotlinTypeName()
+                            ?: error("Cannot retrieve a type of the type argument = $typeArgument.")
+                    }
                 }
             }
 
@@ -100,9 +104,9 @@ private fun Any.toCodeBlock(argName: String = ""): CodeBlock {
         is Char -> CodeBlock.create(argName, "'%L'", this)
         is Float -> CodeBlock.create(argName, "%Lf", this)
         is String -> CodeBlock.create(argName, "%S", this)
-        is KSType -> this.toCodeBlock(argName)
-        is KSAnnotation -> CodeBlock.create(argName, "%L", this.toKotlinAnnoSpec())
-        is ArrayList<*> -> this.toCodeBlock(argName)
+        is KSType -> toCodeBlock(argName)
+        is KSAnnotation -> CodeBlock.create(argName, "%L", toKotlinAnnoSpec())
+        is ArrayList<*> -> toCodeBlock(argName)
         else -> CodeBlock.create(argName, "%L", this)
     }
 }
@@ -154,20 +158,21 @@ private fun CodeBlock.Companion.create(
 
 
 internal fun KSClassDeclaration.toJavaClassName(): JavaClassName {
-    throw UnsupportedOperationException(
-        "Converting KSP types to JavaPoet types is currently not supported."
-    )
+    throwUnsupportedOpError()
 }
 
 
 internal fun KSType.toJavaTypeName(): JavaTypeName {
-    throw UnsupportedOperationException(
-        "Converting KSP types to JavaPoet types is currently not supported."
-    )
+    throwUnsupportedOpError()
 }
 
 
 internal fun KSAnnotation.toJavaAnnoSpec(): JavaAnnotationSpec {
+    throwUnsupportedOpError()
+}
+
+
+private fun throwUnsupportedOpError(): Nothing {
     throw UnsupportedOperationException(
         "Converting KSP types to JavaPoet types is currently not supported."
     )

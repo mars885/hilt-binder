@@ -22,6 +22,7 @@ import com.paulrybitskyi.hiltbinder.processor.brandnew.generator.ModuleFileGener
 import com.paulrybitskyi.hiltbinder.processor.brandnew.generator.generateModuleFiles
 import com.paulrybitskyi.hiltbinder.processor.brandnew.parser.AnnotationsParser
 import com.paulrybitskyi.hiltbinder.processor.brandnew.parser.HiltBinderException
+import com.paulrybitskyi.hiltbinder.processor.brandnew.utils.BIND_TYPE_QUALIFIED_NAME
 
 internal class HiltBinderProcessor(
     private val roundEnv: XRoundEnv,

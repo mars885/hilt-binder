@@ -21,7 +21,6 @@ import com.paulrybitskyi.hiltbinder.BindType.Component
 import com.paulrybitskyi.hiltbinder.common.utils.NOTHING_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.common.utils.VOID_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.compiler.processing.*
-import com.paulrybitskyi.hiltbinder.processor.brandnew.BIND_TYPE_QUALIFIED_NAME
 
 
 private const val BIND_ANNOTATION_PARAM_TO = "to"

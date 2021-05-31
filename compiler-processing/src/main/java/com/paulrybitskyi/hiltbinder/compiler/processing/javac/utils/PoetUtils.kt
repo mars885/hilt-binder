@@ -27,13 +27,6 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 
 
-private fun throwUnsupportedOpError(): Nothing {
-    throw UnsupportedOperationException(
-        "Converting Javac types to KotlinPoet types is currently not supported."
-    )
-}
-
-
 internal fun TypeElement.toJavaClassName(): JavaClassName {
     return JavaClassName.get(this)
 }
@@ -57,4 +50,11 @@ internal fun TypeMirror.toKotlinTypeName(): KotlinTypeName {
 
 internal fun AnnotationMirror.toKotlinAnnoSpec(): KotlinAnnotationSpec {
     throwUnsupportedOpError()
+}
+
+
+private fun throwUnsupportedOpError(): Nothing {
+    throw UnsupportedOperationException(
+        "Converting Javac types to KotlinPoet types is currently not supported."
+    )
 }

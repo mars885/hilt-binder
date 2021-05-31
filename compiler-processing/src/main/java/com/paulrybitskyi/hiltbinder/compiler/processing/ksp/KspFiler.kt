@@ -24,7 +24,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XFiler
 
 internal class KspFiler(
     private val delegate: CodeGenerator
-) : XFiler {
+): XFiler {
 
 
     override fun createSourceFile(file: XFiler.File) {

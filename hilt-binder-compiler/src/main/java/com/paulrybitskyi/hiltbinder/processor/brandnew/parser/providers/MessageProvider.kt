@@ -16,7 +16,7 @@
 
 package com.paulrybitskyi.hiltbinder.processor.brandnew.parser.providers
 
-import com.paulrybitskyi.hiltbinder.processor.brandnew.BIND_TYPE_SIMPLE_NAME
+import com.paulrybitskyi.hiltbinder.processor.brandnew.utils.BIND_TYPE_SIMPLE_NAME
 
 // For some unknown reason, multiline string literals are misaligned
 // in the build console. Standard strings work fine.

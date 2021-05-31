@@ -25,6 +25,13 @@ import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 
 
+internal val Element.simpleNameStr: String
+    get() = simpleName.toString()
+
+internal val TypeElement.qualifiedNameStr: String
+    get() = qualifiedName.toString()
+
+
 internal fun Elements.getType(qualifiedName: CharSequence): TypeMirror? {
     return getTypeElement(qualifiedName)?.asType()
 }
@@ -46,14 +53,4 @@ internal fun Elements.getSuperclass(typeElement: TypeElement): TypeMirror? {
 
             if(isValidSuperclass) type else null
         }
-}
-
-
-internal fun Element.getSimpleNameStr(): String {
-    return simpleName.toString()
-}
-
-
-internal fun TypeElement.getQualifiedNameStr(): String {
-    return qualifiedName.toString()
 }

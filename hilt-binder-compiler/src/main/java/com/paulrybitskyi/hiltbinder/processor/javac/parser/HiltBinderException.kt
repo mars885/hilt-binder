@@ -21,4 +21,4 @@ import javax.lang.model.element.Element
 internal class HiltBinderException(
     message: String,
     val element: Element? = null
-) : Exception(message)
+): Exception(message)

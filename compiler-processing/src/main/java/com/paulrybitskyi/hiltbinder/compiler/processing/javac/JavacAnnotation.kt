@@ -21,7 +21,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotationValue
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XAnnotationValueFactory
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XTypeFactory
-import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.getSimpleNameStr
+import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.simpleNameStr
 import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.toJavaAnnoSpec
 import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.toKotlinAnnoSpec
 import com.paulrybitskyi.hiltbinder.compiler.processing.utils.JavaAnnotationSpec
@@ -40,7 +40,7 @@ internal class JavacAnnotation(
 
     override val args: Map<String, XAnnotationValue> by lazy {
         delegate.elementValues
-            .mapKeys { it.key.getSimpleNameStr() }
+            .mapKeys { it.key.simpleNameStr }
             .mapValues { XAnnotationValueFactory.createJavacValue(env, it.value.value) }
     }
 

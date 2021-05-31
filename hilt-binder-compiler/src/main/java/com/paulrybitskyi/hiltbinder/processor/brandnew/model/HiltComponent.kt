@@ -34,7 +34,6 @@ internal val HiltComponent.simpleName: String
         is HiltComponent.Custom -> element.simpleName
     }
 
-
 internal val HiltComponent.qualifiedName: String
     get() = when(this) {
         is HiltComponent.Predefined -> component.qualifiedName

@@ -77,13 +77,13 @@ internal class BindingMethodSpecFactory {
 
     private fun ReturnType.toTypeName(): TypeName {
         return when(this) {
-            is ReturnType.Standard -> this.type.classDeclaration.toClassName()
+            is ReturnType.Standard -> type.classDeclaration.toClassName()
             is ReturnType.Generic -> when(this) {
-                is ReturnType.Generic.Parameterized -> this.type.toTypeName()
+                is ReturnType.Generic.Parameterized -> type.toTypeName()
                 is ReturnType.Generic.UnboundedWildcard -> {
                     val typeArgs = List(typeParamCount) { STAR }
 
-                    this.type.classDeclaration.toClassName().parameterizedBy(typeArgs)
+                    type.classDeclaration.toClassName().parameterizedBy(typeArgs)
                 }
             }
         }

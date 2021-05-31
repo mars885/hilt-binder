@@ -16,11 +16,11 @@
 
 package com.paulrybitskyi.hiltbinder.processor.brandnew.generator.content.kotlin
 
-import com.paulrybitskyi.hiltbinder.processor.brandnew.BIND_TYPE_SIMPLE_NAME
 import com.paulrybitskyi.hiltbinder.processor.brandnew.generator.content.ModuleFileContentGenerator
-import com.paulrybitskyi.hiltbinder.processor.brandnew.generator.content.addNewlineCharacterAfterComment
-import com.paulrybitskyi.hiltbinder.processor.brandnew.generator.content.removeTrailingNewline
+import com.paulrybitskyi.hiltbinder.processor.brandnew.generator.content.utils.addNewlineCharacterAfterComment
+import com.paulrybitskyi.hiltbinder.processor.brandnew.generator.content.utils.removeTrailingNewline
 import com.paulrybitskyi.hiltbinder.processor.brandnew.model.ModuleSchema
+import com.paulrybitskyi.hiltbinder.processor.brandnew.utils.BIND_TYPE_SIMPLE_NAME
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.TypeSpec
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.paulrybitskyi.hiltbinder.processor.brandnew.generator.content
+package com.paulrybitskyi.hiltbinder.processor.brandnew.generator.content.utils
 
 
 internal fun String.addNewlineCharacterAfterComment(): String {

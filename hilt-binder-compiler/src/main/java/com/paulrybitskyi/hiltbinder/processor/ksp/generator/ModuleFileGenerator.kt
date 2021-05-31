@@ -19,7 +19,7 @@ package com.paulrybitskyi.hiltbinder.processor.ksp.generator
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.symbol.KSFile
-import com.paulrybitskyi.hiltbinder.processor.brandnew.BIND_TYPE_SIMPLE_NAME
+import com.paulrybitskyi.hiltbinder.processor.brandnew.utils.BIND_TYPE_SIMPLE_NAME
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.ContributionType
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.ksp.model.ModuleSchema
