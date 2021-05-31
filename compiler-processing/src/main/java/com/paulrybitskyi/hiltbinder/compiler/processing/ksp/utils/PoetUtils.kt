@@ -62,11 +62,9 @@ private fun KSTypeArgument.toKotlinTypeName(): KotlinTypeName {
             override fun visitTypeArgument(typeArgument: KSTypeArgument, data: Unit): TypeName {
                 return when {
                     (typeArgument.variance == Variance.STAR) -> STAR
-                    else -> {
-                        typeArgument.type?.resolve()
-                            ?.toKotlinTypeName()
-                            ?: error("Cannot retrieve a type of the type argument = $typeArgument.")
-                    }
+                    else -> typeArgument.type?.resolve()
+                        ?.toKotlinTypeName()
+                        ?: error("Cannot retrieve a type of the type argument = $typeArgument.")
                 }
             }
 
