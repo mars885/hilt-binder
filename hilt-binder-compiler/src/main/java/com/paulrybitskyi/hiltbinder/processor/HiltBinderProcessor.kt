@@ -16,53 +16,35 @@
 
 package com.paulrybitskyi.hiltbinder.processor
 
-import com.google.auto.service.AutoService
-import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.generator.ModuleFileGeneratorFactory
-import com.paulrybitskyi.hiltbinder.processor.parser.AnnotationsParserFactory
+import com.paulrybitskyi.hiltbinder.compiler.processing.XLogger
+import com.paulrybitskyi.hiltbinder.compiler.processing.XRoundEnv
+import com.paulrybitskyi.hiltbinder.processor.generator.ModuleFileGenerator
+import com.paulrybitskyi.hiltbinder.processor.generator.generateModuleFiles
+import com.paulrybitskyi.hiltbinder.processor.parser.AnnotationsParser
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType.AGGREGATING
-import javax.annotation.processing.AbstractProcessor
-import javax.annotation.processing.Processor
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.SourceVersion
-import javax.lang.model.element.TypeElement
+import com.paulrybitskyi.hiltbinder.processor.utils.BIND_TYPE_QUALIFIED_NAME
 
-@IncrementalAnnotationProcessor(AGGREGATING)
-@AutoService(Processor::class)
-internal class HiltBinderProcessor : AbstractProcessor() {
+internal class HiltBinderProcessor(
+    private val roundEnv: XRoundEnv,
+    private val logger: XLogger,
+    private val annotationsParser: AnnotationsParser,
+    private val moduleFileGenerator: ModuleFileGenerator
+) {
 
 
-    private val annotationsParser by lazy { AnnotationsParserFactory.create(processingEnv) }
-    private val moduleFileGenerator by lazy { ModuleFileGeneratorFactory.create(processingEnv) }
-    private val logger by lazy { Logger(processingEnv.messager) }
-
-
-    override fun getSupportedAnnotationTypes(): Set<String> {
-        return setOf(BindType::class.java.canonicalName)
-    }
-
-
-    override fun getSupportedSourceVersion(): SourceVersion {
-        return SourceVersion.latestSupported()
-    }
-
-
-    override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
+    fun process() {
         try {
-            roundEnv.getElementsAnnotatedWith(BindType::class.java)
-                .let(annotationsParser::parse)
-                .let(moduleFileGenerator::generateFiles)
-        } catch(error: Exception) {
+            val elements = roundEnv.getElementsAnnotatedWith(BIND_TYPE_QUALIFIED_NAME)
+            val moduleSchemas = annotationsParser.parse(elements)
+
+            moduleFileGenerator.generateModuleFiles(moduleSchemas)
+        } catch(error: Throwable) {
             reportError(error)
         }
-
-        return false
     }
 
 
-    private fun reportError(error: Exception) {
+    private fun reportError(error: Throwable) {
         if(error is HiltBinderException) {
             logger.error(checkNotNull(error.message), error.element)
         } else {

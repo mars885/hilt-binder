@@ -16,28 +16,84 @@
 
 package com.paulrybitskyi.hiltbinder.processor.generator
 
-import javax.annotation.processing.ProcessingEnvironment
+import com.paulrybitskyi.hiltbinder.compiler.processing.XBackend
+import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
+import com.paulrybitskyi.hiltbinder.processor.generator.content.ModuleFileContentGenerator
+import com.paulrybitskyi.hiltbinder.processor.generator.content.java.JavaBindingMethodSpecFactory
+import com.paulrybitskyi.hiltbinder.processor.generator.content.java.JavaModuleFileContentGenerator
+import com.paulrybitskyi.hiltbinder.processor.generator.content.java.JavaTypeSpecFactory
+import com.paulrybitskyi.hiltbinder.processor.generator.content.kotlin.KotlinBindingMethodSpecFactory
+import com.paulrybitskyi.hiltbinder.processor.generator.content.kotlin.KotlinModuleFileContentGenerator
+import com.paulrybitskyi.hiltbinder.processor.generator.content.kotlin.KotlinTypeSpecFactory
 
 internal object ModuleFileGeneratorFactory {
 
 
-    fun create(env: ProcessingEnvironment): ModuleFileGenerator {
+    fun create(processingEnv: XProcessingEnv): ModuleFileGenerator {
+        val outputLanguage = getOutputLanguage(processingEnv.backend)
+
         return ModuleFileGenerator(
-            typeSpecFactory = createTypeSpecFactory(),
-            filer = env.filer
+            outputLanguage = outputLanguage,
+            moduleFileContentGenerator = createModuleFileContentGenerator(outputLanguage),
+            filer = processingEnv.filer
         )
     }
 
 
-    private fun createTypeSpecFactory(): TypeSpecFactory {
-        return TypeSpecFactory(
-            bindingMethodSpecFactory = createBindingMethodSpecFactory()
+    private fun getOutputLanguage(backend: XBackend): Language {
+        // At the moment, for Javac only Java is generated while
+        // for KSP only Kotlin is generated.
+
+        return when(backend) {
+            XBackend.JAVAC -> Language.JAVA
+            XBackend.KSP -> Language.KOTLIN
+        }
+    }
+
+
+    private fun createModuleFileContentGenerator(language: Language): ModuleFileContentGenerator {
+        return when(language) {
+            Language.JAVA -> createJavaModuleFileContentGenerator()
+            Language.KOTLIN -> createKotlinModuleFileContentGenerator()
+        }
+    }
+
+
+    private fun createJavaModuleFileContentGenerator(): JavaModuleFileContentGenerator {
+        return JavaModuleFileContentGenerator(
+            typeSpecFactory = createJavaTypeSpecFactory()
         )
     }
 
 
-    private fun createBindingMethodSpecFactory(): BindingMethodSpecFactory {
-        return BindingMethodSpecFactory()
+    private fun createJavaTypeSpecFactory(): JavaTypeSpecFactory {
+        return JavaTypeSpecFactory(
+            bindingMethodSpecFactory = createJavaBindingMethodSpecFactory()
+        )
+    }
+
+
+    private fun createJavaBindingMethodSpecFactory(): JavaBindingMethodSpecFactory {
+        return JavaBindingMethodSpecFactory()
+    }
+
+
+    private fun createKotlinModuleFileContentGenerator(): KotlinModuleFileContentGenerator {
+        return KotlinModuleFileContentGenerator(
+            typeSpecFactory = createKotlinTypeSpecFactory()
+        )
+    }
+
+
+    private fun createKotlinTypeSpecFactory(): KotlinTypeSpecFactory {
+        return KotlinTypeSpecFactory(
+            bindingMethodSpecFactory = createKotlinBindingMethodSpecFactory()
+        )
+    }
+
+
+    private fun createKotlinBindingMethodSpecFactory(): KotlinBindingMethodSpecFactory {
+        return KotlinBindingMethodSpecFactory()
     }
 
 

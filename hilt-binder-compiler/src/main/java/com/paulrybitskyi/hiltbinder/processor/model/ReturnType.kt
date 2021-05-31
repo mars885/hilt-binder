@@ -16,17 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.processor.model
 
-import javax.lang.model.type.TypeMirror
+import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 
-internal sealed class ReturnType(val type: TypeMirror) {
+internal sealed class ReturnType(val type: XType) {
 
-    class Standard(type: TypeMirror): ReturnType(type)
+    class Standard(type: XType): ReturnType(type)
 
-    internal sealed class Generic(type: TypeMirror): ReturnType(type) {
+    internal sealed class Generic(type: XType): ReturnType(type) {
 
-        class Parameterized(type: TypeMirror): Generic(type)
+        class Parameterized(type: XType): Generic(type)
 
-        class UnboundedWildcard(type: TypeMirror, val typeParamCount: Int): Generic(type)
+        class UnboundedWildcard(type: XType, val typeParamCount: Int): Generic(type)
 
     }
 

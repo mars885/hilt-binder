@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import org.gradle.internal.jvm.Jvm
-
 plugins {
     kotlin()
     kotlinKapt()
@@ -23,9 +21,15 @@ plugins {
 
 dependencies {
     implementation(project(deps.local.hiltBinder))
+    implementation(project(deps.local.compilerProcessing))
+    implementation(project(deps.local.commonUtils))
 
+    implementation(deps.kotlinReflect)
     implementation(deps.apacheCommons)
     implementation(deps.javaPoet)
+    implementation(deps.kotlinPoet)
+
+    compileOnly(deps.kspApi)
 
     compileOnly(deps.incap)
     kapt(deps.incapCompiler)
@@ -35,7 +39,10 @@ dependencies {
 
     testImplementation(deps.jUnit)
     testImplementation(deps.truth)
-    testImplementation(deps.compileTesting)
+    testImplementation(deps.kspCore)
+    testImplementation(deps.kspApi)
+    testImplementation(deps.kspCompileTesting)
+    testImplementation(deps.burst)
 
     // Some Hilt Android classes have to be present on the classpath
     // when testing. Since hilt-binder-compiler is a jar artifact and
@@ -51,11 +58,6 @@ dependencies {
     // by adding local jars in which they are contained.
     testImplementation(files(deps.local.daggerHiltCore))
     testImplementation(files(deps.local.daggerHiltAndroid))
-
-    // https://github.com/google/compile-testing/issues/28
-    if(Jvm.current().javaVersion?.isJava9Compatible == false) {
-        testImplementation(files(Jvm.current().toolsJar))
-    }
 }
 
 publishingConfig.artifactName = publishingConfig.hiltBinderCompilerArtifactName

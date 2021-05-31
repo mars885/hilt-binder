@@ -16,9 +16,9 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser
 
-import javax.lang.model.element.Element
+import com.paulrybitskyi.hiltbinder.compiler.processing.XElement
 
 internal class HiltBinderException(
     message: String,
-    val element: Element? = null
-) : Exception(message)
+    val element: XElement? = null
+): Exception(message)

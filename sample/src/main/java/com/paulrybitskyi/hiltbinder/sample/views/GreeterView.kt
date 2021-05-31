@@ -19,12 +19,6 @@ package com.paulrybitskyi.hiltbinder.sample.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
-import com.paulrybitskyi.hiltbinder.sample.deps.*
-import com.paulrybitskyi.hiltbinder.sample.deps.ActivityDep1
-import com.paulrybitskyi.hiltbinder.sample.deps.ActivityDep2
-import com.paulrybitskyi.hiltbinder.sample.deps.SingletonDep1
-import com.paulrybitskyi.hiltbinder.sample.deps.SingletonDep2
-import com.paulrybitskyi.hiltbinder.sample.deps.ViewDep2
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -36,14 +30,20 @@ internal class GreeterView @JvmOverloads constructor(
 ): AppCompatTextView(context, attrs, defStyleAttr) {
 
 
-    @Inject lateinit var singletonDep1: SingletonDep1
-    @Inject lateinit var singletonDep2: SingletonDep2
+    @Inject lateinit var javacJavaViewDeps: JavacJavaViewDeps
+    @Inject lateinit var kaptJavaViewDeps: KaptJavaViewDeps
+    @Inject lateinit var kaptKotlinViewDeps: KaptKotlinViewDeps
+    @Inject lateinit var kspJavaViewDeps: KspJavaViewDeps
+    @Inject lateinit var kspKotlinViewDeps: KspKotlinViewDeps
 
-    @Inject lateinit var activityDep1: ActivityDep1
-    @Inject lateinit var activityDep2: ActivityDep2
 
-    @Inject lateinit var dep1: ViewDep1
-    @Inject lateinit var dep2: ViewDep2
+    init {
+        javacJavaViewDeps.check()
+        kaptJavaViewDeps.check()
+        kaptKotlinViewDeps.check()
+        kspJavaViewDeps.check()
+        kspKotlinViewDeps.check()
+    }
 
 
 }

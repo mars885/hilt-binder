@@ -16,28 +16,26 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
-import com.paulrybitskyi.hiltbinder.BindType
+import com.paulrybitskyi.hiltbinder.BindType.Component
+import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
+import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.model.PredefinedHiltComponent
-import com.paulrybitskyi.hiltbinder.processor.model.VOID_TYPE_CANON_NAME
-import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.PredefinedHiltComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.utils.*
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
 internal class HiltComponentDetector(
-    private val elementUtils: Elements,
-    private val typeUtils: Types,
+    private val processingEnv: XProcessingEnv,
     private val predefinedHiltComponentMapper: PredefinedHiltComponentMapper,
     private val messageProvider: MessageProvider
 ) {
 
 
-    fun detectComponent(annotatedElement: TypeElement): HiltComponent {
+    fun detectComponent(annotatedElement: XTypeElement): HiltComponent {
         val componentInferredFromScope = inferFromScopeAnnotation(annotatedElement)
         val explicitComponent = detectExplicitComponent(annotatedElement)
 
@@ -47,81 +45,74 @@ internal class HiltComponentDetector(
     }
 
 
-    private fun inferFromScopeAnnotation(annotatedElement: TypeElement): HiltComponent.Predefined? {
+    private fun inferFromScopeAnnotation(annotatedElement: XTypeElement): HiltComponent.Predefined? {
         if(shouldInstallInViewWithFragmentComponent(annotatedElement)) {
             return HiltComponent.Predefined(PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
         }
 
         return PredefinedHiltComponent.values()
             .firstOrNull {
-                val scopeAnnotationType = elementUtils.getType(it.scopeQualifiedName)
-                val hasScopeAnnotation = typeUtils.hasAnnotation(annotatedElement, scopeAnnotationType)
+                val scopeAnnotationType = processingEnv.getTypeUnsafely(it.scopeQualifiedName)
+                val hasScopeAnnotation = annotatedElement.hasAnnotation(scopeAnnotationType)
 
                 hasScopeAnnotation
             }
             ?.let(HiltComponent::Predefined)
-
     }
 
 
-    private fun shouldInstallInViewWithFragmentComponent(annotatedElement: TypeElement): Boolean {
-        val viewScopeType = elementUtils.getType(PredefinedHiltComponent.VIEW.scopeQualifiedName)
-        val hasViewScope = typeUtils.hasAnnotation(annotatedElement, viewScopeType)
+    private fun shouldInstallInViewWithFragmentComponent(annotatedElement: XTypeElement): Boolean {
+        val viewScopeType = processingEnv.getTypeUnsafely(PredefinedHiltComponent.VIEW.scopeQualifiedName)
+        val hasViewScope = annotatedElement.hasAnnotation(viewScopeType)
 
-        val withFragmentBindingsType = elementUtils.getType(WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME)
-        val hasWithFragmentBindingsAnno = typeUtils.hasAnnotation(annotatedElement, withFragmentBindingsType)
+        val withFragmentBindingsType = processingEnv.getTypeUnsafely(
+            WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME
+        )
+        val hasWithFragmentBindingsAnno = annotatedElement.hasAnnotation(withFragmentBindingsType)
 
         return (hasViewScope && hasWithFragmentBindingsAnno)
     }
 
 
-    private fun detectExplicitComponent(annotatedElement: TypeElement): HiltComponent? {
-        val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
+    private fun detectExplicitComponent(annotatedElement: XTypeElement): HiltComponent? {
+        val bindAnnotation = annotatedElement.getBindAnnotation()
+        val component = bindAnnotation.getInstallInArg()
 
         return when {
-            (bindAnnotation.installIn == BindType.Component.NONE) -> null
-            (bindAnnotation.installIn != BindType.Component.CUSTOM) -> detectExplicitPredefinedComponent(bindAnnotation)
+            (component == Component.NONE) -> null
+            (component != Component.CUSTOM) -> detectExplicitPredefinedComponent(component)
             else -> detectExplicitCustomComponent(bindAnnotation, annotatedElement)
         }
     }
 
 
-    private fun detectExplicitPredefinedComponent(bindAnnotation: BindType): HiltComponent.Predefined {
-        return HiltComponent.Predefined(
-            predefinedHiltComponentMapper.mapToPredefinedComponent(
-                bindAnnotation.installIn
-            )
-        )
+    private fun detectExplicitPredefinedComponent(component: Component): HiltComponent.Predefined {
+        return HiltComponent.Predefined(predefinedHiltComponentMapper.mapToPredefinedComponent(component))
     }
 
 
     private fun detectExplicitCustomComponent(
-        bindAnnotation: BindType,
-        annotatedElement: TypeElement
+        bindAnnotation: XAnnotation,
+        annotatedElement: XTypeElement
     ): HiltComponent.Custom {
-        val customComponentType = elementUtils.getTypeSafely(bindAnnotation::customComponent)
-        val voidType = elementUtils.getType(VOID_TYPE_CANON_NAME)
+        val defaultType = processingEnv.getBindAnnotationDefaultType()
+        val customComponentType = checkNotNull(bindAnnotation.getCustomComponentArg(defaultType))
 
-        if(typeUtils.isSameType(customComponentType, voidType)) {
+        if(customComponentType == defaultType) {
             throw HiltBinderException(
                 messageProvider.undefinedCustomComponentError(),
                 annotatedElement
             )
         }
 
-        val customComponentElement = typeUtils.asTypeElement(customComponentType)
-
-        return HiltComponent.Custom(
-            simpleName = customComponentElement.getSimpleNameStr(),
-            qualifiedName = customComponentElement.getQualifiedNameStr()
-        )
+        return HiltComponent.Custom(customComponentType.typeElement)
     }
 
 
     private fun checkComponentMismatch(
         componentInferredFromScope: HiltComponent?,
         explicitComponent: HiltComponent?,
-        annotatedElement: TypeElement
+        annotatedElement: XTypeElement
     ) {
         val mismatchExists = (
             (componentInferredFromScope != null) &&

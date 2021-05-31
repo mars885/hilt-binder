@@ -24,6 +24,6 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.paulrybitskyi.hiltbinder.sample.MainFragment"/>
+        android:name="com.paulrybitskyi.hiltbinder.sample.fragment.MainFragment"/>
 
 </navigation>

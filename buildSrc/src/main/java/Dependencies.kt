@@ -82,12 +82,15 @@ object versions {
     const val materialComponents = "1.3.0"
     const val apacheCommons = "3.12.0"
     const val javaPoet = "1.13.0"
+    const val kotlinPoet = "1.8.0"
     const val incap = "0.3"
     const val autoService = "1.0"
+    const val ksp = "1.5.0-1.0.0-alpha10"
     const val jUnit = "4.13.2"
     const val jUnitExt = "1.1.2"
     const val truth = "1.1.2"
-    const val compileTesting = "0.19"
+    const val ktCompileTesting = "1.4.1"
+    const val burst = "1.2.0"
 
 }
 
@@ -108,9 +111,14 @@ object deps {
 
         const val hiltBinder = ":hilt-binder"
         const val hiltBinderCompiler = ":hilt-binder-compiler"
+        const val commonUtils = ":common-utils"
+        const val compilerProcessing = ":compiler-processing"
+        const val sampleDepsJavac = ":sample-deps-javac"
+        const val sampleDepsKapt = ":sample-deps-kapt"
+        const val sampleDepsKsp = ":sample-deps-ksp"
 
-        const val daggerHiltCore = "libs/hilt-core-${versions.dagger}.jar"
-        const val daggerHiltAndroid = "libs/hilt-android-${versions.dagger}.jar"
+        const val daggerHiltCore = "libs/hilt-core-classes-${versions.dagger}.jar"
+        const val daggerHiltAndroid = "libs/hilt-android-classes-${versions.dagger}.jar"
 
     }
 
@@ -122,14 +130,19 @@ object deps {
     const val daggerHilt = "com.google.dagger:hilt-android:${versions.dagger}"
     const val daggerHiltCompiler = "com.google.dagger:hilt-android-compiler:${versions.dagger}"
     const val materialComponents = "com.google.android.material:material:${versions.materialComponents}"
+    const val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}"
     const val apacheCommons = "org.apache.commons:commons-lang3:${versions.apacheCommons}"
     const val javaPoet = "com.squareup:javapoet:${versions.javaPoet}"
+    const val kotlinPoet = "com.squareup:kotlinpoet:${versions.kotlinPoet}"
     const val incap = "net.ltgt.gradle.incap:incap:${versions.incap}"
     const val incapCompiler = "net.ltgt.gradle.incap:incap-processor:${versions.incap}"
     const val autoService = "com.google.auto.service:auto-service:${versions.autoService}"
+    const val kspCore = "com.google.devtools.ksp:symbol-processing:${versions.ksp}"
+    const val kspApi = "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}"
     const val jUnit = "junit:junit:${versions.jUnit}"
     const val jUnitExt = "androidx.test.ext:junit:${versions.jUnitExt}"
     const val truth = "com.google.truth:truth:${versions.truth}"
-    const val compileTesting = "com.google.testing.compile:compile-testing:${versions.compileTesting}"
+    const val kspCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.ktCompileTesting}"
+    const val burst = "com.squareup.burst:burst-junit4:${versions.burst}"
 
 }

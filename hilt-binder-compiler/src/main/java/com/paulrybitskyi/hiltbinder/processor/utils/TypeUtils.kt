@@ -16,39 +16,16 @@
 
 package com.paulrybitskyi.hiltbinder.processor.utils
 
-import javax.lang.model.element.AnnotationMirror
-import javax.lang.model.element.Element
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Types
+import com.paulrybitskyi.hiltbinder.common.utils.unsafeCast
+import com.paulrybitskyi.hiltbinder.compiler.processing.XType
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 
 
-internal fun Types.hasAnnotation(element: Element, annotationType: TypeMirror): Boolean {
-    return element.annotationMirrors.any {
-        isSameType(it.annotationType, annotationType)
-    }
-}
+internal val XType.isGeneric: Boolean
+    get() = (element.typeParameterCount > 0)
 
+internal val XType.qualifiedName: String
+    get() = checkNotNull(element.qualifiedName)
 
-internal fun Types.getAnnoMarkedWithSpecificAnno(
-    element: Element,
-    specificAnnoType: TypeMirror
-): AnnotationMirror? {
-    return element.annotationMirrors
-        .firstOrNull { hasAnnotation(it.annotationType.asElement(), specificAnnoType) }
-}
-
-
-internal fun Types.asTypeElement(type: TypeMirror): TypeElement {
-    return asElement(type).cast()
-}
-
-
-internal fun Types.isGenericType(type: TypeMirror): Boolean {
-    return asTypeElement(type).typeParameters.isNotEmpty()
-}
-
-
-internal fun Types.getQualifiedName(type: TypeMirror): String {
-    return asTypeElement(type).getQualifiedNameStr()
-}
+internal val XType.typeElement: XTypeElement
+    get() = element.unsafeCast()

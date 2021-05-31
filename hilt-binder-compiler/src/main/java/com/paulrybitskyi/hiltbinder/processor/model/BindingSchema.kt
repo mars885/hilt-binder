@@ -16,16 +16,16 @@
 
 package com.paulrybitskyi.hiltbinder.processor.model
 
-import javax.lang.model.element.AnnotationMirror
-import javax.lang.model.element.TypeElement
+import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 
 internal class BindingSchema(
     val packageName: String,
     val component: HiltComponent,
     val contributionType: ContributionType?,
-    val qualifierAnnotation: AnnotationMirror?,
+    val qualifierAnnotation: XAnnotation?,
     val methodName: String,
-    val paramType: TypeElement,
+    val paramType: XTypeElement,
     val paramName: String,
     val returnType: ReturnType
 )

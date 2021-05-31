@@ -22,10 +22,12 @@ import org.gradle.plugin.use.PluginDependencySpec
 const val PLUGIN_GRADLE_VERSIONS = "com.github.ben-manes.versions"
 const val PLUGIN_DOKKA = "org.jetbrains.dokka"
 const val PLUGIN_ANDROID_APPLICATION = "com.android.application"
+const val PLUGIN_ANDROID_LIBRARY = "com.android.library"
 const val PLUGIN_KOTLIN = "kotlin"
 const val PLUGIN_JAVA_LIBRARY = "java-library"
 const val PLUGIN_KOTLIN_ANDROID = "kotlin-android"
 const val PLUGIN_KOTLIN_KAPT = "kotlin-kapt"
+const val PLUGIN_KSP = "com.google.devtools.ksp"
 const val PLUGIN_DAGGER_HILT_ANDROID = "dagger.hilt.android.plugin"
 const val PLUGIN_MAVEN_PUBLISH = "maven-publish"
 const val PLUGIN_SIGNING = "org.gradle.signing"
@@ -46,6 +48,11 @@ fun PluginDependenciesSpec.androidApplication(): PluginDependencySpec {
 }
 
 
+fun PluginDependenciesSpec.androidLibrary(): PluginDependencySpec {
+    return id(PLUGIN_ANDROID_LIBRARY)
+}
+
+
 fun PluginDependenciesSpec.kotlin(): PluginDependencySpec {
     return id(PLUGIN_KOTLIN)
 }
@@ -58,6 +65,11 @@ fun PluginDependenciesSpec.kotlinAndroid(): PluginDependencySpec {
 
 fun PluginDependenciesSpec.kotlinKapt(): PluginDependencySpec {
     return id(PLUGIN_KOTLIN_KAPT)
+}
+
+
+fun PluginDependenciesSpec.ksp(): PluginDependencySpec {
+    return (id(PLUGIN_KSP) version versions.ksp)
 }
 
 

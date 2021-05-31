@@ -16,6 +16,7 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser
 
+import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.BindingReturnTypeDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.ContributionTypeDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.HiltComponentDetector
@@ -26,36 +27,33 @@ import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNa
 import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleSchemaFactory
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.PackageNameProvider
-import javax.annotation.processing.ProcessingEnvironment
 
 internal object AnnotationsParserFactory {
 
 
-    fun create(env: ProcessingEnvironment): AnnotationsParser {
+    fun create(processingEnv: XProcessingEnv): AnnotationsParser {
         return AnnotationsParser(
-            bindingSchemaFactory = createBindingSchemaFactory(env),
-            moduleSchemaFactory = createModuleSchemaFactory(env),
+            bindingSchemaFactory = createBindingSchemaFactory(processingEnv),
+            moduleSchemaFactory = createModuleSchemaFactory(processingEnv),
             packageNameProvider = createPackageNameProvider()
         )
     }
 
 
-    private fun createBindingSchemaFactory(env: ProcessingEnvironment): BindingSchemaFactory {
+    private fun createBindingSchemaFactory(processingEnv: XProcessingEnv): BindingSchemaFactory {
         return BindingSchemaFactory(
-            elementUtils = env.elementUtils,
-            hiltComponentDetector = createHiltComponentDetector(env),
-            contributionTypeDetector = createContributionTypeDetector(env),
-            qualifierAnnotationDetector = createQualifierAnnotationDetector(env),
-            bindingReturnTypeDetector = createBindingReturnTypeDetector(env),
+            hiltComponentDetector = createHiltComponentDetector(processingEnv),
+            contributionTypeDetector = createContributionTypeDetector(processingEnv),
+            qualifierAnnotationDetector = createQualifierAnnotationDetector(processingEnv),
+            bindingReturnTypeDetector = createBindingReturnTypeDetector(processingEnv),
             bindingMethodNameFactory = createBindingMethodNameFactory()
         )
     }
 
 
-    private fun createHiltComponentDetector(env: ProcessingEnvironment): HiltComponentDetector {
+    private fun createHiltComponentDetector(processingEnv: XProcessingEnv): HiltComponentDetector {
         return HiltComponentDetector(
-            elementUtils = env.elementUtils,
-            typeUtils = env.typeUtils,
+            processingEnv = processingEnv,
             predefinedHiltComponentMapper = createPredefinedHiltComponentMapper(),
             messageProvider = createMessageProvider()
         )
@@ -72,28 +70,25 @@ internal object AnnotationsParserFactory {
     }
 
 
-    private fun createContributionTypeDetector(env: ProcessingEnvironment): ContributionTypeDetector {
+    private fun createContributionTypeDetector(processingEnv: XProcessingEnv): ContributionTypeDetector {
         return ContributionTypeDetector(
-            elementUtils = env.elementUtils,
-            typeUtils = env.typeUtils,
+            processingEnv = processingEnv,
             messageProvider = createMessageProvider()
         )
     }
 
 
-    private fun createQualifierAnnotationDetector(env: ProcessingEnvironment): QualifierAnnotationDetector {
+    private fun createQualifierAnnotationDetector(processingEnv: XProcessingEnv): QualifierAnnotationDetector {
         return QualifierAnnotationDetector(
-            elementUtils = env.elementUtils,
-            typeUtils = env.typeUtils,
+            processingEnv = processingEnv,
             messageProvider = createMessageProvider()
         )
     }
 
 
-    private fun createBindingReturnTypeDetector(env: ProcessingEnvironment): BindingReturnTypeDetector {
+    private fun createBindingReturnTypeDetector(processingEnv: XProcessingEnv): BindingReturnTypeDetector {
         return BindingReturnTypeDetector(
-            elementUtils = env.elementUtils,
-            typeUtils = env.typeUtils,
+            processingEnv = processingEnv,
             messageProvider = createMessageProvider()
         )
     }
@@ -104,10 +99,10 @@ internal object AnnotationsParserFactory {
     }
 
 
-    private fun createModuleSchemaFactory(env: ProcessingEnvironment): ModuleSchemaFactory {
+    private fun createModuleSchemaFactory(processingEnv: XProcessingEnv): ModuleSchemaFactory {
         return ModuleSchemaFactory(
-            moduleInterfaceNameFactory = createModuleInterfaceNameFactory(),
-            elementUtils = env.elementUtils
+            processingEnv = processingEnv,
+            moduleInterfaceNameFactory = createModuleInterfaceNameFactory()
         )
     }
 

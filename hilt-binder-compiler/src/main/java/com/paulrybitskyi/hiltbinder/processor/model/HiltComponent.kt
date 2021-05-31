@@ -16,15 +16,14 @@
 
 package com.paulrybitskyi.hiltbinder.processor.model
 
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
+
 
 internal sealed class HiltComponent {
 
     data class Predefined(val component: PredefinedHiltComponent): HiltComponent()
 
-    data class Custom(
-        val simpleName: String,
-        val qualifiedName: String
-    ): HiltComponent()
+    data class Custom(val element: XTypeElement): HiltComponent()
 
 }
 
@@ -32,12 +31,11 @@ internal sealed class HiltComponent {
 internal val HiltComponent.simpleName: String
     get() = when(this) {
         is HiltComponent.Predefined -> component.simpleName
-        is HiltComponent.Custom -> simpleName
+        is HiltComponent.Custom -> element.simpleName
     }
-
 
 internal val HiltComponent.qualifiedName: String
     get() = when(this) {
         is HiltComponent.Predefined -> component.qualifiedName
-        is HiltComponent.Custom -> qualifiedName
+        is HiltComponent.Custom -> element.qualifiedName
     }

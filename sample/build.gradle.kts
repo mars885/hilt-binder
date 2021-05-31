@@ -53,6 +53,10 @@ android {
 }
 
 dependencies {
+    implementation(project(deps.local.sampleDepsJavac))
+    implementation(project(deps.local.sampleDepsKapt))
+    implementation(project(deps.local.sampleDepsKsp))
+
     implementation(deps.daggerHilt)
     kapt(deps.daggerHiltCompiler)
 
@@ -65,7 +69,4 @@ dependencies {
     implementation(deps.constraintLayout)
 
     implementation(deps.materialComponents)
-
-    testImplementation(deps.jUnit)
-    androidTestImplementation(deps.jUnitExt)
 }

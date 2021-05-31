@@ -16,30 +16,29 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
-import com.paulrybitskyi.hiltbinder.BindType
-import com.paulrybitskyi.hiltbinder.processor.model.QUALIFIER_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
+import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
+import com.paulrybitskyi.hiltbinder.processor.model.QUALIFIER_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
-import com.paulrybitskyi.hiltbinder.processor.utils.getAnnoMarkedWithSpecificAnno
-import com.paulrybitskyi.hiltbinder.processor.utils.getType
-import javax.lang.model.element.AnnotationMirror
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import com.paulrybitskyi.hiltbinder.processor.utils.getAnnoMarkedWithAnotherAnno
+import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotation
+import com.paulrybitskyi.hiltbinder.processor.utils.getTypeUnsafely
+import com.paulrybitskyi.hiltbinder.processor.utils.getWithQualifierArg
 
 internal class QualifierAnnotationDetector(
-    private val elementUtils: Elements,
-    private val typeUtils: Types,
+    private val processingEnv: XProcessingEnv,
     private val messageProvider: MessageProvider
 ) {
 
 
-    fun detectAnnotation(annotatedElement: TypeElement): AnnotationMirror? {
-        if(!annotatedElement.getAnnotation(BindType::class.java).withQualifier) return null
+    fun detectAnnotation(annotatedElement: XTypeElement): XAnnotation? {
+        if(!annotatedElement.getBindAnnotation().getWithQualifierArg()) return null
 
-        val qualifierType = elementUtils.getType(QUALIFIER_TYPE_CANON_NAME)
+        val qualifierType = processingEnv.getTypeUnsafely(QUALIFIER_TYPE_QUALIFIED_NAME)
 
-        return typeUtils.getAnnoMarkedWithSpecificAnno(annotatedElement, qualifierType)
+        return annotatedElement.getAnnoMarkedWithAnotherAnno(qualifierType)
             ?: throw HiltBinderException(messageProvider.qualifierAbsentError(), annotatedElement)
     }
 

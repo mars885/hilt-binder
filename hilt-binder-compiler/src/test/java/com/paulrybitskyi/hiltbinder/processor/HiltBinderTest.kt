@@ -16,29 +16,62 @@
 
 package com.paulrybitskyi.hiltbinder.processor
 
-import com.google.common.truth.Truth.assertAbout
-import com.google.testing.compile.JavaFileObjects.forResource
-import com.google.testing.compile.JavaFileObjects.forSourceLines
-import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
+import com.google.common.truth.Truth.assertThat
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.model.PredefinedHiltComponent
-import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNameFactory
-import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.parser.PredefinedHiltComponentMapper
+import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNameFactory
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
+import com.squareup.burst.BurstJUnit4
+import com.tschuchort.compiletesting.KotlinCompilation
+import com.tschuchort.compiletesting.KotlinCompilation.ExitCode
+import com.tschuchort.compiletesting.SourceFile
+import com.tschuchort.compiletesting.SourceFile.Companion.java
+import com.tschuchort.compiletesting.SourceFile.Companion.kotlin
+import com.tschuchort.compiletesting.kspSourcesDir
+import com.tschuchort.compiletesting.symbolProcessorProviders
+import org.junit.Assume
 import org.junit.Test
+import org.junit.runner.RunWith
+import java.io.File
 
+// TODO (26.05.2021): Burst library for parameterizing
+// tests should be abandoned in favor of TestParameterInjector
+// (https://github.com/google/TestParameterInjector) after this issue
+// (https://github.com/google/TestParameterInjector/issues/6) is resolved.
+@RunWith(BurstJUnit4::class)
 internal class HiltBinderTest {
 
 
-    private companion object {
+    internal companion object {
+
+        enum class ProcessorType { JAVAC, KSP }
+        enum class Language { JAVA, KOTLIN }
+        enum class Scenario(
+            val processorType: ProcessorType,
+            val inputLanguage: Language,
+            val outputLanguage: Language
+        ) {
+
+            JAVAC_JAVA_IN_JAVA_OUT(ProcessorType.JAVAC, Language.JAVA, Language.JAVA),
+            JAVAC_KOTLIN_IN_JAVA_OUT(ProcessorType.JAVAC, Language.KOTLIN, Language.JAVA),
+            KSP_JAVA_IN_KOTLIN_OUT(ProcessorType.KSP, Language.JAVA, Language.KOTLIN),
+            KSP_KOTLIN_IN_KOTLIN_OUT(ProcessorType.KSP, Language.KOTLIN, Language.KOTLIN)
+
+        }
+
+        private val JAVA_TESTABLE_FILE = java("Testable.java", "public interface Testable {}")
+        private val JAVA_ABSTRACT_TEST_FILE = java("AbstractTest.java", "public abstract class AbstractTest {}")
+        private val KOTLIN_TESTABLE_FILE = kotlin("Testable.kt", "interface Testable")
+        private val KOTLIN_ABSTRACT_TEST_FILE = kotlin("AbstractTest.kt", "abstract class AbstractTest")
 
         private val PREDEFINED_HILT_COMPONENT_MAPPER = PredefinedHiltComponentMapper()
         private val MODULE_INTERFACE_NAME_FACTORY = ModuleInterfaceNameFactory()
         private val MESSAGE_PROVIDER = MessageProvider()
 
-        private val VALID_ANNOTATION_PREDEFINED_COMPONENTS = BindType.Component
+        private val PREDEFINED_COMPONENTS = BindType.Component
             .values()
             .filter { (it != BindType.Component.NONE) && (it != BindType.Component.CUSTOM) }
 
@@ -46,555 +79,2548 @@ internal class HiltBinderTest {
 
 
     @Test
-    fun `Binds class implicitly to its single interface`() {
-        val returnType = forResource("Testable.java")
-        val bindingType = forResource("1/Test.java")
-        val expectedModule = forResource("1/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly to its single interface`() {
-        val returnType = forResource("Testable.java")
-        val bindingType = forResource("2/Test.java")
-        val expectedModule = forResource("2/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class implicitly to its superclass`() {
-        val returnType = forResource("AbstractTest.java")
-        val bindingType = forResource("3/Test.java")
-        val expectedModule = forResource("3/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly to its superclass`() {
-        val returnType = forResource("AbstractTest.java")
-        val bindingType = forResource("4/Test.java")
-        val expectedModule = forResource("4/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly, which has two interfaces, to specific interface`() {
-        val returnType = forResource("5/Testable1.java")
-        val interfaceType = forResource("5/Testable2.java")
-        val bindingType = forResource("5/Test.java")
-        val expectedModule = forResource("5/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly, which has superclass and interface, to superclass`() {
-        val returnType = forResource("AbstractTest.java")
-        val interfaceType = forResource("Testable.java")
-        val bindingType = forResource("6/Test.java")
-        val expectedModule = forResource("6/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly, which has superclass and interface, to interface`() {
-        val returnType = forResource("Testable.java")
-        val superclassType = forResource("AbstractTest.java")
-        val bindingType = forResource("7/Test.java")
-        val expectedModule = forResource("7/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, superclassType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly to Object class`() {
-        val bindingType = forResource("8/Test.java")
-        val expectedModule = forResource("8/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly, which has superclass, to Object class`() {
-        val superclassType = forResource("AbstractTest.java")
-        val bindingType = forResource("9/Test.java")
-        val expectedModule = forResource("9/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(superclassType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly, which has interface, to Object class`() {
-        val interfaceType = forResource("Testable.java")
-        val bindingType = forResource("10/Test.java")
-        val expectedModule = forResource("10/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly, which has superclass and interface, to Object class`() {
-        val superclassType = forResource("AbstractTest.java")
-        val interfaceType = forResource("Testable.java")
-        val bindingType = forResource("11/Test.java")
-        val expectedModule = forResource("11/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(superclassType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly, which has superclass, to its superclass's implemented interface`() {
-        val returnType = forResource("Testable.java")
-        val superclassType = forResource("12/AbstractTest.java")
-        val bindingType = forResource("12/Test.java")
-        val expectedModule = forResource("12/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, superclassType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly, which has superclass, to its superclass's superclass`() {
-        val returnType = forResource("13/AbstractAbstractTest.java")
-        val superclassType = forResource("13/AbstractTest.java")
-        val bindingType = forResource("13/Test.java")
-        val expectedModule = forResource("13/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, superclassType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly, which has interface, to its interface's base interface`() {
-        val returnType = forResource("Testable.java")
-        val interfaceType = forResource("14/UnitTestable.java")
-        val bindingType = forResource("14/Test.java")
-        val expectedModule = forResource("14/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class implicitly to its parameterized interface`() {
-        val returnType = forResource("15/Testable.java")
-        val bindingType = forResource("15/Test.java")
-        val expectedModule = forResource("15/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly to its direct parameterized interface`() {
-        val returnType = forResource("35/Testable.java")
-        val bindingType = forResource("35/Test.java")
-        val expectedModule = forResource("35/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly to its indirect parameterized interface`() {
-        val returnType = forResource("37/Testable.java")
-        val interfaceType = forResource("37/UnitTestable.java")
-        val bindingType = forResource("37/Test.java")
-        val expectedModule = forResource("37/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class implicitly to its parameterized superclass`() {
-        val returnType = forResource("16/AbstractTest.java")
-        val bindingType = forResource("16/Test.java")
-        val expectedModule = forResource("16/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly to its direct parameterized superclass`() {
-        val returnType = forResource("36/AbstractTest.java")
-        val bindingType = forResource("36/Test.java")
-        val expectedModule = forResource("36/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Binds class explicitly to its indirect parameterized superclass`() {
-        val returnType = forResource("38/AbstractAbstractTest.java")
-        val superclassType = forResource("38/AbstractTest.java")
-        val bindingType = forResource("38/Test.java")
-        val expectedModule = forResource("38/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, superclassType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Fails to bind class implicitly, which does not have superclass or interface`() {
-        val bindingType = forResource("17/Test.java")
-
-        assertAbout(javaSources())
-            .that(listOf(bindingType))
-            .processedWith(HiltBinderProcessor())
-            .failsToCompile()
-            .withErrorContaining(MESSAGE_PROVIDER.undefinedReturnTypeError())
-            .`in`(bindingType)
-            .onLine(4)
-    }
-
-
-    @Test
-    fun `Fails to bind class implicitly, which has two interfaces`() {
-        val interfaceTypes = listOf(
-            forResource("18/Testable1.java"),
-            forResource("18/Testable2.java")
+    fun `Binds class implicitly to its single interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+                
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
         )
-        val bindingType = forResource("18/Test.java")
 
-        assertAbout(javaSources())
-            .that(interfaceTypes + listOf(bindingType))
-            .processedWith(HiltBinderProcessor())
-            .failsToCompile()
-            .withErrorContaining(MESSAGE_PROVIDER.undefinedReturnTypeError())
-            .`in`(bindingType)
-            .onLine(4)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Fails to bind class implicitly, which has superclass and interface`() {
-        val superclassType = forResource("AbstractTest.java")
-        val interfaceType = forResource("Testable.java")
-        val bindingType = forResource("19/Test.java")
+    fun `Binds class explicitly to its single interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Testable.class)
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    
+                    @BindType(to = Testable::class)
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+                
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
 
-        assertAbout(javaSources())
-            .that(listOf(superclassType, interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .failsToCompile()
-            .withErrorContaining(MESSAGE_PROVIDER.undefinedReturnTypeError())
-            .`in`(bindingType)
-            .onLine(4)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Fails to bind class explicitly, which does not have superclass or interface, to interface`() {
-        val interfaceType = forResource("Testable.java")
-        val bindingType = forResource("20/Test.java")
+    fun `Binds class implicitly to its superclass`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_ABSTRACT_TEST_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType
+                    public class Test extends AbstractTest {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_ABSTRACT_TEST_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    
+                    @BindType
+                    class Test : AbstractTest()
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  AbstractTest bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+                
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): AbstractTest
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
 
-        assertAbout(javaSources())
-            .that(listOf(interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .failsToCompile()
-            .withErrorContaining(MESSAGE_PROVIDER.noSubtypeRelationError("Test", "Testable"))
-            .`in`(bindingType)
-            .onLine(4)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Fails to bind class explicitly, which does not have superclass or interface, to class`() {
-        val classType = forResource("AbstractTest.java")
-        val bindingType = forResource("21/Test.java")
+    fun `Binds class explicitly to its superclass`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_ABSTRACT_TEST_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = AbstractTest.class)
+                    public class Test extends AbstractTest {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_ABSTRACT_TEST_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    
+                    @BindType(to = AbstractTest::class)
+                    class Test : AbstractTest()
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  AbstractTest bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+                
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): AbstractTest
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
 
-        assertAbout(javaSources())
-            .that(listOf(classType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .failsToCompile()
-            .withErrorContaining(MESSAGE_PROVIDER.noSubtypeRelationError("Test", "AbstractTest"))
-            .`in`(bindingType)
-            .onLine(4)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Installs binding in predefined component, which is inferred from scope annotation`() {
-        val returnType = forResource("Testable.java")
+    fun `Binds class explicitly, which has two interfaces, to specific interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable1.java",
+                    "public interface Testable1 {}"
+                ),
+                java(
+                    "Testable2.java",
+                    "public interface Testable2 {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Testable1.class)
+                    public class Test implements Testable1, Testable2 {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable1.kt",
+                    "interface Testable1"
+                ),
+                kotlin(
+                    "Testable2.kt",
+                    "interface Testable2"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Testable1::class)
+                    class Test : Testable1, Testable2
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable1 bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable1
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
 
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly, which has superclass and interface, to superclass`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                JAVA_ABSTRACT_TEST_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = AbstractTest.class)
+                    public class Test extends AbstractTest implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                KOTLIN_ABSTRACT_TEST_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = AbstractTest::class)
+                    class Test : AbstractTest(), Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  AbstractTest bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): AbstractTest
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly, which has superclass and interface, to interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                JAVA_ABSTRACT_TEST_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Testable.class)
+                    public class Test extends AbstractTest implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                KOTLIN_ABSTRACT_TEST_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Testable::class)
+                    class Test : AbstractTest(), Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly to root type`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Object.class)
+                    public class Test {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Any::class)
+                    class Test
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Object;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Object bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Any
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Any
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly, which has superclass, to root type`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_ABSTRACT_TEST_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Object.class)
+                    public class Test extends AbstractTest {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_ABSTRACT_TEST_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Any::class)
+                    class Test : AbstractTest()
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Object;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Object bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Any
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Any
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly, which has interface, to root type`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Object.class)
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Any::class)
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Object;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Object bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Any
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Any
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly, which has superclass and interface, to root type`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                JAVA_ABSTRACT_TEST_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Object.class)
+                    public class Test extends AbstractTest implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                KOTLIN_ABSTRACT_TEST_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Any::class)
+                    class Test : AbstractTest(), Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Object;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Object bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Any
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Any
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly, which has superclass, to its superclass's implemented interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "AbstractTest.java",
+                    "public abstract class AbstractTest implements Testable {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Testable.class)
+                    public class Test extends AbstractTest {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "AbstractTest.kt",
+                    "abstract class AbstractTest : Testable"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Testable::class)
+                    class Test : AbstractTest()
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly, which has superclass, to its superclass's superclass`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "AbstractAbstractTest.java",
+                    "public abstract class AbstractAbstractTest {}"
+                ),
+                java(
+                    "AbstractTest.java",
+                    "public abstract class AbstractTest extends AbstractAbstractTest {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = AbstractAbstractTest.class)
+                    public class Test extends AbstractTest {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "AbstractAbstractTest.kt",
+                    "abstract class AbstractAbstractTest"
+                ),
+                kotlin(
+                    "AbstractTest.kt",
+                    "abstract class AbstractTest : AbstractAbstractTest()"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = AbstractAbstractTest::class)
+                    class Test : AbstractTest()
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  AbstractAbstractTest bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): AbstractAbstractTest
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly, which has interface, to its interface's base interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "UnitTestable.java",
+                    "public interface UnitTestable extends Testable {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Testable.class)
+                    public class Test implements UnitTestable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "UnitTestable.kt",
+                    "interface UnitTestable : Testable"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Testable::class)
+                    class Test : UnitTestable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds enum class implicitly to its interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    
+                    @BindType
+                    public enum Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    
+                    @BindType
+                    enum class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds enum class explicitly to its interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    
+                    @BindType(to = Testable.class)
+                    public enum Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    
+                    @BindType(to = Testable::class)
+                    enum class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds Kotlin object class implicitly to its interface`(scenario: Scenario) {
+        Assume.assumeTrue(scenario.inputLanguage == Language.KOTLIN)
+
+        val sourceFiles = listOf(
+            KOTLIN_TESTABLE_FILE,
+            kotlin(
+                "Test.kt",
+                """
+                import com.paulrybitskyi.hiltbinder.BindType
+                
+                @BindType
+                object Test : Testable
+                """.trimIndent()
+            )
+        )
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds Kotlin object class explicitly to its interface`(scenario: Scenario) {
+        Assume.assumeTrue(scenario.inputLanguage == Language.KOTLIN)
+
+        val sourceFiles = listOf(
+            KOTLIN_TESTABLE_FILE,
+            kotlin(
+                "Test.kt",
+                """
+                import com.paulrybitskyi.hiltbinder.BindType
+                
+                @BindType(to = Testable::class)
+                object Test : Testable
+                """.trimIndent()
+            )
+        )
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds Kotlin object class implicitly to its superclass`(scenario: Scenario) {
+        Assume.assumeTrue(scenario.inputLanguage == Language.KOTLIN)
+
+        val sourceFiles = listOf(
+            KOTLIN_ABSTRACT_TEST_FILE,
+            kotlin(
+                "Test.kt",
+                """
+                import com.paulrybitskyi.hiltbinder.BindType
+                
+                @BindType
+                object Test : AbstractTest()
+                """.trimIndent()
+            )
+        )
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  AbstractTest bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): AbstractTest
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds Kotlin object class explicitly to its superclass`(scenario: Scenario) {
+        Assume.assumeTrue(scenario.inputLanguage == Language.KOTLIN)
+
+        val sourceFiles = listOf(
+            KOTLIN_ABSTRACT_TEST_FILE,
+            kotlin(
+                "Test.kt",
+                """
+                import com.paulrybitskyi.hiltbinder.BindType
+                
+                @BindType(to = AbstractTest::class)
+                object Test : AbstractTest()
+                """.trimIndent()
+            )
+        )
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  AbstractTest bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): AbstractTest
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class implicitly to its parameterized interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable.java",
+                    "public interface Testable<T> {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType
+                    public class Test implements Testable<Long> {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable.kt",
+                    "interface Testable<T>"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType
+                    class Test : Testable<Long>
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Long;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable<Long> bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Long
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable<Long>
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly to its direct parameterized interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable.java",
+                    "public interface Testable<T> {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Testable.class)
+                    public class Test implements Testable<Long> {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable.kt",
+                    "interface Testable<T>"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Testable::class)
+                    class Test : Testable<Long>
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Long;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable<Long> bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Long
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable<Long>
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly to its indirect parameterized interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable.java",
+                    "public interface Testable<T> {}"
+                ),
+                java(
+                    "UnitTestable.java",
+                    "public interface UnitTestable extends Testable<Float> {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Testable.class)
+                    public class Test implements UnitTestable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable.kt",
+                    "interface Testable<T>"
+                ),
+                kotlin(
+                    "UnitTestable.kt",
+                    "interface UnitTestable : Testable<Float>"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Testable::class)
+                    class Test : UnitTestable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Float;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable<Float> bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Float
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable<Float>
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class implicitly to its parameterized superclass`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "AbstractTest.java",
+                    "public abstract class AbstractTest<T> {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType
+                    public class Test extends AbstractTest<Long> {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "AbstractTest.kt",
+                    "abstract class AbstractTest<T>"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType
+                    class Test : AbstractTest<Long>()
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Long;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  AbstractTest<Long> bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Long
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): AbstractTest<Long>
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly to its direct parameterized superclass`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "AbstractTest.java",
+                    "public abstract class AbstractTest<T> {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = AbstractTest.class)
+                    public class Test extends AbstractTest<Long> {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "AbstractTest.kt",
+                    "abstract class AbstractTest<T>"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = AbstractTest::class)
+                    class Test : AbstractTest<Long>()
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Long;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  AbstractTest<Long> bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Long
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): AbstractTest<Long>
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class explicitly to its indirect parameterized superclass`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "AbstractAbstractTest.java",
+                    "public abstract class AbstractAbstractTest<T> {}"
+                ),
+                java(
+                    "AbstractTest.java",
+                    "public abstract class AbstractTest extends AbstractAbstractTest<Integer> {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = AbstractAbstractTest.class)
+                    public class Test extends AbstractTest {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "AbstractAbstractTest.kt",
+                    "abstract class AbstractAbstractTest<T>"
+                ),
+                kotlin(
+                    "AbstractTest.kt",
+                    "abstract class AbstractTest : AbstractAbstractTest<Int>()"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    
+                    @BindType(to = AbstractAbstractTest::class)
+                    class Test : AbstractTest()
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Integer;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  AbstractAbstractTest<Integer> bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+                
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Int
+                
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): AbstractAbstractTest<Int>
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Binds class to heavily parameterized type`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable.java",
+                    "public interface Testable<T1, T2, T3> {}"
+                ),
+                java(
+                    "Testable1.java",
+                    "public interface Testable1<T1, T2, T3> {}"
+                ),
+                java(
+                    "Testable2.java",
+                    "public interface Testable2<T1, T2, T3> {}"
+                ),
+                java(
+                    "Testable3.java",
+                    "public interface Testable3<T1, T2, T3> {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Testable.class)
+                    public class Test implements Testable<
+                      Testable1<? super Integer, ? super Float, ? super String>,
+                      Testable2<? extends Integer, ? extends Float, ? extends String>,
+                      Testable3<?, ?, ?>
+                    > {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable.kt",
+                    "interface Testable<T1, T2, T3>"
+                ),
+                kotlin(
+                    "Testable1.kt",
+                    "interface Testable1<T1, T2, T3>"
+                ),
+                kotlin(
+                    "Testable2.kt",
+                    "interface Testable2<T1, T2, T3>"
+                ),
+                kotlin(
+                    "Testable3.kt",
+                    "interface Testable3<T1, T2, T3>"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    
+                    @BindType(to = Testable::class)
+                    class Test : Testable<
+                        Testable1<in Int, in Float, in String>,
+                        Testable2<out Int, out Float, out String>,
+                        Testable3<*, *, *>
+                    >
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import java.lang.Float;
+                import java.lang.Integer;
+                import java.lang.String;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable<Testable1<? super Integer, ? super Float, ? super String>, Testable2<? extends Integer, ? extends Float, ? extends String>, Testable3<?, ?, ?>> bind_Test(
+                      Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import kotlin.Float
+                import kotlin.Int
+                import kotlin.String
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable<Testable1<Int, Float, String>, Testable2<Int, Float,
+                      String>, Testable3<*, *, *>>
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Fails to bind class implicitly, which does not have superclass or interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType
+                    public class Test {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType
+                    class Test
+                    """.trimIndent()
+                )
+            )
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.COMPILATION_ERROR)
+        assertThat(result.messages).contains(MESSAGE_PROVIDER.undefinedReturnTypeError())
+    }
+
+
+    @Test
+    fun `Fails to bind class implicitly, which has two interfaces`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable1.java",
+                    "public interface Testable1 {}"
+                ),
+                java(
+                    "Testable2.java",
+                    "public interface Testable2 {}"
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType
+                    public class Test implements Testable1, Testable2 {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable1.kt",
+                    "interface Testable1"
+                ),
+                kotlin(
+                    "Testable2.kt",
+                    "interface Testable2"
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType
+                    class Test : Testable1, Testable2
+                    """.trimIndent()
+                )
+            )
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.COMPILATION_ERROR)
+        assertThat(result.messages).contains(MESSAGE_PROVIDER.undefinedReturnTypeError())
+    }
+
+
+    @Test
+    fun `Fails to bind class implicitly, which has superclass and interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                JAVA_ABSTRACT_TEST_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType
+                    public class Test extends AbstractTest implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                KOTLIN_ABSTRACT_TEST_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType
+                    class Test : AbstractTest(), Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.COMPILATION_ERROR)
+        assertThat(result.messages).contains(MESSAGE_PROVIDER.undefinedReturnTypeError())
+    }
+
+
+    @Test
+    fun `Fails to bind class explicitly, which does not have superclass or interface, to interface`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = Testable.class)
+                    public class Test {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = Testable::class)
+                    class Test
+                    """.trimIndent()
+                )
+            )
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.COMPILATION_ERROR)
+        assertThat(result.messages).contains(MESSAGE_PROVIDER.noSubtypeRelationError("Test", "Testable"))
+    }
+
+
+    @Test
+    fun `Fails to bind class explicitly, which does not have superclass or interface, to class`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_ABSTRACT_TEST_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(to = AbstractTest.class)
+                    public class Test {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_ABSTRACT_TEST_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(to = AbstractTest::class)
+                    class Test
+                    """.trimIndent()
+                )
+            )
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.COMPILATION_ERROR)
+        assertThat(result.messages).contains(MESSAGE_PROVIDER.noSubtypeRelationError("Test", "AbstractTest"))
+    }
+
+
+    @Test
+    fun `Installs binding in predefined component, which is inferred from scope annotation`(scenario: Scenario) {
         for(component in PredefinedHiltComponent.values()) {
             val isViewWithFragmentComponent = (component == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
             val withFragmentBindingAnnotation = if(isViewWithFragmentComponent) {
-                "@$WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME"
+                "@$WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME"
             } else {
                 ""
             }
-
-            val bindingType = forSourceLines(
-                "Test",
-                """
-                import com.paulrybitskyi.hiltbinder.BindType;
-                
-                @${component.scopeQualifiedName}
-                $withFragmentBindingAnnotation
-                @BindType
-                public class Test implements Testable {}
-            """.trimIndent()
-            )
             val predefinedHiltComponent = HiltComponent.Predefined(component)
             val interfaceName = MODULE_INTERFACE_NAME_FACTORY.createInterfaceName(predefinedHiltComponent)
-            val expectedModule = forSourceLines(
+            val sourceFiles = when(scenario.inputLanguage) {
+                Language.JAVA -> listOf(
+                    JAVA_TESTABLE_FILE,
+                    java(
+                        "Test.java",
+                        """
+                        import com.paulrybitskyi.hiltbinder.BindType;
+                        
+                        @${component.scopeQualifiedName}
+                        $withFragmentBindingAnnotation
+                        @BindType
+                        public class Test implements Testable {}
+                        """.trimIndent()
+                    )
+                )
+                Language.KOTLIN -> listOf(
+                    KOTLIN_TESTABLE_FILE,
+                    kotlin(
+                        "Test.kt",
+                        """
+                        import com.paulrybitskyi.hiltbinder.BindType
+                        
+                        @${component.scopeQualifiedName}
+                        $withFragmentBindingAnnotation
+                        @BindType
+                        class Test : Testable
+                        """.trimIndent()
+                    )
+                )
+            }
+            val expectedGeneratedFile = when(scenario.outputLanguage) {
+                Language.JAVA -> """
+                    // Generated by @BindType. Do not modify!
+                    
+                    import dagger.Binds;
+                    import dagger.Module;
+                    import dagger.hilt.InstallIn;
+                    import ${component.qualifiedName};
+                    
+                    @Module
+                    @InstallIn(${component.simpleName}.class)
+                    public interface $interfaceName {
+                      @Binds
+                      Testable bind_Test(Test binding);
+                    }
+                    """.trimIndent()
+                Language.KOTLIN -> """
+                    // Generated by @BindType. Do not modify!
+                    
+                    import dagger.Binds
+                    import dagger.Module
+                    import dagger.hilt.InstallIn
+                    import ${component.qualifiedName}
+                    
+                    @Module
+                    @InstallIn(${component.simpleName}::class)
+                    internal interface $interfaceName {
+                      @Binds
+                      fun bind_Test(binding: Test): Testable
+                    }
+                    """.trimIndent()
+            }
+            val compilation = setupCompilation(sourceFiles, scenario.processorType)
+            val result = compilation.compile()
+            val actualGeneratedFile = compilation.getGeneratedFile(
                 interfaceName,
-                """
-                // Generated by @BindType. Do not modify!
-                
-                import dagger.Binds;
-                import dagger.Module;
-                import dagger.hilt.InstallIn;
-                import ${component.qualifiedName};
-                
-                @Module
-                @InstallIn(${component.simpleName}.class)
-                public interface $interfaceName {
-                  @Binds
-                  Testable bind_Test(Test binding);
-                }
-                """.trimIndent()
+                scenario.outputLanguage
             )
 
-            assertAbout(javaSources())
-                .that(listOf(returnType, bindingType))
-                .processedWith(HiltBinderProcessor())
-                .compilesWithoutError()
-                .and()
-                .generatesSources(expectedModule)
+            assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+            assertThat(actualGeneratedFile.exists()).isTrue()
+            assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
         }
     }
 
 
     @Test
-    fun `Installs binding in predefined component, which is explicitly specified in annotation`() {
-        val returnType = forResource("Testable.java")
-
-        for(predefinedComponent in VALID_ANNOTATION_PREDEFINED_COMPONENTS) {
-            val bindingType = forSourceLines(
-                "Test",
-                """
-                import com.paulrybitskyi.hiltbinder.BindType;
-                
-                @BindType(installIn = BindType.Component.${predefinedComponent.name})
-                public class Test implements Testable {}
-            """.trimIndent()
-            )
+    fun `Installs binding in predefined component, which is explicitly specified in annotation`(scenario: Scenario) {
+        for(predefinedComponent in PREDEFINED_COMPONENTS) {
             val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
             val predefinedHiltComponent = HiltComponent.Predefined(mappedComponent)
             val interfaceName = MODULE_INTERFACE_NAME_FACTORY.createInterfaceName(predefinedHiltComponent)
-            val expectedModule = forSourceLines(
+            val sourceFiles = when(scenario.inputLanguage) {
+                Language.JAVA -> listOf(
+                    JAVA_TESTABLE_FILE,
+                    java(
+                        "Test.java",
+                        """
+                        import com.paulrybitskyi.hiltbinder.BindType;
+                        
+                        @BindType(installIn = BindType.Component.${predefinedComponent.name})
+                        public class Test implements Testable {}
+                        """.trimIndent()
+                    )
+                )
+                Language.KOTLIN -> listOf(
+                    KOTLIN_TESTABLE_FILE,
+                    kotlin(
+                        "Test.kt",
+                        """
+                        import com.paulrybitskyi.hiltbinder.BindType
+                        
+                        @BindType(installIn = BindType.Component.${predefinedComponent.name})
+                        class Test : Testable
+                        """.trimIndent()
+                    )
+                )
+            }
+            val expectedGeneratedFile = when(scenario.outputLanguage) {
+                Language.JAVA -> """
+                    // Generated by @BindType. Do not modify!
+                    
+                    import dagger.Binds;
+                    import dagger.Module;
+                    import dagger.hilt.InstallIn;
+                    import ${mappedComponent.qualifiedName};
+                    
+                    @Module
+                    @InstallIn(${mappedComponent.simpleName}.class)
+                    public interface $interfaceName {
+                      @Binds
+                      Testable bind_Test(Test binding);
+                    }
+                    """.trimIndent()
+                Language.KOTLIN -> """
+                    // Generated by @BindType. Do not modify!
+                    
+                    import dagger.Binds
+                    import dagger.Module
+                    import dagger.hilt.InstallIn
+                    import ${mappedComponent.qualifiedName}
+                    
+                    @Module
+                    @InstallIn(${mappedComponent.simpleName}::class)
+                    internal interface $interfaceName {
+                      @Binds
+                      fun bind_Test(binding: Test): Testable
+                    }
+                    """.trimIndent()
+            }
+            val compilation = setupCompilation(sourceFiles, scenario.processorType)
+            val result = compilation.compile()
+            val actualGeneratedFile = compilation.getGeneratedFile(
                 interfaceName,
-                """
-                // Generated by @BindType. Do not modify!
-                
-                import dagger.Binds;
-                import dagger.Module;
-                import dagger.hilt.InstallIn;
-                import ${mappedComponent.qualifiedName};
-                
-                @Module
-                @InstallIn(${mappedComponent.simpleName}.class)
-                public interface $interfaceName {
-                  @Binds
-                  Testable bind_Test(Test binding);
-                }
-                """.trimIndent()
+                scenario.outputLanguage
             )
 
-            assertAbout(javaSources())
-                .that(listOf(returnType, bindingType))
-                .processedWith(HiltBinderProcessor())
-                .compilesWithoutError()
-                .and()
-                .generatesSources(expectedModule)
+            assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+            assertThat(actualGeneratedFile.exists()).isTrue()
+            assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
         }
     }
 
 
     @Test
-    fun `Installs binding in predefined component, which is specified both by the scope annotation and explicitly`() {
-        val returnType = forResource("Testable.java")
-
-        for(predefinedComponent in VALID_ANNOTATION_PREDEFINED_COMPONENTS) {
+    fun `Installs binding in predefined component, which is specified both by the scope annotation and explicitly`(scenario: Scenario) {
+        for(predefinedComponent in PREDEFINED_COMPONENTS) {
             val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
             val isViewWithFragmentComponent = (mappedComponent == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
             val withFragmentBindingAnnotation = if(isViewWithFragmentComponent) {
-                "@$WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME"
+                "@$WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME"
             } else {
                 ""
             }
-
-            val bindingType = forSourceLines(
-                "Test",
-                """
-                import com.paulrybitskyi.hiltbinder.BindType;
-                
-                @${mappedComponent.scopeQualifiedName}
-                $withFragmentBindingAnnotation
-                @BindType(installIn = BindType.Component.${predefinedComponent.name})
-                public class Test implements Testable {}
-                """.trimIndent()
-            )
             val predefinedHiltComponent = HiltComponent.Predefined(mappedComponent)
             val interfaceName = MODULE_INTERFACE_NAME_FACTORY.createInterfaceName(predefinedHiltComponent)
-            val expectedModule = forSourceLines(
+            val sourceFiles = when(scenario.inputLanguage) {
+                Language.JAVA -> listOf(
+                    JAVA_TESTABLE_FILE,
+                    java(
+                        "Test.java",
+                        """
+                        import com.paulrybitskyi.hiltbinder.BindType;
+                        
+                        @${mappedComponent.scopeQualifiedName}
+                        $withFragmentBindingAnnotation
+                        @BindType(installIn = BindType.Component.${predefinedComponent.name})
+                        public class Test implements Testable {}
+                        """.trimIndent()
+                    )
+                )
+                Language.KOTLIN -> listOf(
+                    KOTLIN_TESTABLE_FILE,
+                    kotlin(
+                        "Test.kt",
+                        """
+                        import com.paulrybitskyi.hiltbinder.BindType
+                        
+                        @${mappedComponent.scopeQualifiedName}
+                        $withFragmentBindingAnnotation
+                        @BindType(installIn = BindType.Component.${predefinedComponent.name})
+                        class Test : Testable
+                        """.trimIndent()
+                    )
+                )
+            }
+            val expectedGeneratedFile = when(scenario.outputLanguage) {
+                Language.JAVA -> """
+                    // Generated by @BindType. Do not modify!
+                    
+                    import dagger.Binds;
+                    import dagger.Module;
+                    import dagger.hilt.InstallIn;
+                    import ${mappedComponent.qualifiedName};
+                    
+                    @Module
+                    @InstallIn(${mappedComponent.simpleName}.class)
+                    public interface $interfaceName {
+                      @Binds
+                      Testable bind_Test(Test binding);
+                    }
+                    """.trimIndent()
+                Language.KOTLIN -> """
+                    // Generated by @BindType. Do not modify!
+                    
+                    import dagger.Binds
+                    import dagger.Module
+                    import dagger.hilt.InstallIn
+                    import ${mappedComponent.qualifiedName}
+                    
+                    @Module
+                    @InstallIn(${mappedComponent.simpleName}::class)
+                    internal interface $interfaceName {
+                      @Binds
+                      fun bind_Test(binding: Test): Testable
+                    }
+                    """.trimIndent()
+            }
+            val compilation = setupCompilation(sourceFiles, scenario.processorType)
+            val result = compilation.compile()
+            val actualGeneratedFile = compilation.getGeneratedFile(
                 interfaceName,
-                """
-                // Generated by @BindType. Do not modify!
-                
-                import dagger.Binds;
-                import dagger.Module;
-                import dagger.hilt.InstallIn;
-                import ${mappedComponent.qualifiedName};
-                
-                @Module
-                @InstallIn(${mappedComponent.simpleName}.class)
-                public interface $interfaceName {
-                  @Binds
-                  Testable bind_Test(Test binding);
-                }
-                """.trimIndent()
+                scenario.outputLanguage
             )
 
-            assertAbout(javaSources())
-                .that(listOf(returnType, bindingType))
-                .processedWith(HiltBinderProcessor())
-                .compilesWithoutError()
-                .and()
-                .generatesSources(expectedModule)
+            assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+            assertThat(actualGeneratedFile.exists()).isTrue()
+            assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
         }
     }
 
 
     @Test
-    fun `Fails to install binding in predefined component, when scope's component and explicit component differs`() {
-        val returnType = forResource("Testable.java")
-
-        for(predefinedComponent in VALID_ANNOTATION_PREDEFINED_COMPONENTS) {
+    fun `Fails to install binding in predefined component, when scope's component and explicit component differs`(scenario: Scenario) {
+        for(predefinedComponent in PREDEFINED_COMPONENTS) {
             val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
             val isViewWithFragmentComponent = (mappedComponent == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
             val withFragmentBindingAnnotation = if(isViewWithFragmentComponent) {
-                "@$WITH_FRAGMENT_BINDINGS_TYPE_CANON_NAME"
+                "@$WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME"
             } else {
                 ""
             }
@@ -608,369 +2634,3213 @@ internal class HiltBinderTest {
                 PredefinedHiltComponent.VIEW -> PredefinedHiltComponent.VIEW_WITH_FRAGMENT
                 PredefinedHiltComponent.VIEW_WITH_FRAGMENT -> PredefinedHiltComponent.SINGLETON
             }
+            val sourceFiles = when(scenario.inputLanguage) {
+                Language.JAVA -> listOf(
+                    JAVA_TESTABLE_FILE,
+                    java(
+                        "Test.java",
+                        """
+                        import com.paulrybitskyi.hiltbinder.BindType;
+                        
+                        @${mappedComponent.scopeQualifiedName}
+                        $withFragmentBindingAnnotation
+                        @BindType(installIn = BindType.Component.${mismatchedExplicitComponent.name})
+                        public class Test implements Testable {}
+                        """.trimIndent()
+                    )
+                )
+                Language.KOTLIN -> listOf(
+                    KOTLIN_TESTABLE_FILE,
+                    kotlin(
+                        "Test.kt",
+                        """
+                        import com.paulrybitskyi.hiltbinder.BindType
+                        
+                        @${mappedComponent.scopeQualifiedName}
+                        $withFragmentBindingAnnotation
+                        @BindType(installIn = BindType.Component.${mismatchedExplicitComponent.name})
+                        class Test : Testable
+                        """.trimIndent()
+                    )
+                )
+            }
+            val compilation = setupCompilation(sourceFiles, scenario.processorType)
+            val result = compilation.compile()
 
-            val bindingType = forSourceLines(
-                "Test",
-                """
-                import com.paulrybitskyi.hiltbinder.BindType;
-                
-                @${mappedComponent.scopeQualifiedName}
-                $withFragmentBindingAnnotation
-                @BindType(installIn = BindType.Component.${mismatchedExplicitComponent.name})
-                public class Test implements Testable {}
-                """.trimIndent()
-            )
-
-            assertAbout(javaSources())
-                .that(listOf(returnType, bindingType))
-                .processedWith(HiltBinderProcessor())
-                .failsToCompile()
-                .withErrorContaining(MESSAGE_PROVIDER.componentMismatchError())
-                .`in`(bindingType)
-                .onLine(6)
+            assertThat(result.exitCode).isEqualTo(ExitCode.COMPILATION_ERROR)
+            assertThat(result.messages).contains(MESSAGE_PROVIDER.componentMismatchError())
         }
     }
 
 
     @Test
-    fun `Installs scoped binding in custom component successfully`() {
-        val returnType = forResource("Testable.java")
-        val customComponent = forResource("42/CustomComponent.java")
-        val customScope = forResource("42/CustomScope.java")
-        val bindingType = forResource("42/Test.java")
-        val expectedModule = forResource("42/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, customComponent, customScope, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Installs unscoped binding in custom component successfully`() {
-        val returnType = forResource("Testable.java")
-        val customComponent = forResource("43/CustomComponent.java")
-        val bindingType = forResource("43/Test.java")
-        val expectedModule = forResource("43/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, customComponent, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Fails to install binding in custom component, when its type is unspecified`() {
-        val interfaceType = forResource("Testable.java")
-        val bindingType = forResource("44/Test.java")
-
-        assertAbout(javaSources())
-            .that(listOf(interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .failsToCompile()
-            .withErrorContaining(MESSAGE_PROVIDER.undefinedCustomComponentError())
-            .`in`(bindingType)
-            .onLine(4)
-    }
-
-
-    @Test
-    fun `Binds class with qualifier to its single interface`() {
-        val returnType = forResource("Testable.java")
-        val bindingType = forResource("22/Test.java")
-        val expectedModule = forResource("22/ExpectedModule.java")
-
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
-    }
-
-
-    @Test
-    fun `Fails to bind class, which is specified to have qualifier, but does not come have it`() {
-        val interfaceType = forResource("Testable.java")
-        val bindingType = forResource("23/Test.java")
-
-        assertAbout(javaSources())
-            .that(listOf(interfaceType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .failsToCompile()
-            .withErrorContaining(MESSAGE_PROVIDER.qualifierAbsentError())
-            .`in`(bindingType)
-            .onLine(4)
-    }
-
-
-    @Test
-    fun `Saves bound classes into multibound set`() {
-        val returnType = forResource("Testable.java")
-        val bindingTypes = listOf(
-            forResource("24/Test1.java"),
-            forResource("24/Test2.java"),
-            forResource("24/Test3.java")
+    fun `Installs scoped binding in custom component successfully`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "CustomScope.java",
+                    """
+                    import java.lang.annotation.RetentionPolicy;
+    
+                    import java.lang.annotation.Retention;
+                    import javax.inject.Scope;
+    
+                    @Scope
+                    @Retention(RetentionPolicy.RUNTIME)
+                    public @interface CustomScope {}
+                    """.trimIndent()
+                ),
+                java(
+                    "CustomComponent.java",
+                    """
+                    import dagger.hilt.DefineComponent;
+                    import dagger.hilt.components.SingletonComponent;
+    
+                    @CustomScope
+                    @DefineComponent(parent = SingletonComponent.class)
+                    public interface CustomComponent {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(
+                      installIn = BindType.Component.CUSTOM,
+                      customComponent = CustomComponent.class
+                    )
+                    @CustomScope
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "CustomComponent.kt",
+                    """
+                    import dagger.hilt.DefineComponent
+                    import dagger.hilt.components.SingletonComponent
+    
+                    @CustomScope
+                    @DefineComponent(parent = SingletonComponent::class)
+                    interface CustomComponent
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "CustomScope.kt",
+                    """
+                    import javax.inject.Scope
+    
+                    @Scope
+                    @Retention(value = AnnotationRetention.RUNTIME)
+                    annotation class CustomScope
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(
+                      installIn = BindType.Component.CUSTOM,
+                      customComponent = CustomComponent::class
+                    )
+                    @CustomScope
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+    
+                @Module
+                @InstallIn(CustomComponent.class)
+                public interface HiltBinder_CustomComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+    
+                @Module
+                @InstallIn(CustomComponent::class)
+                internal interface HiltBinder_CustomComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_CustomComponentModule",
+            scenario.outputLanguage
         )
-        val expectedModule = forResource("24/ExpectedModule.java")
 
-        assertAbout(javaSources())
-            .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Saves bound parameterized classes into multibound set`() {
-        val returnType = forResource("39/Testable.java")
-        val bindingTypes = listOf(
-            forResource("39/Test1.java"),
-            forResource("39/Test2.java"),
-            forResource("39/Test3.java")
+    fun `Installs unscoped binding in custom component successfully`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "CustomComponent.java",
+                    """
+                    import dagger.hilt.DefineComponent;
+                    import dagger.hilt.components.SingletonComponent;
+    
+                    @DefineComponent(parent = SingletonComponent.class)
+                    public interface CustomComponent {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    
+                    @BindType(
+                      installIn = BindType.Component.CUSTOM,
+                      customComponent = CustomComponent.class
+                    )
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "CustomComponent.kt",
+                    """
+                    import dagger.hilt.DefineComponent
+                    import dagger.hilt.components.SingletonComponent
+    
+                    @DefineComponent(parent = SingletonComponent::class)
+                    interface CustomComponent
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(
+                      installIn = BindType.Component.CUSTOM,
+                      customComponent = CustomComponent::class
+                    )
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+    
+                @Module
+                @InstallIn(CustomComponent.class)
+                public interface HiltBinder_CustomComponentModule {
+                  @Binds
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+    
+                @Module
+                @InstallIn(CustomComponent::class)
+                internal interface HiltBinder_CustomComponentModule {
+                  @Binds
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_CustomComponentModule",
+            scenario.outputLanguage
         )
-        val expectedModule = forResource("39/ExpectedModule.java")
 
-        assertAbout(javaSources())
-            .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Saves bound classes into qualified multibound set`() {
-        val returnType = forResource("Testable.java")
-        val bindingTypes = listOf(
-            forResource("25/Test1.java"),
-            forResource("25/Test2.java"),
-            forResource("25/Test3.java")
+    fun `Installs multiple bindings in custom component successfully`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "CustomScope.java",
+                    """
+                    import java.lang.annotation.RetentionPolicy;
+    
+                    import java.lang.annotation.Retention;
+                    import javax.inject.Scope;
+    
+                    @Scope
+                    @Retention(RetentionPolicy.RUNTIME)
+                    public @interface CustomScope {}
+                    """.trimIndent()
+                ),
+                java(
+                    "CustomComponent.java",
+                    """
+                    import dagger.hilt.DefineComponent;
+                    import dagger.hilt.components.SingletonComponent;
+    
+                    @CustomScope
+                    @DefineComponent(parent = SingletonComponent.class)
+                    public interface CustomComponent {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(
+                      installIn = BindType.Component.CUSTOM,
+                      customComponent = CustomComponent.class
+                    )
+                    @CustomScope
+                    public class Test1 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+
+                    @BindType(
+                      installIn = BindType.Component.CUSTOM,
+                      customComponent = CustomComponent.class
+                    )
+                    public class Test2 implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "CustomComponent.kt",
+                    """
+                    import dagger.hilt.DefineComponent
+                    import dagger.hilt.components.SingletonComponent
+    
+                    @CustomScope
+                    @DefineComponent(parent = SingletonComponent::class)
+                    interface CustomComponent
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "CustomScope.kt",
+                    """
+                    import javax.inject.Scope
+    
+                    @Scope
+                    @Retention(value = AnnotationRetention.RUNTIME)
+                    annotation class CustomScope
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(
+                      installIn = BindType.Component.CUSTOM,
+                      customComponent = CustomComponent::class
+                    )
+                    @CustomScope
+                    class Test1 : Testable
+                    
+                    @BindType(
+                      installIn = BindType.Component.CUSTOM,
+                      customComponent = CustomComponent::class
+                    )
+                    class Test2 : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+    
+                @Module
+                @InstallIn(CustomComponent.class)
+                public interface HiltBinder_CustomComponentModule {
+                  @Binds
+                  Testable bind_Test1(Test1 binding);
+                
+                  @Binds
+                  Testable bind_Test2(Test2 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+    
+                @Module
+                @InstallIn(CustomComponent::class)
+                internal interface HiltBinder_CustomComponentModule {
+                  @Binds
+                  fun bind_Test1(binding: Test1): Testable
+                
+                  @Binds
+                  fun bind_Test2(binding: Test2): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_CustomComponentModule",
+            scenario.outputLanguage
         )
-        val expectedModule = forResource("25/ExpectedModule.java")
 
-        assertAbout(javaSources())
-            .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Fails to save bound class, which does not have @MapKey annotation, into multibound map`() {
-        val returnType = forResource("Testable.java")
-        val bindingType = forResource("26/Test.java")
+    fun `Fails to install binding in custom component, when its type is unspecified`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(installIn = BindType.Component.CUSTOM)
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(installIn = BindType.Component.CUSTOM)
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
 
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .failsToCompile()
-            .withErrorContaining(MESSAGE_PROVIDER.noMapKeyError())
-            .`in`(bindingType)
-            .onLine(4)
+        assertThat(result.exitCode).isEqualTo(ExitCode.COMPILATION_ERROR)
+        assertThat(result.messages).contains(MESSAGE_PROVIDER.undefinedCustomComponentError())
     }
 
 
     @Test
-    fun `Saves bound classes into multibound map using standard integer key annotation`() {
-        val returnType = forResource("Testable.java")
-        val bindingTypes = listOf(
-            forResource("27/Test1.java"),
-            forResource("27/Test2.java"),
-            forResource("27/Test3.java")
+    fun `Binds class with predefined qualifier`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    import javax.inject.Named;
+    
+                    @Named("test")
+                    @BindType(withQualifier = true)
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    import javax.inject.Named
+    
+                    @Named("test")
+                    @BindType(withQualifier = true)
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import javax.inject.Named;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @Named("test")
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import javax.inject.Named
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @Named("test")
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
         )
-        val expectedModule = forResource("27/ExpectedModule.java")
 
-        assertAbout(javaSources())
-            .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Saves bound classes into multibound map using standard long key annotation`() {
-        val returnType = forResource("Testable.java")
-        val bindingTypes = listOf(
-            forResource("28/Test1.java"),
-            forResource("28/Test2.java"),
-            forResource("28/Test3.java")
-        )
-        val expectedModule = forResource("28/ExpectedModule.java")
+    fun `Binds class with custom qualifier`(scenario: Scenario) {
+        // TODO (26.05.2021): This test does not work when KSP parses Java
+        // code, since this issue (https://github.com/google/ksp/issues/453)
+        // needs to be resolved for it to run properly.
+        Assume.assumeTrue(Scenario.KSP_JAVA_IN_KOTLIN_OUT != scenario)
 
-        assertAbout(javaSources())
-            .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "CustomQualifier.java",
+                    """
+                    import java.lang.annotation.Retention;
+                    import java.lang.annotation.RetentionPolicy;
+    
+                    import javax.inject.Qualifier;
+    
+                    @Qualifier
+                    @Retention(RetentionPolicy.RUNTIME)
+                    public @interface CustomQualifier {
+    
+                      Type type();
+    
+                      enum Type { ONE }
+    
+                    }
+                    """.trimIndent()
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @CustomQualifier(type = CustomQualifier.Type.ONE)
+                    @BindType(withQualifier = true)
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "CustomQualifier.kt",
+                    """
+                    import javax.inject.Qualifier
+    
+                    @Qualifier
+                    @Retention(AnnotationRetention.RUNTIME)
+                    annotation class CustomQualifier(val type: Type) {
+                    
+                      enum class Type { ONE }
+                      
+                    }
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @CustomQualifier(CustomQualifier.Type.ONE)
+                    @BindType(withQualifier = true)
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @CustomQualifier(
+                      type = CustomQualifier.Type.ONE
+                  )
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @CustomQualifier(CustomQualifier.Type.ONE)
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Saves bound classes into multibound map using standard string key annotation`() {
-        val returnType = forResource("Testable.java")
-        val bindingTypes = listOf(
-            forResource("29/Test1.java"),
-            forResource("29/Test2.java"),
-            forResource("29/Test3.java")
-        )
-        val expectedModule = forResource("29/ExpectedModule.java")
+    fun `Fails to bind class, which is specified to have qualifier, but does not have it`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(withQualifier = true)
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(withQualifier = true)
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
 
-        assertAbout(javaSources())
-            .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.COMPILATION_ERROR)
+        assertThat(result.messages).contains(MESSAGE_PROVIDER.qualifierAbsentError())
     }
 
 
     @Test
-    fun `Saves bound classes into multibound map using standard class key annotation`() {
-        val returnType = forResource("Testable.java")
-        val bindingTypes = listOf(
-            forResource("30/Test1.java"),
-            forResource("30/Test2.java"),
-            forResource("30/Test3.java")
-        )
-        val expectedModule = forResource("30/ExpectedModule.java")
+    fun `Verify that all annotation properties are properly copied in binding method`(scenario: Scenario) {
+        // TODO (26.05.2021): This test does not work when KSP parses Java
+        // code, since this issue (https://github.com/google/ksp/issues/453)
+        // needs to be resolved for it to run properly.
+        Assume.assumeTrue(Scenario.KSP_JAVA_IN_KOTLIN_OUT != scenario)
 
-        assertAbout(javaSources())
-            .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "CustomQualifierType.java",
+                    "public enum CustomQualifierType { ONE, TWO, THREE }"
+                ),
+                java(
+                    "InnerAnno.java",
+                    """
+                    import java.lang.annotation.Retention;
+                    import java.lang.annotation.RetentionPolicy;
+    
+                    @Retention(RetentionPolicy.RUNTIME)
+                    public @interface InnerAnno {
+    
+                      int intValue();
+                      long longValue();
+                      Class<?> classValue();
+    
+                    }
+                    """.trimIndent()
+                ),
+                java(
+                    "CustomQualifierClass.java",
+                    "public class CustomQualifierClass {}"
+                ),
+                java(
+                    "CustomQualifier.java",
+                    """
+                    import java.lang.annotation.Retention;
+                    import java.lang.annotation.RetentionPolicy;
+    
+                    import javax.inject.Qualifier;
+    
+                    @Qualifier
+                    @Retention(RetentionPolicy.RUNTIME)
+                    public @interface CustomQualifier {
+    
+                      boolean boolValue();
+                      byte byteValue();
+                      char charValue();
+                      short shortValue();
+                      int intValue();
+                      long longValue();
+                      float floatValue();
+                      double doubleValue();
+                      String stringValue();
+                      CustomQualifierType enumValue();
+                      InnerAnno annotationValue();
+                      Class<?> classValue();
+                      boolean[] boolArray();
+                      byte[] byteArray();
+                      char[] charArray();
+                      short[] shortArray();
+                      int[] intArray();
+                      long[] longArray();
+                      float[] floatArray();
+                      double[] doubleArray();
+                      String[] stringArray();
+                      CustomQualifierType[] enumArray();
+                      InnerAnno[] annotationArray();
+                      Class<?>[] classArray();
+    
+                    }
+                    """.trimIndent()
+                ),
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @CustomQualifier(
+                      boolValue = true,
+                      byteValue = 10,
+                      charValue = ',',
+                      shortValue = Short.MAX_VALUE,
+                      intValue = -10,
+                      longValue = 100L,
+                      floatValue = -15f,
+                      doubleValue = 50.0,
+                      stringValue = "string",
+                      enumValue = CustomQualifierType.ONE,
+                      annotationValue = @InnerAnno(
+                        intValue = 0,
+                        longValue = 500L,
+                        classValue = CustomQualifierClass.class
+                      ),
+                      classValue = CustomQualifierClass.class,
+                      boolArray = { true, false },
+                      byteArray = { 100, 105 },
+                      charArray = { 'A', 'B', 'C' },
+                      shortArray = { Short.MIN_VALUE, Short.MAX_VALUE },
+                      intArray = { 0, 10, 20 },
+                      longArray = { 10L, 20L, 30L },
+                      floatArray = { Float.MAX_VALUE, Float.MIN_VALUE },
+                      doubleArray = { 100.0, 200.0, 300.0 },
+                      stringArray = { "one", "two", "three" },
+                      enumArray = {
+                        CustomQualifierType.ONE,
+                        CustomQualifierType.TWO,
+                        CustomQualifierType.THREE
+                      },
+                      annotationArray = {
+                        @InnerAnno(
+                          intValue = 0,
+                          longValue = 1L,
+                          classValue = Test.class
+                        ),
+                        @InnerAnno(
+                          intValue = 10,
+                          longValue = 100L,
+                          classValue = Testable.class
+                        )
+                      },
+                      classArray = {
+                        Test.class,
+                        Testable.class,
+                        CustomQualifierClass.class
+                      }
+                    )
+                    @BindType(withQualifier = true)
+                    public class Test implements Testable { }
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "CustomQualifierType.kt",
+                    """
+                    enum class CustomQualifierType {
+                        
+                      ONE,
+                      TWO,
+                      THREE
+                        
+                    }
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "InnerAnno.kt",
+                    """
+                    import kotlin.reflect.KClass
+                        
+                    @Retention(AnnotationRetention.RUNTIME)
+                    annotation class InnerAnno(
+                      val intValue: Int,
+                      val longValue: Long,
+                      val classValue: KClass<*>
+                    )
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "CustomQualifierClass.kt",
+                    "class CustomQualifierClass"
+                ),
+                kotlin(
+                    "CustomQualifier.kt",
+                    """
+                    import kotlin.reflect.KClass
+                    
+                    import javax.inject.Qualifier
+    
+                    @Qualifier
+                    @Retention(AnnotationRetention.RUNTIME)
+                    annotation class CustomQualifier(
+                      val boolValue: Boolean,
+                      val byteValue: Byte,
+                      val charValue: Char,
+                      val shortValue: Short,
+                      val intValue: Int,
+                      val longValue: Long,
+                      val floatValue: Float,
+                      val doubleValue: Double,
+                      val stringValue: String,
+                      val enumValue: CustomQualifierType,
+                      val annotationValue: InnerAnno,
+                      val classValue: KClass<*>,
+                      val boolArray: BooleanArray,
+                      val byteArray: ByteArray,
+                      val charArray: CharArray,
+                      val shortArray: ShortArray,
+                      val intArray: IntArray,
+                      val longArray: LongArray,
+                      val floatArray: FloatArray,
+                      val doubleArray: DoubleArray,
+                      val stringArray: Array<String>,
+                      val enumArray: Array<CustomQualifierType>,
+                      val annotationArray: Array<InnerAnno>,
+                      val classArray: Array<KClass<*>>
+                    )
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @CustomQualifier(
+                      boolValue = true,
+                      byteValue = 10,
+                      charValue = ',',
+                      shortValue = Short.MAX_VALUE,
+                      intValue = -10,
+                      longValue = 100L,
+                      floatValue = -15F,
+                      doubleValue = 50.0,
+                      stringValue = "string",
+                      enumValue = CustomQualifierType.ONE,
+                      annotationValue = InnerAnno(
+                        intValue = 0,
+                        longValue = 500L,
+                        classValue = CustomQualifierClass::class
+                      ),
+                      classValue = CustomQualifierClass::class,
+                      boolArray = [true, false],
+                      byteArray = [100, 105],
+                      charArray = ['A', 'B', 'C'],
+                      shortArray = [Short.MIN_VALUE, Short.MAX_VALUE],
+                      intArray = [0, 10, 20],
+                      longArray = [10L, 20L, 30L],
+                      floatArray = [Float.MAX_VALUE, Float.MIN_VALUE],
+                      doubleArray = [100.0, 200.0, 300.0],
+                      stringArray = ["one", "two", "three"],
+                      enumArray = [
+                        CustomQualifierType.ONE,
+                        CustomQualifierType.TWO,
+                        CustomQualifierType.THREE
+                      ],
+                      annotationArray = [
+                        InnerAnno(
+                          intValue = 0,
+                          longValue = 1L,
+                          classValue = Test::class
+                        ),
+                        InnerAnno(
+                          intValue = 10,
+                          longValue = 100L,
+                          classValue = Testable::class
+                        )
+                      ],
+                      classArray = [
+                        Test::class,
+                        Testable::class,
+                        CustomQualifierClass::class
+                      ]
+                    )
+                    @BindType(withQualifier = true)
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA ->             """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @CustomQualifier(
+                      boolValue = true,
+                      byteValue = 10,
+                      charValue = ',',
+                      shortValue = 32767,
+                      intValue = -10,
+                      longValue = 100,
+                      floatValue = -15.0f,
+                      doubleValue = 50.0,
+                      stringValue = "string",
+                      enumValue = CustomQualifierType.ONE,
+                      annotationValue = @InnerAnno(intValue = 0, longValue = 500, classValue = CustomQualifierClass.class),
+                      classValue = CustomQualifierClass.class,
+                      boolArray = {
+                          true,
+                          false
+                      },
+                      byteArray = {
+                          100,
+                          105
+                      },
+                      charArray = {
+                          'A',
+                          'B',
+                          'C'
+                      },
+                      shortArray = {
+                          -32768,
+                          32767
+                      },
+                      intArray = {
+                          0,
+                          10,
+                          20
+                      },
+                      longArray = {
+                          10,
+                          20,
+                          30
+                      },
+                      floatArray = {
+                          3.4028235E38f,
+                          1.4E-45f
+                      },
+                      doubleArray = {
+                          100.0,
+                          200.0,
+                          300.0
+                      },
+                      stringArray = {
+                          "one",
+                          "two",
+                          "three"
+                      },
+                      enumArray = {
+                          CustomQualifierType.ONE,
+                          CustomQualifierType.TWO,
+                          CustomQualifierType.THREE
+                      },
+                      annotationArray = {
+                          @InnerAnno(intValue = 0, longValue = 1, classValue = Test.class),
+                          @InnerAnno(intValue = 10, longValue = 100, classValue = Testable.class)
+                      },
+                      classArray = {
+                          Test.class,
+                          Testable.class,
+                          CustomQualifierClass.class
+                      }
+                  )
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @CustomQualifier(
+                    boolValue = true,
+                    byteValue = 10,
+                    charValue = ',',
+                    shortValue = 32767,
+                    intValue = -10,
+                    longValue = 100,
+                    floatValue = -15.0f,
+                    doubleValue = 50.0,
+                    stringValue = "string",
+                    enumValue = CustomQualifierType.ONE,
+                    annotationValue = InnerAnno(intValue = 0, longValue = 500, classValue =
+                          CustomQualifierClass::class),
+                    classValue = CustomQualifierClass::class,
+                    boolArray = [true, false],
+                    byteArray = [100, 105],
+                    charArray = ['A', 'B', 'C'],
+                    shortArray = [-32768, 32767],
+                    intArray = [0, 10, 20],
+                    longArray = [10, 20, 30],
+                    floatArray = [3.4028235E38f, 1.4E-45f],
+                    doubleArray = [100.0, 200.0, 300.0],
+                    stringArray = ["one", "two", "three"],
+                    enumArray = [CustomQualifierType.ONE, CustomQualifierType.TWO, CustomQualifierType.THREE],
+                    annotationArray = [InnerAnno(intValue = 0, longValue = 1, classValue = Test::class),
+                        InnerAnno(intValue = 10, longValue = 100, classValue = Testable::class)],
+                    classArray = [Test::class, Testable::class, CustomQualifierClass::class]
+                  )
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Saves bound parameterized classes into multibound map using standard class key annotation`() {
-        val returnType = forResource("40/Testable.java")
-        val bindingTypes = listOf(
-            forResource("40/Test1.java"),
-            forResource("40/Test2.java"),
-            forResource("40/Test3.java")
+    fun `Saves bound classes into multibound set`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    public class Test1 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    public class Test2 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    public class Test3 implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    class Test1 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    class Test2 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    class Test3 : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoSet;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoSet
+                  Testable bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoSet
+                  Testable bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoSet
+                  Testable bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoSet
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoSet
+                  fun bind_Test1(binding: Test1): Testable
+    
+                  @Binds
+                  @IntoSet
+                  fun bind_Test2(binding: Test2): Testable
+    
+                  @Binds
+                  @IntoSet
+                  fun bind_Test3(binding: Test3): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
         )
-        val expectedModule = forResource("40/ExpectedModule.java")
 
-        assertAbout(javaSources())
-            .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Saves bound classes into multibound map using custom @MapKey annotation`() {
-        val returnType = forResource("Testable.java")
-        val customMapKey = forResource("31/TestMapKey.java")
-        val bindingTypes = listOf(
-            forResource("31/Test1.java"),
-            forResource("31/Test2.java"),
-            forResource("31/Test3.java")
+    fun `Saves bound parameterized classes into multibound set`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable.java",
+                    "public interface Testable<T1> {}"
+                ),
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    public class Test1 implements Testable<Integer> {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                     import com.paulrybitskyi.hiltbinder.BindType;
+    
+                     @BindType(contributesTo = BindType.Collection.SET)
+                     public class Test2 implements Testable<Long> {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    public class Test3 implements Testable<Float> {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable.kt",
+                    "interface Testable<T1>"
+                ),
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    class Test1 : Testable<Int>
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    class Test2 : Testable<Long>
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(contributesTo = BindType.Collection.SET)
+                    class Test3 : Testable<Float>
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoSet;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoSet
+                  Testable<?> bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoSet
+                  Testable<?> bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoSet
+                  Testable<?> bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoSet
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoSet
+                  fun bind_Test1(binding: Test1): Testable<*>
+    
+                  @Binds
+                  @IntoSet
+                  fun bind_Test2(binding: Test2): Testable<*>
+    
+                  @Binds
+                  @IntoSet
+                  fun bind_Test3(binding: Test3): Testable<*>
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
         )
-        val expectedModule = forResource("31/ExpectedModule.java")
 
-        assertAbout(javaSources())
-            .that(listOf(returnType, customMapKey) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Saves bound parameterized classes into multibound map using custom @MapKey annotation`() {
-        val returnType = forResource("41/Testable.java")
-        val customMapKey = forResource("41/TestMapKey.java")
-        val bindingTypes = listOf(
-            forResource("41/Test1.java"),
-            forResource("41/Test2.java"),
-            forResource("41/Test3.java")
+    fun `Saves bound classes into qualified multibound set`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    import javax.inject.Named;
+    
+                    @Named("one")
+                    @BindType(
+                      contributesTo = BindType.Collection.SET,
+                      withQualifier = true
+                    )
+                    public class Test1 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    import javax.inject.Named;
+    
+                    @Named("two")
+                    @BindType(
+                      contributesTo = BindType.Collection.SET,
+                      withQualifier = true
+                    )
+                    public class Test2 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                     import com.paulrybitskyi.hiltbinder.BindType;
+    
+                     import javax.inject.Named;
+    
+                     @Named("three")
+                     @BindType(
+                       contributesTo = BindType.Collection.SET,
+                       withQualifier = true
+                     )
+                     public class Test3 implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    import javax.inject.Named
+    
+                    @Named("one")
+                    @BindType(
+                      contributesTo = BindType.Collection.SET,
+                      withQualifier = true
+                    )
+                    class Test1 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    import javax.inject.Named
+    
+                    @Named("two")
+                    @BindType(
+                      contributesTo = BindType.Collection.SET,
+                      withQualifier = true
+                    )
+                    class Test2 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    import javax.inject.Named
+    
+                    @Named("three")
+                    @BindType(
+                      contributesTo = BindType.Collection.SET,
+                      withQualifier = true
+                    )
+                    class Test3 : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoSet;
+                import javax.inject.Named;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoSet
+                  @Named("one")
+                  Testable bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoSet
+                  @Named("two")
+                  Testable bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoSet
+                  @Named("three")
+                  Testable bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoSet
+                import javax.inject.Named
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoSet
+                  @Named("one")
+                  fun bind_Test1(binding: Test1): Testable
+    
+                  @Binds
+                  @IntoSet
+                  @Named("two")
+                  fun bind_Test2(binding: Test2): Testable
+    
+                  @Binds
+                  @IntoSet
+                  @Named("three")
+                  fun bind_Test3(binding: Test3): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
         )
-        val expectedModule = forResource("41/ExpectedModule.java")
 
-        assertAbout(javaSources())
-            .that(listOf(returnType, customMapKey) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Saves bound classes into qualified multibound map`() {
-        val returnType = forResource("Testable.java")
-        val bindingTypes = listOf(
-            forResource("32/Test1.java"),
-            forResource("32/Test2.java"),
-            forResource("32/Test3.java")
-        )
-        val expectedModule = forResource("32/ExpectedModule.java")
+    fun `Fails to save bound class, which does not have @MapKey annotation, into multibound map`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
 
-        assertAbout(javaSources())
-            .that(listOf(returnType) + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.COMPILATION_ERROR)
+        assertThat(result.messages).contains(MESSAGE_PROVIDER.noMapKeyError())
     }
 
 
     @Test
-    fun `Verify that binding method is properly formatted`() {
-        val returnType = forResource("33/Testable.java")
-        val bindingType = forResource("33/Test.java")
-        val expectedModule = forResource("33/ExpectedModule.java")
+    fun `Saves bound classes into multibound map using standard integer key annotation`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapIntKey;
+    
+                    @MapIntKey(1)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test1 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapIntKey;
+    
+                    @MapIntKey(2)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test2 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapIntKey;
+    
+                    @MapIntKey(3)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test3 implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapIntKey
+    
+                    @MapIntKey(1)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test1 : Testable 
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapIntKey
+    
+                    @MapIntKey(2)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test2 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapIntKey
+    
+                    @MapIntKey(3)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test3 : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapIntKey;
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoMap;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapIntKey(1)
+                  Testable bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapIntKey(2)
+                  Testable bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapIntKey(3)
+                  Testable bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapIntKey
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoMap
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapIntKey(1)
+                  fun bind_Test1(binding: Test1): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @MapIntKey(2)
+                  fun bind_Test2(binding: Test2): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @MapIntKey(3)
+                  fun bind_Test3(binding: Test3): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
 
-        assertAbout(javaSources())
-            .that(listOf(returnType, bindingType))
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
     }
 
 
     @Test
-    fun `Verify that common prefix package name is used based on bindings of component`() {
-        val returnTypes = listOf(
-            forResource("34/Testable1.java"),
-            forResource("34/Testable2.java"),
-            forResource("34/Testable3.java")
+    fun `Saves bound classes into multibound map using standard long key annotation`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapLongKey;
+    
+                    @MapLongKey(1L)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test1 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapLongKey;
+    
+                    @MapLongKey(2L)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test2 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapLongKey;
+    
+                    @MapLongKey(3L)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test3 implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapLongKey
+    
+                    @MapLongKey(1L)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test1 : Testable 
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapLongKey
+    
+                    @MapLongKey(2L)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test2 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapLongKey
+    
+                    @MapLongKey(3L)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test3 : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapLongKey;
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoMap;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapLongKey(1)
+                  Testable bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapLongKey(2)
+                  Testable bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapLongKey(3)
+                  Testable bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapLongKey
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoMap
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapLongKey(1)
+                  fun bind_Test1(binding: Test1): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @MapLongKey(2)
+                  fun bind_Test2(binding: Test2): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @MapLongKey(3)
+                  fun bind_Test3(binding: Test3): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
         )
-        val bindingTypes = listOf(
-            forResource("34/Test1.java"),
-            forResource("34/Test2.java"),
-            forResource("34/Test3.java")
-        )
-        val expectedModule = forResource("34/ExpectedModule.java")
 
-        assertAbout(javaSources())
-            .that(returnTypes + bindingTypes)
-            .processedWith(HiltBinderProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(expectedModule)
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Saves bound classes into multibound map using standard string key annotation`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapStringKey;
+    
+                    @MapStringKey("one")
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test1 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapStringKey;
+    
+                    @MapStringKey("two")
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test2 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapStringKey;
+    
+                    @MapStringKey("three")
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test3 implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapStringKey
+    
+                    @MapStringKey("one")
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test1 : Testable 
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapStringKey
+    
+                    @MapStringKey("two")
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test2 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapStringKey
+    
+                    @MapStringKey("three")
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test3 : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapStringKey;
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoMap;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapStringKey("one")
+                  Testable bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapStringKey("two")
+                  Testable bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapStringKey("three")
+                  Testable bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapStringKey
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoMap
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapStringKey("one")
+                  fun bind_Test1(binding: Test1): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @MapStringKey("two")
+                  fun bind_Test2(binding: Test2): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @MapStringKey("three")
+                  fun bind_Test3(binding: Test3): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Saves bound classes into multibound map using standard class key annotation`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+    
+                    @MapClassKey(Test1.class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test1 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+    
+                    @MapClassKey(Test2.class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test2 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+    
+                    @MapClassKey(Test3.class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test3 implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+    
+                    @MapClassKey(Test1::class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test1 : Testable 
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+    
+                    @MapClassKey(Test2::class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test2 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+    
+                    @MapClassKey(Test3::class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test3 : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoMap;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test1.class)
+                  Testable bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test2.class)
+                  Testable bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test3.class)
+                  Testable bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoMap
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test1::class)
+                  fun bind_Test1(binding: Test1): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test2::class)
+                  fun bind_Test2(binding: Test2): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test3::class)
+                  fun bind_Test3(binding: Test3): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Saves bound parameterized classes into multibound map using standard class key annotation`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable.java",
+                    "public interface Testable<T1, T2> {}"
+                ),
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+    
+                    @MapClassKey(Test1.class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test1 implements Testable<Long, Long> {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+    
+                    @MapClassKey(Test2.class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test2 implements Testable<Integer, Integer> {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                     import com.paulrybitskyi.hiltbinder.BindType;
+                     import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+    
+                     @MapClassKey(Test3.class)
+                     @BindType(contributesTo = BindType.Collection.MAP)
+                     public class Test3 implements Testable<Float, Float> {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable.kt",
+                    "interface Testable<T1, T2>"
+                ),
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+    
+                    @MapClassKey(Test1::class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test1 : Testable<Long, Long>
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+    
+                    @MapClassKey(Test2::class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test2 : Testable<Int, Int>
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+    
+                    @MapClassKey(Test3::class)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test3 : Testable<Float, Float>
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoMap;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test1.class)
+                  Testable<?, ?> bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test2.class)
+                  Testable<?, ?> bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test3.class)
+                  Testable<?, ?> bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoMap
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test1::class)
+                  fun bind_Test1(binding: Test1): Testable<*, *>
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test2::class)
+                  fun bind_Test2(binding: Test2): Testable<*, *>
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test3::class)
+                  fun bind_Test3(binding: Test3): Testable<*, *>
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Saves bound classes into multibound map using custom @MapKey annotation`(scenario: Scenario) {
+        // TODO (26.05.2021): This test does not work when KSP parses Java
+        // code, since this issue (https://github.com/google/ksp/issues/453)
+        // needs to be resolved for it to run properly.
+        Assume.assumeTrue(Scenario.KSP_JAVA_IN_KOTLIN_OUT != scenario)
+
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "TestMapKey.java",
+                    """
+                    import java.lang.annotation.ElementType;
+                    import java.lang.annotation.Retention;
+                    import java.lang.annotation.RetentionPolicy;
+    
+                    import dagger.MapKey;
+    
+                    @MapKey
+                    @Retention(RetentionPolicy.RUNTIME)
+                    public @interface TestMapKey {
+    
+                      Type value();
+    
+                      enum Type { ONE, TWO, THREE }
+    
+                    }
+                    """.trimIndent()
+                ),
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @TestMapKey(TestMapKey.Type.ONE)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test1 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @TestMapKey(TestMapKey.Type.TWO)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test2 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @TestMapKey(TestMapKey.Type.THREE)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test3 implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "TestMapKey.kt",
+                    """
+                    import dagger.MapKey
+                    
+                    @MapKey
+                    @Retention(AnnotationRetention.RUNTIME)
+                    annotation class TestMapKey(val value: Type) {
+                        
+                      enum class Type {
+    
+                        ONE,
+                        TWO,
+                        THREE
+    
+                      }
+    
+                    }
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @TestMapKey(TestMapKey.Type.ONE)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test1 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @TestMapKey(TestMapKey.Type.TWO)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test2 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @TestMapKey(TestMapKey.Type.THREE)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test3 : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoMap;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.ONE)
+                  Testable bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.TWO)
+                  Testable bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.THREE)
+                  Testable bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoMap
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.ONE)
+                  fun bind_Test1(binding: Test1): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.TWO)
+                  fun bind_Test2(binding: Test2): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.THREE)
+                  fun bind_Test3(binding: Test3): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Saves bound parameterized classes into multibound map using custom @MapKey annotation`(scenario: Scenario) {
+        // TODO (26.05.2021): This test does not work when KSP parses Java
+        // code, since this issue (https://github.com/google/ksp/issues/453)
+        // needs to be resolved for it to run properly.
+        Assume.assumeTrue(Scenario.KSP_JAVA_IN_KOTLIN_OUT != scenario)
+
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable.java",
+                    "public interface Testable<T1, T2, T3> {}"
+                ),
+                java(
+                    "TestMapKey.java",
+                    """
+                    import java.lang.annotation.ElementType;
+                    import java.lang.annotation.Retention;
+                    import java.lang.annotation.RetentionPolicy;
+    
+                    import dagger.MapKey;
+    
+                    @MapKey
+                    @Retention(RetentionPolicy.RUNTIME)
+                    public @interface TestMapKey {
+    
+                      Type value();
+    
+                      enum Type { ONE, TWO, THREE }
+    
+                    }
+                    """.trimIndent()
+                ),
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @TestMapKey(TestMapKey.Type.ONE)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test1 implements Testable<Integer, Integer, Integer> {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @TestMapKey(TestMapKey.Type.TWO)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test2 implements Testable<Float, Float, Float> {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @TestMapKey(TestMapKey.Type.THREE)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    public class Test3 implements Testable<Double, Double, Double> {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable.kt",
+                    "interface Testable<T1, T2, T3>"
+                ),
+                kotlin(
+                    "TestMapKey.kt",
+                    """
+                    import dagger.MapKey
+                    
+                    @MapKey
+                    @Retention(AnnotationRetention.RUNTIME)
+                    annotation class TestMapKey(val value: Type) {
+                        
+                      enum class Type {
+    
+                        ONE,
+                        TWO,
+                        THREE
+    
+                      }
+    
+                    }
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @TestMapKey(TestMapKey.Type.ONE)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test1 : Testable<Int, Int, Int>
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @TestMapKey(TestMapKey.Type.TWO)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test2 : Testable<Float, Float, Float>
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @TestMapKey(TestMapKey.Type.THREE)
+                    @BindType(contributesTo = BindType.Collection.MAP)
+                    class Test3 : Testable<Double, Double, Double>
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoMap;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.ONE)
+                  Testable<?, ?, ?> bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.TWO)
+                  Testable<?, ?, ?> bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.THREE)
+                  Testable<?, ?, ?> bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoMap
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.ONE)
+                  fun bind_Test1(binding: Test1): Testable<*, *, *>
+    
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.TWO)
+                  fun bind_Test2(binding: Test2): Testable<*, *, *>
+    
+                  @Binds
+                  @IntoMap
+                  @TestMapKey(TestMapKey.Type.THREE)
+                  fun bind_Test3(binding: Test3): Testable<*, *, *>
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Saves bound classes into qualified multibound map`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test1.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+    
+                    import javax.inject.Named;
+    
+                    @BindType(
+                      contributesTo = BindType.Collection.MAP,
+                      withQualifier = true
+                    )
+                    @MapClassKey(Test1.class)
+                    @Named("one")
+                    public class Test1 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+    
+                    import javax.inject.Named;
+    
+                    @BindType(
+                      contributesTo = BindType.Collection.MAP,
+                      withQualifier = true
+                    )
+                    @MapClassKey(Test2.class)
+                    @Named("two")
+                    public class Test2 implements Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+    
+                    import javax.inject.Named;
+    
+                    @BindType(
+                      contributesTo = BindType.Collection.MAP,
+                      withQualifier = true
+                    )
+                    @MapClassKey(Test3.class)
+                    @Named("three")
+                    public class Test3 implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test1.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+    
+                    import javax.inject.Named
+    
+                    @BindType(
+                      contributesTo = BindType.Collection.MAP,
+                      withQualifier = true
+                    )
+                    @MapClassKey(Test1::class)
+                    @Named("one")
+                    class Test1 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+    
+                    import javax.inject.Named
+    
+                    @BindType(
+                      contributesTo = BindType.Collection.MAP,
+                      withQualifier = true
+                    )
+                    @MapClassKey(Test2::class)
+                    @Named("two")
+                    class Test2 : Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+                    
+                    import javax.inject.Named
+                    
+                    @BindType(
+                      contributesTo = BindType.Collection.MAP,
+                      withQualifier = true
+                    )
+                    @MapClassKey(Test3::class)
+                    @Named("three")
+                    class Test3 : Testable   
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoMap;
+                import javax.inject.Named;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test1.class)
+                  @Named("one")
+                  Testable bind_Test1(Test1 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test2.class)
+                  @Named("two")
+                  Testable bind_Test2(Test2 binding);
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test3.class)
+                  @Named("three")
+                  Testable bind_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+    
+                import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoMap
+                import javax.inject.Named
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test1::class)
+                  @Named("one")
+                  fun bind_Test1(binding: Test1): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test2::class)
+                  @Named("two")
+                  fun bind_Test2(binding: Test2): Testable
+    
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test3::class)
+                  @Named("three")
+                  fun bind_Test3(binding: Test3): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Verify that binding method is properly formatted`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable.java",
+                    """
+                    package com.paulrybitskyi.hiltbinder.test;
+    
+                    public interface Testable {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test.java",
+                    """
+                    package com.paulrybitskyi.hiltbinder.test;
+    
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    import javax.inject.Named;
+    
+                    @Named("test")
+                    @BindType(withQualifier = true)
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable.kt",
+                    """
+                    package com.paulrybitskyi.hiltbinder.test
+    
+                    interface Testable
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test.kt",
+                    """
+                    package com.paulrybitskyi.hiltbinder.test
+    
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    import javax.inject.Named
+    
+                    @Named("test")
+                    @BindType(withQualifier = true)
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+                
+                package com.paulrybitskyi.hiltbinder.test;
+    
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import javax.inject.Named;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @Named("test")
+                  Testable bind_com_paulrybitskyi_hiltbinder_test_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+                
+                package com.paulrybitskyi.hiltbinder.test
+    
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import javax.inject.Named
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @Named("test")
+                  fun bind_com_paulrybitskyi_hiltbinder_test_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "com/paulrybitskyi/hiltbinder/test/HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    @Test
+    fun `Verify that common prefix package name is used based on bindings of component`(scenario: Scenario) {
+        val sourceFiles = when(scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                java(
+                    "Testable1.java",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.feature1.interfaces.testing;
+    
+                    public interface Testable1 {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Testable2.java",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.feature2.repositories.model;
+    
+                    public interface Testable2 {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Testable3.java",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.utils.interfaces;
+    
+                    public interface Testable3 {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test1.java",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.feature1.interfaces.testing;
+    
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType
+                    public class Test1 implements Testable1 {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test2.java",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.feature2.repositories.model;
+    
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType
+                    public class Test2 implements Testable2 {}
+                    """.trimIndent()
+                ),
+                java(
+                    "Test3.java",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.utils.interfaces;
+    
+                    import com.paulrybitskyi.hiltbinder.BindType;
+    
+                    @BindType
+                    public class Test3 implements Testable3 {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                kotlin(
+                    "Testable1.kt",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.feature1.interfaces.testing
+    
+                    interface Testable1
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Testable2.kt",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.feature2.repositories.model
+    
+                    interface Testable2
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Testable3.kt",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.utils.interfaces
+    
+                    interface Testable3
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test1.kt",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.feature1.interfaces.testing
+    
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType
+                    class Test1 : Testable1
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test2.kt",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.feature2.repositories.model
+    
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType
+                    class Test2 : Testable2
+                    """.trimIndent()
+                ),
+                kotlin(
+                    "Test3.kt",
+                    """
+                    package com.paulrybitskyi.hiltbinder.testing.utils.interfaces
+    
+                    import com.paulrybitskyi.hiltbinder.BindType
+    
+                    @BindType
+                    class Test3 : Testable3
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when(scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+                
+                package com.paulrybitskyi.hiltbinder.testing;
+    
+                import com.paulrybitskyi.hiltbinder.testing.feature1.interfaces.testing.Test1;
+                import com.paulrybitskyi.hiltbinder.testing.feature1.interfaces.testing.Testable1;
+                import com.paulrybitskyi.hiltbinder.testing.feature2.repositories.model.Test2;
+                import com.paulrybitskyi.hiltbinder.testing.feature2.repositories.model.Testable2;
+                import com.paulrybitskyi.hiltbinder.testing.utils.interfaces.Test3;
+                import com.paulrybitskyi.hiltbinder.testing.utils.interfaces.Testable3;
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+    
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  Testable1 bind_com_paulrybitskyi_hiltbinder_testing_feature1_interfaces_testing_Test1(
+                      Test1 binding);
+    
+                  @Binds
+                  Testable2 bind_com_paulrybitskyi_hiltbinder_testing_feature2_repositories_model_Test2(
+                      Test2 binding);
+    
+                  @Binds
+                  Testable3 bind_com_paulrybitskyi_hiltbinder_testing_utils_interfaces_Test3(Test3 binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+                
+                package com.paulrybitskyi.hiltbinder.testing
+    
+                import com.paulrybitskyi.hiltbinder.testing.feature1.interfaces.testing.Test1
+                import com.paulrybitskyi.hiltbinder.testing.feature1.interfaces.testing.Testable1
+                import com.paulrybitskyi.hiltbinder.testing.feature2.repositories.model.Test2
+                import com.paulrybitskyi.hiltbinder.testing.feature2.repositories.model.Testable2
+                import com.paulrybitskyi.hiltbinder.testing.utils.interfaces.Test3
+                import com.paulrybitskyi.hiltbinder.testing.utils.interfaces.Testable3
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+    
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  fun bind_com_paulrybitskyi_hiltbinder_testing_feature1_interfaces_testing_Test1(
+                      binding: Test1): Testable1
+    
+                  @Binds
+                  fun bind_com_paulrybitskyi_hiltbinder_testing_feature2_repositories_model_Test2(
+                      binding: Test2): Testable2
+    
+                  @Binds
+                  fun bind_com_paulrybitskyi_hiltbinder_testing_utils_interfaces_Test3(
+                      binding: Test3): Testable3
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "com/paulrybitskyi/hiltbinder/testing/HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+
+    private fun setupCompilation(
+        sourceFiles: List<SourceFile>,
+        processorType: ProcessorType
+    ): KotlinCompilation {
+        val compilation = KotlinCompilation().apply {
+            sources = sourceFiles
+            verbose = false
+            inheritClassPath = true
+
+            when(processorType) {
+                ProcessorType.JAVAC -> annotationProcessors = listOf(HiltBinderJavacProcessor())
+                ProcessorType.KSP -> symbolProcessorProviders = listOf(HiltBinderKspProcessor.Provider())
+            }
+        }
+
+        return compilation
+    }
+
+
+    private fun KotlinCompilation.getGeneratedFile(path: String, language: Language): File {
+        return when(language) {
+            Language.JAVA -> File(kaptSourceDir, "$path.java")
+            Language.KOTLIN -> File(kspSourcesDir, "kotlin/$path.kt")
+        }
     }
 
 

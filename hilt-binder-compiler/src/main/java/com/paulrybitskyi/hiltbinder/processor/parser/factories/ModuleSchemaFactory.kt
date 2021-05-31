@@ -16,16 +16,16 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser.factories
 
+import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 import com.paulrybitskyi.hiltbinder.processor.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.model.ModuleSchema
 import com.paulrybitskyi.hiltbinder.processor.model.qualifiedName
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
 
 internal class ModuleSchemaFactory(
-    private val moduleInterfaceNameFactory: ModuleInterfaceNameFactory,
-    private val elementUtils: Elements
+    private val processingEnv: XProcessingEnv,
+    private val moduleInterfaceNameFactory: ModuleInterfaceNameFactory
 ) {
 
 
@@ -38,13 +38,13 @@ internal class ModuleSchemaFactory(
             packageName = packageName,
             interfaceName = moduleInterfaceNameFactory.createInterfaceName(component),
             componentType = component.toTypeElement(),
-            bindings = bindings
+            bindings = bindings.sortedBy(BindingSchema::methodName)
         )
     }
 
 
-    private fun HiltComponent.toTypeElement(): TypeElement {
-        return elementUtils.getTypeElement(qualifiedName)
+    private fun HiltComponent.toTypeElement(): XTypeElement {
+        return checkNotNull(processingEnv.getTypeElement(qualifiedName))
     }
 
 

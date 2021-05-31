@@ -16,38 +16,39 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
-import com.paulrybitskyi.hiltbinder.BindType
+import com.paulrybitskyi.hiltbinder.BindType.Collection
+import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 import com.paulrybitskyi.hiltbinder.processor.model.ContributionType
-import com.paulrybitskyi.hiltbinder.processor.model.MAP_KEY_TYPE_CANON_NAME
+import com.paulrybitskyi.hiltbinder.processor.model.MAP_KEY_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
-import com.paulrybitskyi.hiltbinder.processor.utils.getAnnoMarkedWithSpecificAnno
-import com.paulrybitskyi.hiltbinder.processor.utils.getType
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import com.paulrybitskyi.hiltbinder.processor.utils.getAnnoMarkedWithAnotherAnno
+import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotation
+import com.paulrybitskyi.hiltbinder.processor.utils.getContributesToArg
+import com.paulrybitskyi.hiltbinder.processor.utils.getTypeUnsafely
 
 internal class ContributionTypeDetector(
-    private val elementUtils: Elements,
-    private val typeUtils: Types,
+    private val processingEnv: XProcessingEnv,
     private val messageProvider: MessageProvider
 ) {
 
 
-    fun detectType(annotatedElement: TypeElement): ContributionType? {
-        val bindAnnotation = annotatedElement.getAnnotation(BindType::class.java)
+    fun detectType(annotatedElement: XTypeElement): ContributionType? {
+        val bindAnnotation = annotatedElement.getBindAnnotation()
+        val collection = bindAnnotation.getContributesToArg()
 
-        return when(bindAnnotation.contributesTo) {
-            BindType.Collection.NONE -> null
-            BindType.Collection.SET -> ContributionType.Set
-            BindType.Collection.MAP -> annotatedElement.createMapContributionType()
+        return when(collection) {
+            Collection.NONE -> null
+            Collection.SET -> ContributionType.Set
+            Collection.MAP -> annotatedElement.createMapContributionType()
         }
     }
 
 
-    private fun TypeElement.createMapContributionType(): ContributionType {
-        val daggerMapKeyType = elementUtils.getType(MAP_KEY_TYPE_CANON_NAME)
-        val mapKeyAnnotation = typeUtils.getAnnoMarkedWithSpecificAnno(this, daggerMapKeyType)
+    private fun XTypeElement.createMapContributionType(): ContributionType {
+        val daggerMapKeyType = processingEnv.getTypeUnsafely(MAP_KEY_TYPE_QUALIFIED_NAME)
+        val mapKeyAnnotation = getAnnoMarkedWithAnotherAnno(daggerMapKeyType)
             ?: throw HiltBinderException(messageProvider.noMapKeyError(), this)
 
         return ContributionType.Map(mapKeyAnnotation)

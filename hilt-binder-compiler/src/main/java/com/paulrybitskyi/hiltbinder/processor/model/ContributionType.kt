@@ -16,12 +16,12 @@
 
 package com.paulrybitskyi.hiltbinder.processor.model
 
-import javax.lang.model.element.AnnotationMirror
+import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
 
 internal sealed class ContributionType {
 
     object Set : ContributionType()
 
-    class Map(val mapKeyAnnotation: AnnotationMirror): ContributionType()
+    class Map(val mapKeyAnnotation: XAnnotation): ContributionType()
 
 }

@@ -34,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <com.paulrybitskyi.hiltbinder.sample.views.MoodAskerView
+    <com.paulrybitskyi.hiltbinder.sample.views.withfragment.MoodAskerView
         android:id="@+id/moodAskerView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

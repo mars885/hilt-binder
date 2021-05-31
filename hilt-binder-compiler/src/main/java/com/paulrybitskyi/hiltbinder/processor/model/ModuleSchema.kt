@@ -16,11 +16,11 @@
 
 package com.paulrybitskyi.hiltbinder.processor.model
 
-import javax.lang.model.element.TypeElement
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 
 internal class ModuleSchema(
     val packageName: String,
     val interfaceName: String,
-    val componentType: TypeElement,
+    val componentType: XTypeElement,
     val bindings: List<BindingSchema>
 )

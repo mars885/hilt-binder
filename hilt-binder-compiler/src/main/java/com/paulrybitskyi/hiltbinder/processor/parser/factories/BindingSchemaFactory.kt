@@ -16,17 +16,14 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser.factories
 
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 import com.paulrybitskyi.hiltbinder.processor.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.BindingReturnTypeDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.ContributionTypeDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.HiltComponentDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.QualifierAnnotationDetector
-import com.paulrybitskyi.hiltbinder.processor.utils.getPackageName
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
 
 internal class BindingSchemaFactory(
-    private val elementUtils: Elements,
     private val hiltComponentDetector: HiltComponentDetector,
     private val contributionTypeDetector: ContributionTypeDetector,
     private val qualifierAnnotationDetector: QualifierAnnotationDetector,
@@ -42,8 +39,8 @@ internal class BindingSchemaFactory(
     }
 
 
-    fun createBindingSchema(annotatedElement: TypeElement): BindingSchema {
-        val packageName = elementUtils.getPackageName(annotatedElement)
+    fun createBindingSchema(annotatedElement: XTypeElement): BindingSchema {
+        val packageName = annotatedElement.packageName
         val component = hiltComponentDetector.detectComponent(annotatedElement)
         val contributionType = contributionTypeDetector.detectType(annotatedElement)
         val qualifierAnnotation = qualifierAnnotationDetector.detectAnnotation(annotatedElement)
