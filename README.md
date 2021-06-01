@@ -9,6 +9,9 @@ An annotating processing library that automatically generates Dagger Hilt's `@Bi
 ## Contents
 * [Motivation](#motivation)
 * [Installation](#installation)
+  * [Java](#java)
+  * [KAPT](#kapt)
+  * [KSP](#ksp)
 * [Usage](#usage)
   * [Basics](#basics)
   * [Hilt Components](#hilt-components)
@@ -42,7 +45,7 @@ Can't we just automate this process and instruct the machine to generate a bindi
 
 First of all, make sure that you've added the `mavenCentral()` repository to your top-level `build.gradle` file.
 
-````groovy
+````kotlin
 buildscript {
     //...
     repositories {
@@ -53,23 +56,88 @@ buildscript {
 }
 ````
 
-Then, if you are using Java, add the following to your module-level `build.gradle` file.
+### Java
 
-````groovy
+If you are using pure Java (no Kotlin code), add the following to your module-level `build.gradle` file.
+
+````kotlin
 dependencies {
-    implementation "com.paulrybitskyi:hilt-binder:1.0.0"
-    annotationProcessor "com.paulrybitskyi:hilt-binder-compiler:1.0.0"
+    implementation("com.paulrybitskyi:hilt-binder:1.1.0")
+    annotationProcessor("com.paulrybitskyi:hilt-binder-compiler:1.1.0")
 }
 ````
 
-If you are using Kotlin, then apply the [kapt plugin](https://kotlinlang.org/docs/reference/kapt.html) and declare the compiler dependency using `kapt` instead of `annotationProcessor`.
+### KAPT
 
-````groovy
+If you are using Kotlin with Java, then apply the [kapt plugin](https://kotlinlang.org/docs/reference/kapt.html) and declare the compiler dependency using `kapt` instead of `annotationProcessor`.
+
+````kotlin
+plugins {
+    kotlin("kapt")
+}
+
 dependencies {
-    implementation "com.paulrybitskyi:hilt-binder:1.0.0"
-    kapt "com.paulrybitskyi:hilt-binder-compiler:1.0.0"
+    implementation("com.paulrybitskyi:hilt-binder:1.1.0")
+    kapt("com.paulrybitskyi:hilt-binder-compiler:1.1.0")
 }
 ````
+
+### KSP
+
+A [KSP](https://github.com/google/ksp) implementation of the library. KSP is a replacement for KAPT to run annotation processors natively on the Kotlin compiler, significantly reducing build times.
+
+The implementation is experimental insofar as KSP itself is experimental, so if you find any bugs using it, please report them for further investigation.
+
+To use the KSP implementation, go to your project's `settings.gradle.kts` file and add `google()` to `repositories` for the KSP plugin.
+
+````kotlin
+pluginManagement {
+    repositories {
+       gradlePluginPortal()
+       google()
+    }
+}
+````
+
+Then, in the module's `build.gradle.kts` file, apply the KSP Gradle plguin and replace the `kapt` configuration in your build file with `ksp`.
+
+````kotlin
+plugins {
+    id("com.google.devtools.ksp") version "<latestKspVersion>"
+}
+
+dependencies {
+    ksp("com.paulrybitskyi:hilt-binder-compiler:1.1.0")
+}
+````
+
+Apart from the above, at the moment, generated code by KSP is not visible in the IDE by default. To help the IDE see the generated code, add the following to your module's `build.gradle.kts` (see this [issue](https://github.com/google/ksp/issues/37) for more info).
+
+````kotlin
+android {
+    buildTypes {
+        getByName("debug") {
+            sourceSets {
+                getByName("main") {
+                    java.srcDir(File("build/generated/ksp/debug/java"))
+                    java.srcDir(File("build/generated/ksp/debug/kotlin"))
+                }
+            }
+        }
+
+        getByName("release") {
+            sourceSets {
+                getByName("main") {
+                    java.srcDir(File("build/generated/ksp/release/java"))
+                    java.srcDir(File("build/generated/ksp/release/kotlin"))
+                }
+            }
+        }
+    }
+}
+````
+
+See the [KSP documentation](https://github.com/google/ksp/blob/main/docs/quickstart.md) for more details.
 
 ## Usage
 

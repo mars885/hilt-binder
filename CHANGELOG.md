@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+## Version 1.1.0 *(2021-06-01)*
+
+* New: Experimental [KSP](https://github.com/google/ksp) support. KSP is a replacement for KAPT to run annotation processors natively on the Kotlin compiler, significantly reducing build times. To use HiltBinder with KSP, see the [README's KSP section](https://github.com/mars885/hilt-binder#ksp) for installation guide and [KSP documentation](https://github.com/google/ksp/blob/main/docs/quickstart.md) for more details.
+* Upgrade: [Kotlin 1.5.10](https://github.com/JetBrains/kotlin/releases/tag/v1.5.10).
+* Upgrade: [Dagger Hilt 2.36](https://github.com/google/dagger/releases/tag/dagger-2.36).
+
 ## Version 1.0.0 *(2021-05-17)*
 
 First Stable Release.
