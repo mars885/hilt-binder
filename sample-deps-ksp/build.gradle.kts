@@ -36,25 +36,7 @@ android {
     }
 
     buildTypes {
-        // TODO (26.05.2021): To be removed once KSP supports it by
-        // default. See this issue: https://github.com/google/ksp/issues/37
-        getByName("debug") {
-            sourceSets {
-                getByName("main") {
-                    java.srcDir(File("build/generated/ksp/debug/java"))
-                    java.srcDir(File("build/generated/ksp/debug/kotlin"))
-                }
-            }
-        }
-
         getByName("release") {
-            sourceSets {
-                getByName("main") {
-                    java.srcDir(File("build/generated/ksp/release/java"))
-                    java.srcDir(File("build/generated/ksp/release/kotlin"))
-                }
-            }
-
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }

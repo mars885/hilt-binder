@@ -39,11 +39,7 @@ jobs:
             cache-gradle-
 
       - name: Test Application
-        # ./gradlew hilt-binder-compiler:test, instead of simple ./gradlew test,
-        # because at the moment of writing this (31.05.2021), ./gradlew test
-        # would generate KSP sources for both debug and release variants,
-        # which cause "Redeclaration: <ClassName>" errors.
-        run: ./gradlew hilt-binder-compiler:test
+        run: ./gradlew test
 
   assemble:
     runs-on: [ubuntu-latest]
