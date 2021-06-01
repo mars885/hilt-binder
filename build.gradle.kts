@@ -23,6 +23,7 @@ buildscript {
     repositories {
         mavenCentral()
         google()
+        gradlePluginPortal()
     }
 
     dependencies {
@@ -31,6 +32,7 @@ buildscript {
         classpath(deps.plugins.daggerHiltGradle)
         classpath(deps.plugins.gradleVersions)
         classpath(deps.plugins.dokka)
+        classpath(deps.plugins.shadow)
     }
 }
 

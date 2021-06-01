@@ -74,6 +74,7 @@ object versions {
     const val gradlePlugin = "4.2.0" // also in buildSrc build.gradle.kts file
     const val gradleVersionsPlugin = "0.39.0"
     const val dokkaPlugin = "1.4.32"
+    const val shadowPlugin = "7.0.0"
     const val appCompat = "1.3.0"
     const val navigation = "2.3.5"
     const val fragmentKtx = "1.3.4"
@@ -104,6 +105,7 @@ object deps {
         const val daggerHiltGradle = "com.google.dagger:hilt-android-gradle-plugin:${versions.dagger}"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersionsPlugin}"
         const val dokka = "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokkaPlugin}"
+        const val shadow = "gradle.plugin.com.github.jengelman.gradle.plugins:shadow:${versions.shadowPlugin}"
 
     }
 

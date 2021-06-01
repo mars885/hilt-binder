@@ -14,15 +14,61 @@
  * limitations under the License.
  */
 
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     kotlin()
     kotlinKapt()
+    shadow()
+}
+
+// Custom configuration used for dependencies that are copied
+// into the library jar instead of adding it as a POM dependency.
+val shadowed: Configuration = configurations.create("shadowed") {
+    // Make sure shadowed dependencies show up as "compileOnly"
+    // so they won't be included in the POM file.
+    configurations.getByName("compileOnly").extendsFrom(this)
+    // Compiler tests run without shadowed classes, so we should
+    // add those dependencies into test configuration.
+    configurations.getByName("testImplementation").extendsFrom(this)
+}
+
+val shadowJar by tasks.getting(ShadowJar::class) {
+    // Clearing the classifier because by default it appends "all"
+    // ending to the jar name.
+    archiveClassifier.set("")
+    configurations = listOf(shadowed)
+    dependencies {
+        // Excluding redundant dependencies like
+        // JetBrains annotations, kotlin libraries,
+        // and both Java and Kotlin Poets, since they
+        // are directly requested at runtime.
+        exclude(dependency("org.jetbrains:.*"))
+        exclude(dependency("org.jetbrains.lang:.*"))
+        exclude(dependency("org.jetbrains.kotlin:.*"))
+        exclude(dependency("com.squareup:javapoet:.*"))
+        exclude(dependency("com.squareup:kotlinpoet:.*"))
+    }
+}
+
+configurations {
+    // Replace the standard jar with the one built by "shadowJar"
+    // in both api and runtime variants.
+    apiElements.get().outgoing.artifacts.clear()
+    apiElements.get().outgoing.artifact(shadowJar) {
+        builtBy(shadowJar)
+    }
+
+    runtimeElements.get().outgoing.artifacts.clear()
+    runtimeElements.get().outgoing.artifact(shadowJar) {
+        builtBy(shadowJar)
+    }
 }
 
 dependencies {
     implementation(project(deps.local.hiltBinder))
-    implementation(project(deps.local.compilerProcessing))
-    implementation(project(deps.local.commonUtils))
+    shadowed(project(deps.local.compilerProcessing))
+    shadowed(project(deps.local.commonUtils))
 
     implementation(deps.kotlinReflect)
     implementation(deps.apacheCommons)
