@@ -111,32 +111,6 @@ dependencies {
 }
 ````
 
-Apart from the above, at the moment, generated code by KSP is not visible in the IDE by default. To help the IDE see the generated code, add the following to your module's `build.gradle.kts` (see this [issue](https://github.com/google/ksp/issues/37) for more info).
-
-````kotlin
-android {
-    buildTypes {
-        getByName("debug") {
-            sourceSets {
-                getByName("main") {
-                    java.srcDir(File("build/generated/ksp/debug/java"))
-                    java.srcDir(File("build/generated/ksp/debug/kotlin"))
-                }
-            }
-        }
-
-        getByName("release") {
-            sourceSets {
-                getByName("main") {
-                    java.srcDir(File("build/generated/ksp/release/java"))
-                    java.srcDir(File("build/generated/ksp/release/kotlin"))
-                }
-            }
-        }
-    }
-}
-````
-
 See the [KSP documentation](https://github.com/google/ksp/blob/main/docs/quickstart.md) for more details.
 
 ## Usage
