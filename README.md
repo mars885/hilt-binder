@@ -107,6 +107,7 @@ plugins {
 }
 
 dependencies {
+    implementation("com.paulrybitskyi:hilt-binder:1.1.0")
     ksp("com.paulrybitskyi:hilt-binder-compiler:1.1.0")
 }
 ````
