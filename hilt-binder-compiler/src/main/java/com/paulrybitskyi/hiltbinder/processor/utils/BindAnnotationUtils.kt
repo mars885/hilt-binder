@@ -18,7 +18,6 @@ package com.paulrybitskyi.hiltbinder.processor.utils
 
 import com.paulrybitskyi.hiltbinder.BindType.Collection
 import com.paulrybitskyi.hiltbinder.BindType.Component
-import com.paulrybitskyi.hiltbinder.common.utils.NOTHING_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.common.utils.VOID_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.compiler.processing.*
 
@@ -31,12 +30,7 @@ private const val BIND_ANNOTATION_PARAM_WITH_QUALIFIER = "withQualifier"
 
 
 internal fun XProcessingEnv.getBindAnnotationDefaultType(): XType {
-    return getTypeUnsafely(
-        when(backend) {
-            XBackend.JAVAC -> VOID_TYPE_QUALIFIED_NAME
-            XBackend.KSP -> NOTHING_TYPE_QUALIFIED_NAME
-        }
-    )
+    return getTypeUnsafely(VOID_TYPE_QUALIFIED_NAME)
 }
 
 
