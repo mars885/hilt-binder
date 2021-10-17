@@ -22,12 +22,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(appConfig.compileSdkVersion)
-    buildToolsVersion(appConfig.buildToolsVersion)
+    compileSdk = appConfig.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion(appConfig.minSdkVersion)
-        targetSdkVersion(appConfig.targetSdkVersion)
+        minSdk = appConfig.minSdkVersion
+        targetSdk = appConfig.targetSdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,15 +36,6 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = appConfig.javaCompatibilityVersion
-        targetCompatibility = appConfig.javaCompatibilityVersion
-    }
-
-    kotlinOptions {
-        jvmTarget = appConfig.kotlinCompatibilityVersion.toString()
     }
 }
 

@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import com.android.build.gradle.LibraryExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     gradleVersions()
     dokka()
@@ -40,6 +43,21 @@ allprojects {
     repositories {
         mavenCentral()
         google()
+    }
+
+    tasks.withType(KotlinCompile::class.java) {
+        kotlinOptions {
+            jvmTarget = appConfig.kotlinCompatibilityVersion.toString()
+        }
+    }
+
+    plugins.withId(PLUGIN_ANDROID_LIBRARY) {
+        extensions.findByType<LibraryExtension>()?.run {
+            compileOptions {
+                sourceCompatibility = appConfig.javaCompatibilityVersion
+                targetCompatibility = appConfig.javaCompatibilityVersion
+            }
+        }
     }
 }
 
