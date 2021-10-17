@@ -74,7 +74,7 @@ object versions {
     const val gradlePlugin = "7.0.3" // also in buildSrc build.gradle.kts file
     const val gradleVersionsPlugin = "0.39.0"
     const val dokkaPlugin = "1.5.31"
-    const val shadowPlugin = "7.1.0"
+    const val shadowPlugin = "7.0.0"
     const val appCompat = "1.3.1"
     const val navigation = "2.3.5"
     const val fragmentKtx = "1.3.6"

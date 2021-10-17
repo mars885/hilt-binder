@@ -26,7 +26,7 @@ android {
     buildToolsVersion(appConfig.buildToolsVersion)
 
     defaultConfig {
-        applicationId(appConfig.applicationId)
+        applicationId = appConfig.applicationId
         minSdkVersion(appConfig.minSdkVersion)
         targetSdkVersion(appConfig.targetSdkVersion)
         versionCode = appConfig.versionCode

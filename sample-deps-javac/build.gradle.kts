@@ -26,8 +26,6 @@ android {
     defaultConfig {
         minSdkVersion(appConfig.minSdkVersion)
         targetSdkVersion(appConfig.targetSdkVersion)
-        versionCode = appConfig.versionCode
-        versionName = appConfig.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
