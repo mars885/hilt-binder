@@ -22,5 +22,4 @@ const val VOID_TYPE_QUALIFIED_NAME = "java.lang.Void"
 const val JAVA_ENUM_TYPE_QUALIFIED_NAME = "java.lang.Enum"
 
 const val ANY_TYPE_QUALIFIED_NAME = "kotlin.Any"
-const val NOTHING_TYPE_QUALIFIED_NAME = "kotlin.Nothing"
 const val KOTLIN_ENUM_TYPE_QUALIFIED_NAME = "kotlin.Enum"
