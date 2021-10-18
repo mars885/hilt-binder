@@ -3164,11 +3164,6 @@ internal class HiltBinderTest {
 
     @Test
     fun `Binds class with custom qualifier`(scenario: Scenario) {
-        // TODO (26.05.2021): This test does not work when KSP parses Java
-        // code, since this issue (https://github.com/google/ksp/issues/453)
-        // needs to be resolved for it to run properly.
-        Assume.assumeTrue(Scenario.KSP_JAVA_IN_KOTLIN_OUT != scenario)
-
         val sourceFiles = when(scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -3317,11 +3312,6 @@ internal class HiltBinderTest {
 
     @Test
     fun `Verify that all annotation properties are properly copied in binding method`(scenario: Scenario) {
-        // TODO (26.05.2021): This test does not work when KSP parses Java
-        // code, since this issue (https://github.com/google/ksp/issues/453)
-        // needs to be resolved for it to run properly.
-        Assume.assumeTrue(Scenario.KSP_JAVA_IN_KOTLIN_OUT != scenario)
-
         val sourceFiles = when(scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -4944,11 +4934,6 @@ internal class HiltBinderTest {
 
     @Test
     fun `Saves bound classes into multibound map using custom @MapKey annotation`(scenario: Scenario) {
-        // TODO (26.05.2021): This test does not work when KSP parses Java
-        // code, since this issue (https://github.com/google/ksp/issues/453)
-        // needs to be resolved for it to run properly.
-        Assume.assumeTrue(Scenario.KSP_JAVA_IN_KOTLIN_OUT != scenario)
-
         val sourceFiles = when(scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -5130,11 +5115,6 @@ internal class HiltBinderTest {
 
     @Test
     fun `Saves bound parameterized classes into multibound map using custom @MapKey annotation`(scenario: Scenario) {
-        // TODO (26.05.2021): This test does not work when KSP parses Java
-        // code, since this issue (https://github.com/google/ksp/issues/453)
-        // needs to be resolved for it to run properly.
-        Assume.assumeTrue(Scenario.KSP_JAVA_IN_KOTLIN_OUT != scenario)
-
         val sourceFiles = when(scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
