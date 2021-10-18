@@ -28,5 +28,4 @@ public class JavacJavaViewDep10Impl extends JavacJavaViewDep10<Double> {
 
     @Inject
     public JavacJavaViewDep10Impl() {}
-
 }

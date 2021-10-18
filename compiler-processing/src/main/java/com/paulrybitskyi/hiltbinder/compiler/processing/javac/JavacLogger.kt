@@ -25,27 +25,21 @@ import javax.tools.Diagnostic
 
 internal class JavacLogger(
     private val delegate: Messager
-): XLogger {
-
+) : XLogger {
 
     override fun info(message: String, element: XElement?) {
         delegate.printMessage(Diagnostic.Kind.NOTE, message, element?.asJavacElement())
     }
 
-
     override fun warning(message: String, element: XElement?) {
         delegate.printMessage(Diagnostic.Kind.WARNING, message, element?.asJavacElement())
     }
-
 
     override fun error(message: String, element: XElement?) {
         delegate.printMessage(Diagnostic.Kind.ERROR, message, element?.asJavacElement())
     }
 
-
     private fun XElement.asJavacElement(): Element {
         return unsafeCast<JavacElement>().delegate
     }
-
-
 }

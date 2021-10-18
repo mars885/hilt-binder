@@ -25,9 +25,6 @@ public interface KspJavaCustomComponent {
 
     @DefineComponent.Builder
     interface Builder {
-
         KspJavaCustomComponent build();
-
     }
-
 }

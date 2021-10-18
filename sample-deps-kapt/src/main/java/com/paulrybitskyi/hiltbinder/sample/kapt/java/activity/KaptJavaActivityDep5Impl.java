@@ -31,5 +31,4 @@ public class KaptJavaActivityDep5Impl implements KaptJavaActivityDep5 {
 
     @Inject
     public KaptJavaActivityDep5Impl() {}
-
 }

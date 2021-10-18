@@ -23,13 +23,11 @@ import javax.inject.Inject
 @HiltAndroidApp
 internal class SampleApplication : Application() {
 
-
     @Inject lateinit var javacJavaSingletonDeps: JavacJavaSingletonDeps
     @Inject lateinit var kaptJavaSingletonDeps: KaptJavaSingletonDeps
     @Inject lateinit var kaptKotlinSingletonDeps: KaptKotlinSingletonDeps
     @Inject lateinit var kspJavaSingletonDeps: KspJavaSingletonDeps
     @Inject lateinit var kspKotlinSingletonDeps: KspKotlinSingletonDeps
-
 
     override fun onCreate() {
         super.onCreate()
@@ -40,6 +38,4 @@ internal class SampleApplication : Application() {
         kspJavaSingletonDeps.check()
         kspKotlinSingletonDeps.check()
     }
-
-
 }

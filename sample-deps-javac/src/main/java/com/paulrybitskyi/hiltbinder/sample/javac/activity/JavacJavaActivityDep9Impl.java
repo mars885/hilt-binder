@@ -25,5 +25,4 @@ public class JavacJavaActivityDep9Impl extends JavacJavaActivityDep9<Float> {
 
     @Inject
     public JavacJavaActivityDep9Impl() {}
-
 }

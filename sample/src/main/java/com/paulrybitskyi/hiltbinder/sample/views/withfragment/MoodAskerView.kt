@@ -29,14 +29,11 @@ internal class MoodAskerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): AppCompatTextView(context, attrs, defStyleAttr) {
-
+) : AppCompatTextView(context, attrs, defStyleAttr) {
 
     @Inject lateinit var javacJavaViewWithFragmentDeps: JavacJavaViewWithFragmentDeps
     @Inject lateinit var kaptJavaViewWithFragmentDeps: KaptJavaViewWithFragmentDeps
     @Inject lateinit var kaptKotlinViewWithFragmentDeps: KaptKotlinViewWithFragmentDeps
     @Inject lateinit var kspJavaViewWithFragmentDeps: KspJavaViewWithFragmentDeps
     @Inject lateinit var kspKotlinViewWithFragmentDeps: KspKotlinViewWithFragmentDeps
-
-
 }

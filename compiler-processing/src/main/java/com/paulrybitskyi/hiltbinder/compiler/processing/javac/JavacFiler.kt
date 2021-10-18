@@ -24,8 +24,7 @@ import javax.lang.model.element.Element
 
 internal class JavacFiler(
     private val delegate: Filer
-): XFiler {
-
+) : XFiler {
 
     override fun createSourceFile(file: XFiler.File) {
         val qualifiedFileName = file.createQualifiedFileName()
@@ -37,7 +36,6 @@ internal class JavacFiler(
             .use { writer -> writer.write(file.content) }
     }
 
-
     private fun XFiler.File.createQualifiedFileName(): String {
         return when {
             packageName.isEmpty() -> name
@@ -45,12 +43,9 @@ internal class JavacFiler(
         }
     }
 
-
     private fun XFiler.File.getOriginatingElements(): Array<Element> {
         return originatingElements
             .mapNotNull { it.safeCast<JavacOriginatingElement>()?.element }
             .toTypedArray()
     }
-
-
 }

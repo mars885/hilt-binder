@@ -44,12 +44,9 @@ internal class KspJavaViewModelDeps @Inject constructor(
     private val kspJavaViewModelDeps11: Set<@JvmSuppressWildcards KspJavaViewModelDep11<*>>
 ) {
 
-
     fun check() {
         check(kspJavaViewModelDeps6.size == 3)
         check(kspJavaViewModelDeps7.size == 3)
         check(kspJavaViewModelDeps11.size == 3)
     }
-
-
 }

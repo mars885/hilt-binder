@@ -30,5 +30,4 @@ public class JavacJavaSingletonDep7Impl implements JavacJavaSingletonDep7 {
 
     @Inject
     public JavacJavaSingletonDep7Impl() {}
-
 }

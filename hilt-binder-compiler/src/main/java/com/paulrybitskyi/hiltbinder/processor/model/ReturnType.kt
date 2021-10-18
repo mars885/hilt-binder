@@ -20,14 +20,10 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 
 internal sealed class ReturnType(val type: XType) {
 
-    class Standard(type: XType): ReturnType(type)
+    class Standard(type: XType) : ReturnType(type)
 
-    internal sealed class Generic(type: XType): ReturnType(type) {
-
-        class Parameterized(type: XType): Generic(type)
-
-        class UnboundedWildcard(type: XType, val typeParamCount: Int): Generic(type)
-
+    internal sealed class Generic(type: XType) : ReturnType(type) {
+        class Parameterized(type: XType) : Generic(type)
+        class UnboundedWildcard(type: XType, val typeParamCount: Int) : Generic(type)
     }
-
 }

@@ -25,9 +25,6 @@ public interface JavacJavaCustomComponent {
 
     @DefineComponent.Builder
     interface Builder {
-
         JavacJavaCustomComponent build();
-
     }
-
 }

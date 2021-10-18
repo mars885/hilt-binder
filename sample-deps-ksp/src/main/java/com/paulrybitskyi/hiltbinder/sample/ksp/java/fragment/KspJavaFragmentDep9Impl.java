@@ -25,5 +25,4 @@ public class KspJavaFragmentDep9Impl extends KspJavaFragmentDep9<Float> {
 
     @Inject
     public KspJavaFragmentDep9Impl() {}
-
 }

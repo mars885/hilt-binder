@@ -29,5 +29,4 @@ public class JavacJavaCustomComponentDep1Impl implements JavacJavaCustomComponen
 
     @Inject
     public JavacJavaCustomComponentDep1Impl() {}
-
 }

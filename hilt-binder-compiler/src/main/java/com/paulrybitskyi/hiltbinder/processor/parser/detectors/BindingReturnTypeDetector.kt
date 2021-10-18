@@ -39,7 +39,6 @@ internal class BindingReturnTypeDetector(
     private val messageProvider: MessageProvider
 ) {
 
-
     fun detectReturnType(annotatedElement: XTypeElement): ReturnType {
         val bindAnnotation = annotatedElement.getBindAnnotation()
         val collection = bindAnnotation.getContributesToArg()
@@ -57,7 +56,6 @@ internal class BindingReturnTypeDetector(
         }
     }
 
-
     private fun retrieveReturnType(
         bindAnnotation: XAnnotation,
         annotatedElement: XTypeElement
@@ -71,7 +69,7 @@ internal class BindingReturnTypeDetector(
                 (type == processingEnv.getRootType(XBackend.JAVAC))
             )
 
-            if(shouldMapJavaRootTypeToKotlin) {
+            if (shouldMapJavaRootTypeToKotlin) {
                 processingEnv.getRootType(XBackend.KSP)
             } else {
                 type
@@ -79,16 +77,15 @@ internal class BindingReturnTypeDetector(
         }
     }
 
-
     private fun detectExplicitReturnType(
         bindAnnotation: XAnnotation,
         annotatedElement: XTypeElement
     ): XType? {
-        if(!bindAnnotation.hasExplicitReturnType()) return null
+        if (!bindAnnotation.hasExplicitReturnType()) return null
 
         val explicitReturnType = checkNotNull(bindAnnotation.getToArg())
 
-        if(!explicitReturnType.isGeneric) return explicitReturnType
+        if (!explicitReturnType.isGeneric) return explicitReturnType
 
         val parameterizedReturnType = findParameterizedReturnType(
             annotatedElement,
@@ -98,7 +95,6 @@ internal class BindingReturnTypeDetector(
         return (parameterizedReturnType ?: explicitReturnType)
     }
 
-
     private fun XAnnotation.hasExplicitReturnType(): Boolean {
         val defaultType = processingEnv.getBindAnnotationDefaultType()
         val toParamType = getToArg(defaultType)
@@ -106,13 +102,12 @@ internal class BindingReturnTypeDetector(
         return (toParamType != defaultType)
     }
 
-
     private fun findParameterizedReturnType(
         annotatedElement: XTypeElement,
         parameterizedTypeName: String
     ): XType? {
         fun MutableList<XType>.addTypeElementSuperTypes(typeElement: XTypeElement) {
-            if(typeElement.isClass) {
+            if (typeElement.isClass) {
                 typeElement.superclass?.let(::add)
             }
 
@@ -126,7 +121,7 @@ internal class BindingReturnTypeDetector(
         val rootType = processingEnv.getRootType()
 
         @Suppress("LoopWithTooManyJumpStatements")
-        while(possibleReturnTypes.isNotEmpty()) {
+        while (possibleReturnTypes.isNotEmpty()) {
             val possibleReturnType = possibleReturnTypes.removeFirst()
             val possibleReturnTypeElement = possibleReturnType.typeElement
             val possibleReturnTypeName = possibleReturnTypeElement.qualifiedName
@@ -145,7 +140,6 @@ internal class BindingReturnTypeDetector(
         return null
     }
 
-
     private fun inferReturnType(annotatedElement: XTypeElement): XType {
         val superclass = annotatedElement.superclass
         val interfaces = annotatedElement.interfaces
@@ -153,15 +147,14 @@ internal class BindingReturnTypeDetector(
         val hasSuperclass = (superclass != null)
         val hasInterfaces = interfaces.isNotEmpty()
 
-        if(hasSuperclass && !hasInterfaces) return checkNotNull(superclass)
-        if(!hasSuperclass && (interfaces.size == 1)) return interfaces.single()
+        if (hasSuperclass && !hasInterfaces) return checkNotNull(superclass)
+        if (!hasSuperclass && (interfaces.size == 1)) return interfaces.single()
 
         throw HiltBinderException(messageProvider.undefinedReturnTypeError(), annotatedElement)
     }
 
-
     private fun checkSubtypeRelation(bindingType: XType, returnType: XType) {
-        if(returnType.isAssignableFrom(bindingType)) return
+        if (returnType.isAssignableFrom(bindingType)) return
 
         val bindingTypeName = bindingType.qualifiedName
         val returnTypeName = returnType.qualifiedName
@@ -172,6 +165,4 @@ internal class BindingReturnTypeDetector(
 
         throw HiltBinderException(errorMessage, bindingType.element)
     }
-
-
 }

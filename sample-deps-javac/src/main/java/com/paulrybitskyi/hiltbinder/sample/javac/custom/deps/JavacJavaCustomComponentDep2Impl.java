@@ -31,5 +31,4 @@ public class JavacJavaCustomComponentDep2Impl extends JavacJavaCustomComponentDe
 
     @Inject
     public JavacJavaCustomComponentDep2Impl() {}
-
 }

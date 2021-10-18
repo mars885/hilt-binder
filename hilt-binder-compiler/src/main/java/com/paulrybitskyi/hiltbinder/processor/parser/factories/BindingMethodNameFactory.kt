@@ -21,14 +21,10 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 
 internal class BindingMethodNameFactory {
 
-
     private companion object {
-
         private const val METHOD_NAME_WORD_SEPARATOR = '_'
         private const val METHOD_NAME_PREFIX = "bind$METHOD_NAME_WORD_SEPARATOR"
-
     }
-
 
     fun createMethodName(annotatedElement: XTypeElement): String {
         val qualifiedName = annotatedElement.qualifiedName
@@ -39,6 +35,4 @@ internal class BindingMethodNameFactory {
 
         return (METHOD_NAME_PREFIX + formattedQualifiedName)
     }
-
-
 }

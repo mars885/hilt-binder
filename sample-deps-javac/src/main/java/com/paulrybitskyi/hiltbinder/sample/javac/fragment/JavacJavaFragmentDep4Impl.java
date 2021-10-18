@@ -28,5 +28,4 @@ public class JavacJavaFragmentDep4Impl implements JavacJavaFragmentDep4 {
 
     @Inject
     public JavacJavaFragmentDep4Impl() {}
-
 }

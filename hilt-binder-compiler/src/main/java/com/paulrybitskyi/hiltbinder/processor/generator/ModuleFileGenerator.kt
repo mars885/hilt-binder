@@ -23,13 +23,11 @@ import com.paulrybitskyi.hiltbinder.processor.model.ContributionType
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.model.ModuleSchema
 
-
 internal class ModuleFileGenerator(
     private val outputLanguage: Language,
     private val moduleFileContentGenerator: ModuleFileContentGenerator,
     private val filer: XFiler
 ) {
-
 
     fun generateModuleFile(moduleSchema: ModuleSchema) {
         val fileContent = moduleFileContentGenerator.generateFileContent(moduleSchema)
@@ -44,22 +42,21 @@ internal class ModuleFileGenerator(
         filer.createSourceFile(file)
     }
 
-
     private fun ModuleSchema.getOriginatingElements(): List<XOriginatingElement> {
         val elements = mutableListOf<XOriginatingElement?>()
 
         elements.add(componentType.originatingElement)
 
-        for(binding in bindings) {
-            if(binding.component is HiltComponent.Custom) {
+        for (binding in bindings) {
+            if (binding.component is HiltComponent.Custom) {
                 elements.add(binding.component.element.originatingElement)
             }
 
-            if(binding.contributionType is ContributionType.Map) {
+            if (binding.contributionType is ContributionType.Map) {
                 elements.add(binding.contributionType.mapKeyAnnotation.type.element.originatingElement)
             }
 
-            if(binding.qualifierAnnotation != null) {
+            if (binding.qualifierAnnotation != null) {
                 elements.add(binding.qualifierAnnotation.type.element.originatingElement)
             }
 
@@ -69,10 +66,7 @@ internal class ModuleFileGenerator(
 
         return elements.filterNotNull()
     }
-
-
 }
-
 
 internal fun ModuleFileGenerator.generateModuleFiles(moduleSchemas: List<ModuleSchema>) {
     moduleSchemas.forEach(::generateModuleFile)

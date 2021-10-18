@@ -36,8 +36,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.getTypeByName
 internal class KspProcessingEnv(
     private val delegate: SymbolProcessorEnvironment,
     val resolver: Resolver
-): XProcessingEnv {
-
+) : XProcessingEnv {
 
     override val backend = XBackend.KSP
 
@@ -53,19 +52,15 @@ internal class KspProcessingEnv(
         XFilerFactory.createKspFiler(delegate.codeGenerator)
     }
 
-
     override fun getType(qualifiedName: String): XType? {
         return resolver.getTypeByName(qualifiedName)?.let {
             XTypeFactory.createKspType(this, it)
         }
     }
 
-
     override fun getTypeElement(qualifiedName: String): XTypeElement? {
         return resolver.getClassDeclarationByName(qualifiedName)?.let {
             XTypeElementFactory.createKspTypeElement(this, it)
         }
     }
-
-
 }

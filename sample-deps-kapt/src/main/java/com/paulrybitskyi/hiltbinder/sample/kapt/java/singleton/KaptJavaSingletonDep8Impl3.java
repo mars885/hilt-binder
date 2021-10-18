@@ -27,5 +27,4 @@ public class KaptJavaSingletonDep8Impl3 implements KaptJavaSingletonDep8 {
 
     @Inject
     public KaptJavaSingletonDep8Impl3() {}
-
 }

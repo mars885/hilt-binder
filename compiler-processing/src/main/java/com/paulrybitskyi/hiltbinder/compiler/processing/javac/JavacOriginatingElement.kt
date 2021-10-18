@@ -21,4 +21,4 @@ import javax.lang.model.element.Element
 
 internal class JavacOriginatingElement(
     val element: Element
-): XOriginatingElement
+) : XOriginatingElement

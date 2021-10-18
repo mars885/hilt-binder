@@ -29,23 +29,18 @@ import dagger.hilt.InstallIn;
 
 public class KaptJavaCustomComponentManager {
 
-
     private final KaptJavaCustomComponent.Builder customComponentBuilder;
     private KaptJavaCustomComponent customComponent;
 
     private KaptJavaCustomComponentDep1 customComponentDep1;
     private KaptJavaCustomComponentDep2 customComponentDep2;
 
-
     @EntryPoint
     @InstallIn(KaptJavaCustomComponent.class)
     interface DependenciesProvider {
-
         KaptJavaCustomComponentDep1 getCustomComponentDep1();
         KaptJavaCustomComponentDep2 getCustomComponentDep2();
-
     }
-
 
     @Inject
     public KaptJavaCustomComponentManager(
@@ -53,7 +48,6 @@ public class KaptJavaCustomComponentManager {
     ) {
         this.customComponentBuilder = customComponentBuilder;
     }
-
 
     public void onCreateComponent() {
         customComponent = customComponentBuilder.build();
@@ -70,10 +64,7 @@ public class KaptJavaCustomComponentManager {
         Objects.requireNonNull(customComponentDep2);
     }
 
-
     public void onDestroyComponent() {
         customComponent = null;
     }
-
-
 }

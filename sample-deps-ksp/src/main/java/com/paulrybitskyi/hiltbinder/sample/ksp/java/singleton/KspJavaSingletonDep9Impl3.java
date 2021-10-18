@@ -27,5 +27,4 @@ public class KspJavaSingletonDep9Impl3 implements KspJavaSingletonDep9 {
 
     @Inject
     public KspJavaSingletonDep9Impl3() {}
-
 }

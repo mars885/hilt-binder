@@ -25,15 +25,11 @@ import javax.annotation.processing.RoundEnvironment
 
 internal object XRoundEnvFactory {
 
-
     fun createJavacEnv(env: JavacProcessingEnv, roundEnv: RoundEnvironment): XRoundEnv {
         return JavacRoundEnv(env, roundEnv)
     }
 
-
     fun createKspEnv(env: KspProcessingEnv): XRoundEnv {
         return KspRoundEnv(env)
     }
-
-
 }

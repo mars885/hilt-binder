@@ -33,8 +33,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinClassName
 internal class KspTypeElement(
     env: KspProcessingEnv,
     override val delegate: KSClassDeclaration
-): KspElement(env, delegate), XTypeElement {
-
+) : KspElement(env, delegate), XTypeElement {
 
     override val qualifiedName: String by lazy {
         checkNotNull(super.qualifiedName)
@@ -65,20 +64,15 @@ internal class KspTypeElement(
         delegate.toKotlinClassName()
     }
 
-
     override fun equals(other: Any?): Boolean {
         return (delegate == other?.safeCast<KspTypeElement>()?.delegate)
     }
-
 
     override fun hashCode(): Int {
         return delegate.hashCode()
     }
 
-
     override fun toString(): String {
         return delegate.toString()
     }
-
-
 }

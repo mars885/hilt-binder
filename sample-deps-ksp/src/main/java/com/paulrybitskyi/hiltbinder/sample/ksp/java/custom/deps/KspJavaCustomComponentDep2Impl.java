@@ -31,5 +31,4 @@ public class KspJavaCustomComponentDep2Impl extends KspJavaCustomComponentDep2 {
 
     @Inject
     public KspJavaCustomComponentDep2Impl() {}
-
 }

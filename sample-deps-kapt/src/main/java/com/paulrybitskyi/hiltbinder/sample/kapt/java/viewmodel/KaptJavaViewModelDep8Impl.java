@@ -30,5 +30,4 @@ public class KaptJavaViewModelDep8Impl implements KaptJavaViewModelDep8 {
 
     @Inject
     public KaptJavaViewModelDep8Impl() {}
-
 }

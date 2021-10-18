@@ -28,5 +28,4 @@ public class JavacJavaViewModelDep10Impl extends JavacJavaViewModelDep10<Float> 
 
     @Inject
     public JavacJavaViewModelDep10Impl() {}
-
 }

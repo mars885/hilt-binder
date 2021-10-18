@@ -26,5 +26,4 @@ interface XProcessingEnv {
     fun getType(qualifiedName: String): XType?
 
     fun getTypeElement(qualifiedName: String): XTypeElement?
-
 }

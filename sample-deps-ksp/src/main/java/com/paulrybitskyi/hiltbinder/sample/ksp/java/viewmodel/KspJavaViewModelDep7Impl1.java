@@ -30,5 +30,4 @@ public class KspJavaViewModelDep7Impl1 implements KspJavaViewModelDep7 {
 
     @Inject
     public KspJavaViewModelDep7Impl1() {}
-
 }

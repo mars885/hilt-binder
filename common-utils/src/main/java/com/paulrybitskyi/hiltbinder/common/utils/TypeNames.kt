@@ -16,7 +16,6 @@
 
 package com.paulrybitskyi.hiltbinder.common.utils
 
-
 const val OBJECT_TYPE_QUALIFIED_NAME = "java.lang.Object"
 const val VOID_TYPE_QUALIFIED_NAME = "java.lang.Void"
 const val JAVA_ENUM_TYPE_QUALIFIED_NAME = "java.lang.Enum"

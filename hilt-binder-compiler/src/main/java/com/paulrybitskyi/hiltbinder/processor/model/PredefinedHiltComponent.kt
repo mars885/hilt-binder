@@ -21,7 +21,6 @@ internal enum class PredefinedHiltComponent(
     val qualifiedName: String,
     val scopeQualifiedName: String
 ) {
-
     SINGLETON(
         simpleName = "SingletonComponent",
         qualifiedName = "dagger.hilt.components.SingletonComponent",
@@ -62,5 +61,4 @@ internal enum class PredefinedHiltComponent(
         qualifiedName = "dagger.hilt.android.components.ViewWithFragmentComponent",
         scopeQualifiedName = "dagger.hilt.android.scopes.ViewScoped"
     )
-
 }

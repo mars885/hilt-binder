@@ -25,5 +25,4 @@ public class KspJavaViewModelDep9Impl extends KspJavaViewModelDep9<Float> {
 
     @Inject
     public KspJavaViewModelDep9Impl() {}
-
 }

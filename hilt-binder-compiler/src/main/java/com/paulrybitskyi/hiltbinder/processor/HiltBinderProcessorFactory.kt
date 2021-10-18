@@ -27,7 +27,6 @@ import javax.annotation.processing.RoundEnvironment
 
 internal object HiltBinderProcessorFactory {
 
-
     fun createJavacProcessor(
         processingEnv: ProcessingEnvironment,
         roundEnv: RoundEnvironment
@@ -36,7 +35,6 @@ internal object HiltBinderProcessorFactory {
             processingEnv = XProcessingEnvFactory.createJavacEnv(processingEnv, roundEnv)
         )
     }
-
 
     fun createKspProcessor(
         processingEnv: SymbolProcessorEnvironment,
@@ -47,7 +45,6 @@ internal object HiltBinderProcessorFactory {
         )
     }
 
-
     private fun createProcessor(processingEnv: XProcessingEnv): HiltBinderProcessor {
         return HiltBinderProcessor(
             roundEnv = processingEnv.roundEnv,
@@ -56,6 +53,4 @@ internal object HiltBinderProcessorFactory {
             moduleFileGenerator = ModuleFileGeneratorFactory.create(processingEnv)
         )
     }
-
-
 }

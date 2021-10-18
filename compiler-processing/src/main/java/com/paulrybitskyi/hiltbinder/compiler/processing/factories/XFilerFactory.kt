@@ -24,15 +24,11 @@ import javax.annotation.processing.Filer
 
 internal object XFilerFactory {
 
-
     fun createJavacFiler(delegate: Filer): XFiler {
         return JavacFiler(delegate)
     }
 
-
     fun createKspFiler(delegate: CodeGenerator): XFiler {
         return KspFiler(delegate)
     }
-
-
 }

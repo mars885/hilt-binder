@@ -44,12 +44,9 @@ internal class KspKotlinFragmentDeps @Inject constructor(
     private val kspKotlinFragmentDeps11: Set<@JvmSuppressWildcards KspKotlinFragmentDep11<*>>
 ) {
 
-
     fun check() {
         check(kspKotlinFragmentDeps6.size == 3)
         check(kspKotlinFragmentDeps7.size == 3)
         check(kspKotlinFragmentDeps11.size == 3)
     }
-
-
 }

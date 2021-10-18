@@ -16,7 +16,6 @@
 
 package com.paulrybitskyi.hiltbinder.processor.model
 
-
 internal const val QUALIFIER_TYPE_QUALIFIED_NAME = "javax.inject.Qualifier"
 internal const val WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME = "dagger.hilt.android.WithFragmentBindings"
 internal const val MAP_KEY_TYPE_QUALIFIED_NAME = "dagger.MapKey"

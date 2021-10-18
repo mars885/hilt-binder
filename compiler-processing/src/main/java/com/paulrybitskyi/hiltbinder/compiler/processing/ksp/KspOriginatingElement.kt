@@ -21,4 +21,4 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XOriginatingElement
 
 internal class KspOriginatingElement(
     val file: KSFile
-): XOriginatingElement
+) : XOriginatingElement

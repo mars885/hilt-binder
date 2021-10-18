@@ -21,5 +21,4 @@ interface XAnnotated {
     val annotations: Sequence<XAnnotation>
 
     fun getAnnotation(annotationQualifiedName: String): XAnnotation?
-
 }

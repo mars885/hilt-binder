@@ -28,5 +28,4 @@ public class KspJavaViewDep3Impl implements KspJavaViewDep3 {
 
     @Inject
     public KspJavaViewDep3Impl() {}
-
 }

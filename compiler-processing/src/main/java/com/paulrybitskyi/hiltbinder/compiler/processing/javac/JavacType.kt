@@ -29,8 +29,7 @@ import javax.lang.model.type.TypeMirror
 internal class JavacType(
     private val env: JavacProcessingEnv,
     private val delegate: TypeMirror
-): XType {
-
+) : XType {
 
     override val element: XElement by lazy {
         XElementFactory.createJavacElement(env, env.typeUtils.asElement(delegate))
@@ -44,13 +43,11 @@ internal class JavacType(
         delegate.toKotlinTypeName()
     }
 
-
     override fun isAssignableFrom(other: XType): Boolean {
         return other.safeCast<JavacType>()
             ?.let { env.typeUtils.isSubtype(it.delegate, delegate) }
             ?: false
     }
-
 
     override fun equals(other: Any?): Boolean {
         return other?.safeCast<JavacType>()
@@ -58,15 +55,11 @@ internal class JavacType(
             ?: false
     }
 
-
     override fun hashCode(): Int {
         return delegate.hashCode()
     }
 
-
     override fun toString(): String {
         return delegate.toString()
     }
-
-
 }

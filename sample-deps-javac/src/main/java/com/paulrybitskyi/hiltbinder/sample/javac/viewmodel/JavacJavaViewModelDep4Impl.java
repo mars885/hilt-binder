@@ -28,5 +28,4 @@ public class JavacJavaViewModelDep4Impl implements JavacJavaViewModelDep4 {
 
     @Inject
     public JavacJavaViewModelDep4Impl() {}
-
 }

@@ -30,23 +30,18 @@ import dagger.hilt.InstallIn;
 
 public class KspJavaCustomComponentManager {
 
-
     private final KspJavaCustomComponent.Builder customComponentBuilder;
     private KspJavaCustomComponent customComponent;
 
     private KspJavaCustomComponentDep1 customComponentDep1;
     private KspJavaCustomComponentDep2 customComponentDep2;
 
-
     @EntryPoint
     @InstallIn(KspJavaCustomComponent.class)
     interface DependenciesProvider {
-
         KspJavaCustomComponentDep1 getCustomComponentDep1();
         KspJavaCustomComponentDep2 getCustomComponentDep2();
-
     }
-
 
     @Inject
     public KspJavaCustomComponentManager(
@@ -54,7 +49,6 @@ public class KspJavaCustomComponentManager {
     ) {
         this.customComponentBuilder = customComponentBuilder;
     }
-
 
     public void onCreateComponent() {
         customComponent = customComponentBuilder.build();
@@ -71,10 +65,7 @@ public class KspJavaCustomComponentManager {
         Objects.requireNonNull(customComponentDep2);
     }
 
-
     public void onDestroyComponent() {
         customComponent = null;
     }
-
-
 }

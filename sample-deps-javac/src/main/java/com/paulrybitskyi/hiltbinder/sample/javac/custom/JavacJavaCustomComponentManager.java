@@ -29,23 +29,18 @@ import dagger.hilt.InstallIn;
 
 public class JavacJavaCustomComponentManager {
 
-
     private final JavacJavaCustomComponent.Builder customComponentBuilder;
     private JavacJavaCustomComponent customComponent;
 
     private JavacJavaCustomComponentDep1 customComponentDep1;
     private JavacJavaCustomComponentDep2 customComponentDep2;
 
-
     @EntryPoint
     @InstallIn(JavacJavaCustomComponent.class)
     interface DependenciesProvider {
-
         JavacJavaCustomComponentDep1 getCustomComponentDep1();
         JavacJavaCustomComponentDep2 getCustomComponentDep2();
-
     }
-
 
     @Inject
     public JavacJavaCustomComponentManager(
@@ -53,7 +48,6 @@ public class JavacJavaCustomComponentManager {
     ) {
         this.customComponentBuilder = customComponentBuilder;
     }
-
 
     public void onCreateComponent() {
         customComponent = customComponentBuilder.build();
@@ -70,10 +64,7 @@ public class JavacJavaCustomComponentManager {
         Objects.requireNonNull(customComponentDep2);
     }
 
-
     public void onDestroyComponent() {
         customComponent = null;
     }
-
-
 }

@@ -44,12 +44,9 @@ internal class KaptKotlinViewModelDeps @Inject constructor(
     private val kaptKotlinViewModelDeps11: Set<@JvmSuppressWildcards KaptKotlinViewModelDep11<*>>
 ) {
 
-
     fun check() {
         check(kaptKotlinViewModelDeps6.size == 3)
         check(kaptKotlinViewModelDeps7.size == 3)
         check(kaptKotlinViewModelDeps11.size == 3)
     }
-
-
 }

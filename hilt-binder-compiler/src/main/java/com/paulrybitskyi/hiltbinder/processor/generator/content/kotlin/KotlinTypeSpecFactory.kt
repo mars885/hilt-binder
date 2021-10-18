@@ -27,8 +27,7 @@ import com.squareup.kotlinpoet.TypeSpec
 
 internal class KotlinTypeSpecFactory(
     private val bindingMethodSpecFactory: KotlinBindingMethodSpecFactory
-): TypeSpecFactory<TypeSpec> {
-
+) : TypeSpecFactory<TypeSpec> {
 
     override fun createTypeSpec(moduleSchema: ModuleSchema): TypeSpec {
         return TypeSpec.interfaceBuilder(moduleSchema.interfaceName)
@@ -39,12 +38,9 @@ internal class KotlinTypeSpecFactory(
             .build()
     }
 
-
     private fun ModuleSchema.createComponentInstallationAnnotation(): AnnotationSpec {
         return AnnotationSpec.builder(DAGGER_TYPE_INSTALL_IN_KOTLIN_CLASS_NAME)
             .addMember("%T::class", componentType.kotlinClassName)
             .build()
     }
-
-
 }

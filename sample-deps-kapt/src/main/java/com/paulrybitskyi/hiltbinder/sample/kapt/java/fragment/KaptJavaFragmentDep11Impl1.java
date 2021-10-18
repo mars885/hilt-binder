@@ -28,5 +28,4 @@ public class KaptJavaFragmentDep11Impl1 extends KaptJavaFragmentDep11<Float> {
 
     @Inject
     public KaptJavaFragmentDep11Impl1() {}
-
 }

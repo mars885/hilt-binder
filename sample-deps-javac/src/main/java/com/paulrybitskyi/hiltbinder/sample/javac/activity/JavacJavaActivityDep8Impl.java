@@ -30,5 +30,4 @@ public class JavacJavaActivityDep8Impl implements JavacJavaActivityDep8 {
 
     @Inject
     public JavacJavaActivityDep8Impl() {}
-
 }

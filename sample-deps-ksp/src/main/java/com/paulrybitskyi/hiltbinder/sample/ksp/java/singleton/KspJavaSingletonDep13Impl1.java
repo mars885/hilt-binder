@@ -25,5 +25,4 @@ public class KspJavaSingletonDep13Impl1 extends KspJavaSingletonDep13<Integer> {
 
     @Inject
     public KspJavaSingletonDep13Impl1() {}
-
 }

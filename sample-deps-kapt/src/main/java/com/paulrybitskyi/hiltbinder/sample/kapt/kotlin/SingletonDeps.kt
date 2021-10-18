@@ -22,28 +22,28 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-
+// ######################################################################################################
 
 interface KaptKotlinSingletonDep1
 
 @BindType
-internal class KaptKotlinSingletonDep1Impl @Inject constructor(): KaptKotlinSingletonDep1
+internal class KaptKotlinSingletonDep1Impl @Inject constructor() : KaptKotlinSingletonDep1
 
-
+// ######################################################################################################
 
 interface KaptKotlinSingletonDep2
 
 @BindType(to = KaptKotlinSingletonDep2::class)
-internal class KaptKotlinSingletonDep2Impl @Inject constructor(): KaptKotlinSingletonDep2
+internal class KaptKotlinSingletonDep2Impl @Inject constructor() : KaptKotlinSingletonDep2
 
-
+// ######################################################################################################
 
 interface KaptKotlinSingletonDep3
 
 @BindType(installIn = BindType.Component.SINGLETON)
-internal class KaptKotlinSingletonDep3Impl @Inject constructor(): KaptKotlinSingletonDep3
+internal class KaptKotlinSingletonDep3Impl @Inject constructor() : KaptKotlinSingletonDep3
 
-
+// ######################################################################################################
 
 interface KaptKotlinSingletonDep4
 
@@ -51,25 +51,25 @@ interface KaptKotlinSingletonDep4
     to = KaptKotlinSingletonDep4::class,
     installIn = BindType.Component.SINGLETON
 )
-internal class KaptKotlinSingletonDep4Impl @Inject constructor(): KaptKotlinSingletonDep4
+internal class KaptKotlinSingletonDep4Impl @Inject constructor() : KaptKotlinSingletonDep4
 
-
+// ######################################################################################################
 
 interface KaptKotlinSingletonDep5
 
 @Singleton
 @BindType
-internal class KaptKotlinSingletonDep5Impl @Inject constructor(): KaptKotlinSingletonDep5
+internal class KaptKotlinSingletonDep5Impl @Inject constructor() : KaptKotlinSingletonDep5
 
-
+// ######################################################################################################
 
 interface KaptKotlinSingletonDep6
 
 @Singleton
 @BindType(to = KaptKotlinSingletonDep6::class)
-internal class KaptKotlinSingletonDep6Impl @Inject constructor(): KaptKotlinSingletonDep6
+internal class KaptKotlinSingletonDep6Impl @Inject constructor() : KaptKotlinSingletonDep6
 
-
+// ######################################################################################################
 
 interface KaptKotlinSingletonDep7
 
@@ -78,71 +78,71 @@ interface KaptKotlinSingletonDep7
     to = KaptKotlinSingletonDep7::class,
     installIn = BindType.Component.SINGLETON
 )
-internal class KaptKotlinSingletonDep7Impl @Inject constructor(): KaptKotlinSingletonDep7
+internal class KaptKotlinSingletonDep7Impl @Inject constructor() : KaptKotlinSingletonDep7
 
-
+// ######################################################################################################
 
 interface KaptKotlinSingletonDep8
 
 @Singleton
 @BindType(contributesTo = BindType.Collection.SET)
-internal class KaptKotlinSingletonDep8Impl1 @Inject constructor(): KaptKotlinSingletonDep8
+internal class KaptKotlinSingletonDep8Impl1 @Inject constructor() : KaptKotlinSingletonDep8
 
 @Singleton
 @BindType(contributesTo = BindType.Collection.SET)
-internal class KaptKotlinSingletonDep8Impl2 @Inject constructor(): KaptKotlinSingletonDep8
+internal class KaptKotlinSingletonDep8Impl2 @Inject constructor() : KaptKotlinSingletonDep8
 
 @Singleton
 @BindType(contributesTo = BindType.Collection.SET)
-internal class KaptKotlinSingletonDep8Impl3 @Inject constructor(): KaptKotlinSingletonDep8
+internal class KaptKotlinSingletonDep8Impl3 @Inject constructor() : KaptKotlinSingletonDep8
 
-
+// ######################################################################################################
 
 interface KaptKotlinSingletonDep9
 
 @BindType(contributesTo = BindType.Collection.MAP)
 @MapClassKey(KaptKotlinSingletonDep9Impl1::class)
-internal class KaptKotlinSingletonDep9Impl1 @Inject constructor(): KaptKotlinSingletonDep9
+internal class KaptKotlinSingletonDep9Impl1 @Inject constructor() : KaptKotlinSingletonDep9
 
 @BindType(contributesTo = BindType.Collection.MAP)
 @MapClassKey(KaptKotlinSingletonDep9Impl2::class)
-internal class KaptKotlinSingletonDep9Impl2 @Inject constructor(): KaptKotlinSingletonDep9
+internal class KaptKotlinSingletonDep9Impl2 @Inject constructor() : KaptKotlinSingletonDep9
 
 @BindType(contributesTo = BindType.Collection.MAP)
 @MapClassKey(KaptKotlinSingletonDep9Impl3::class)
-internal class KaptKotlinSingletonDep9Impl3 @Inject constructor(): KaptKotlinSingletonDep9
+internal class KaptKotlinSingletonDep9Impl3 @Inject constructor() : KaptKotlinSingletonDep9
 
-
+// ######################################################################################################
 
 interface KaptKotlinSingletonDep10
 
 @BindType(withQualifier = true)
 @Named("dep10")
-internal class KaptKotlinSingletonDep10Impl @Inject constructor(): KaptKotlinSingletonDep10
+internal class KaptKotlinSingletonDep10Impl @Inject constructor() : KaptKotlinSingletonDep10
 
-
+// ######################################################################################################
 
 abstract class KaptKotlinSingletonDep11<T>
 
 @BindType
-internal class KaptKotlinSingletonDep11Impl @Inject constructor(): KaptKotlinSingletonDep11<Int>()
+internal class KaptKotlinSingletonDep11Impl @Inject constructor() : KaptKotlinSingletonDep11<Int>()
 
-
+// ######################################################################################################
 
 abstract class KaptKotlinSingletonDep12<T>
 
 @BindType(to = KaptKotlinSingletonDep12::class)
-internal class KaptKotlinSingletonDep12Impl @Inject constructor(): KaptKotlinSingletonDep12<Int>()
+internal class KaptKotlinSingletonDep12Impl @Inject constructor() : KaptKotlinSingletonDep12<Int>()
 
-
+// ######################################################################################################
 
 abstract class KaptKotlinSingletonDep13<T>
 
 @BindType(contributesTo = BindType.Collection.SET)
-internal class KaptKotlinSingletonDep13Impl1 @Inject constructor(): KaptKotlinSingletonDep13<Int>()
+internal class KaptKotlinSingletonDep13Impl1 @Inject constructor() : KaptKotlinSingletonDep13<Int>()
 
 @BindType(contributesTo = BindType.Collection.SET)
-internal class KaptKotlinSingletonDep13Impl2 @Inject constructor(): KaptKotlinSingletonDep13<Int>()
+internal class KaptKotlinSingletonDep13Impl2 @Inject constructor() : KaptKotlinSingletonDep13<Int>()
 
 @BindType(contributesTo = BindType.Collection.SET)
-internal class KaptKotlinSingletonDep13Impl3 @Inject constructor(): KaptKotlinSingletonDep13<Int>()
+internal class KaptKotlinSingletonDep13Impl3 @Inject constructor() : KaptKotlinSingletonDep13<Int>()

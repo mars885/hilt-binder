@@ -32,15 +32,12 @@ internal class QualifierAnnotationDetector(
     private val messageProvider: MessageProvider
 ) {
 
-
     fun detectAnnotation(annotatedElement: XTypeElement): XAnnotation? {
-        if(!annotatedElement.getBindAnnotation().getWithQualifierArg()) return null
+        if (!annotatedElement.getBindAnnotation().getWithQualifierArg()) return null
 
         val qualifierType = processingEnv.getTypeUnsafely(QUALIFIER_TYPE_QUALIFIED_NAME)
 
         return annotatedElement.getAnnoMarkedWithAnotherAnno(qualifierType)
             ?: throw HiltBinderException(messageProvider.qualifierAbsentError(), annotatedElement)
     }
-
-
 }

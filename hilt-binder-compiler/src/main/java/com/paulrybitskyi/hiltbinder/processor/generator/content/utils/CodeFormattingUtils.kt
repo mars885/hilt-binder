@@ -16,11 +16,9 @@
 
 package com.paulrybitskyi.hiltbinder.processor.generator.content.utils
 
-
 internal fun String.addNewlineCharacterAfterComment(): String {
     return replaceFirst("\n", "\n\n")
 }
-
 
 internal fun String.removeTrailingNewline(): String {
     return trim()

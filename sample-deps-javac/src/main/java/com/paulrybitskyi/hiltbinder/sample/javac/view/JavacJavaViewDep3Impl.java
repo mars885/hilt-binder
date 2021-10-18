@@ -29,5 +29,4 @@ public class JavacJavaViewDep3Impl implements JavacJavaViewDep3 {
 
     @Inject
     public JavacJavaViewDep3Impl() {}
-
 }

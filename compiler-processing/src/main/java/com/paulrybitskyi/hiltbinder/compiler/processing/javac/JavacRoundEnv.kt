@@ -24,8 +24,7 @@ import javax.annotation.processing.RoundEnvironment
 internal class JavacRoundEnv(
     private val env: JavacProcessingEnv,
     private val delegate: RoundEnvironment
-): XRoundEnv {
-
+) : XRoundEnv {
 
     override fun getElementsAnnotatedWith(annotationQualifiedName: String): Sequence<XElement> {
         val annotationTypeElement = env.elementUtils.getTypeElement(annotationQualifiedName)
@@ -38,6 +37,4 @@ internal class JavacRoundEnv(
 
         return xElements
     }
-
-
 }

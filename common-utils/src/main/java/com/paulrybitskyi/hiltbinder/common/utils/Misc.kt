@@ -16,18 +16,15 @@
 
 package com.paulrybitskyi.hiltbinder.common.utils
 
-
 @Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
 inline fun <T> Any.safeCast(): T? {
     return (this as? T)
 }
 
-
 @Suppress("NOTHING_TO_INLINE")
 inline fun <T> Sequence<*>.safeCastEach(): Sequence<T> {
     return mapNotNull { it?.safeCast() }
 }
-
 
 @Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
 inline fun <T> Any.unsafeCast(): T {

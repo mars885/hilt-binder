@@ -27,5 +27,4 @@ public class JavacJavaSingletonDep10Impl implements JavacJavaSingletonDep10 {
 
     @Inject
     public JavacJavaSingletonDep10Impl() {}
-
 }

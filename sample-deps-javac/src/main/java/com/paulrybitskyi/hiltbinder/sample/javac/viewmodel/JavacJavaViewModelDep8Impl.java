@@ -30,5 +30,4 @@ public class JavacJavaViewModelDep8Impl implements JavacJavaViewModelDep8 {
 
     @Inject
     public JavacJavaViewModelDep8Impl() {}
-
 }

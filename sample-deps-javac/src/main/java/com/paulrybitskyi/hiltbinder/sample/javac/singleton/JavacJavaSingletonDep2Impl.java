@@ -25,5 +25,4 @@ public class JavacJavaSingletonDep2Impl implements JavacJavaSingletonDep2 {
 
     @Inject
     public JavacJavaSingletonDep2Impl() {}
-
 }

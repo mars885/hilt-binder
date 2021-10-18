@@ -418,7 +418,6 @@ annotation class BindType(
     val withQualifier: Boolean = false
 ) {
 
-
     /**
      * Denotes a component where bindings can be installed in.
      */
@@ -436,9 +435,7 @@ annotation class BindType(
         VIEW_WITH_FRAGMENT,
 
         CUSTOM
-
     }
-
 
     /**
      * Denotes a collection where bindings can be contributed to.
@@ -449,8 +446,5 @@ annotation class BindType(
 
         SET,
         MAP
-
     }
-
-
 }

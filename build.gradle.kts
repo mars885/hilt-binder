@@ -16,9 +16,12 @@
 
 import com.android.build.gradle.LibraryExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     detekt()
+    ktlint()
     gradleVersions()
     dokka()
 }
@@ -48,6 +51,8 @@ detekt {
 }
 
 allprojects {
+    apply(plugin = PLUGIN_KTLINT)
+
     project.subprojects
         .filter { subproject ->
             subproject.name !in listOf(
@@ -78,6 +83,14 @@ allprojects {
                 sourceCompatibility = appConfig.javaCompatibilityVersion
                 targetCompatibility = appConfig.javaCompatibilityVersion
             }
+        }
+    }
+
+    configure<KtlintExtension> {
+        android.set(true)
+        outputToConsole.set(true)
+        reporters {
+            reporter(ReporterType.HTML)
         }
     }
 }

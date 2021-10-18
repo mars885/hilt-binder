@@ -24,14 +24,13 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XAnnotationFac
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XOriginatingElementFactory
 import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.getAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.getTypeByName
-import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.simpleNameStr
 import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.packageNameStr
+import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.simpleNameStr
 
 internal abstract class KspElement(
     protected val env: KspProcessingEnv,
     open val delegate: KSDeclaration
-): XElement {
-
+) : XElement {
 
     override val packageName: String
         get() = delegate.packageNameStr
@@ -53,12 +52,9 @@ internal abstract class KspElement(
             .map { XAnnotationFactory.createKspAnnotation(env, it) }
     }
 
-
     override fun getAnnotation(annotationQualifiedName: String): XAnnotation? {
         return env.resolver.getTypeByName(annotationQualifiedName)
             ?.let { annoType -> delegate.getAnnotation(annoType) }
             ?.let { annotation -> XAnnotationFactory.createKspAnnotation(env, annotation) }
     }
-
-
 }

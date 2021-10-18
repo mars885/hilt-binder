@@ -28,5 +28,4 @@ public class KaptJavaViewModelDep10Impl extends KaptJavaViewModelDep10<Float> {
 
     @Inject
     public KaptJavaViewModelDep10Impl() {}
-
 }

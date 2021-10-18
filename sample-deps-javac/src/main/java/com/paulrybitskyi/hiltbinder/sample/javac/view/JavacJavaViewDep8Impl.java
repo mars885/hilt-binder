@@ -30,5 +30,4 @@ public class JavacJavaViewDep8Impl implements JavacJavaViewDep8 {
 
     @Inject
     public JavacJavaViewDep8Impl() {}
-
 }

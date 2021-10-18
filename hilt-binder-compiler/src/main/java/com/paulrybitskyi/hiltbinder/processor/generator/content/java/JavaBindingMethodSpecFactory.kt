@@ -33,7 +33,6 @@ import javax.lang.model.element.Modifier
 
 internal class JavaBindingMethodSpecFactory : BindingMethodSpecFactory<MethodSpec> {
 
-
     override fun createMethodSpec(bindingSchema: BindingSchema): MethodSpec {
         return MethodSpec.methodBuilder(bindingSchema.methodName)
             .addAnnotation(DAGGER_TYPE_BINDS_JAVA_CLASS_NAME)
@@ -45,23 +44,20 @@ internal class JavaBindingMethodSpecFactory : BindingMethodSpecFactory<MethodSpe
             .build()
     }
 
-
     private fun MethodSpec.Builder.addMultibindingAnnotationsIfExist(
         contributionType: ContributionType?
     ): MethodSpec.Builder = apply {
-        if(contributionType == null) return@apply
+        if (contributionType == null) return@apply
 
-        when(contributionType) {
+        when (contributionType) {
             is ContributionType.Set -> contributeToSet()
             is ContributionType.Map -> contributeToMap(contributionType.mapKeyAnnotation)
         }
     }
 
-
     private fun MethodSpec.Builder.contributeToSet(): MethodSpec.Builder = apply {
         addAnnotation(DAGGER_TYPE_INTO_SET_JAVA_CLASS_NAME)
     }
-
 
     private fun MethodSpec.Builder.contributeToMap(
         mapKeyAnnotation: XAnnotation
@@ -70,21 +66,18 @@ internal class JavaBindingMethodSpecFactory : BindingMethodSpecFactory<MethodSpe
         addAnnotation(mapKeyAnnotation.javaAnnoSpec)
     }
 
-
     private fun MethodSpec.Builder.addQualifierAnnotationIfExists(
         qualifierAnnotation: XAnnotation?
     ): MethodSpec.Builder = apply {
-        if(qualifierAnnotation == null) return@apply
+        if (qualifierAnnotation == null) return@apply
 
         addAnnotation(qualifierAnnotation.javaAnnoSpec)
     }
 
-
-
     private fun ReturnType.toTypeName(): TypeName {
-        return when(this) {
+        return when (this) {
             is ReturnType.Standard -> type.javaTypeName
-            is ReturnType.Generic -> when(this) {
+            is ReturnType.Generic -> when (this) {
                 is ReturnType.Generic.Parameterized -> type.javaTypeName
                 is ReturnType.Generic.UnboundedWildcard -> {
                     val rawType = type.typeElement.javaClassName
@@ -98,6 +91,4 @@ internal class JavaBindingMethodSpecFactory : BindingMethodSpecFactory<MethodSpe
             }
         }
     }
-
-
 }

@@ -22,14 +22,14 @@ import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 import javax.inject.Named
 
-
+// ######################################################################################################
 
 interface KaptKotlinFragmentDep1
 
 @BindType(installIn = BindType.Component.FRAGMENT)
-internal class KaptKotlinFragmentDep1Impl @Inject constructor(): KaptKotlinFragmentDep1
+internal class KaptKotlinFragmentDep1Impl @Inject constructor() : KaptKotlinFragmentDep1
 
-
+// ######################################################################################################
 
 interface KaptKotlinFragmentDep2
 
@@ -37,25 +37,25 @@ interface KaptKotlinFragmentDep2
     to = KaptKotlinFragmentDep2::class,
     installIn = BindType.Component.FRAGMENT
 )
-internal class KaptKotlinFragmentDep2Impl @Inject constructor(): KaptKotlinFragmentDep2
+internal class KaptKotlinFragmentDep2Impl @Inject constructor() : KaptKotlinFragmentDep2
 
-
+// ######################################################################################################
 
 interface KaptKotlinFragmentDep3
 
 @FragmentScoped
 @BindType
-internal class KaptKotlinFragmentDep3Impl @Inject constructor(): KaptKotlinFragmentDep3
+internal class KaptKotlinFragmentDep3Impl @Inject constructor() : KaptKotlinFragmentDep3
 
-
+// ######################################################################################################
 
 interface KaptKotlinFragmentDep4
 
 @FragmentScoped
 @BindType(to = KaptKotlinFragmentDep4::class)
-internal class KaptKotlinFragmentDep4Impl @Inject constructor(): KaptKotlinFragmentDep4
+internal class KaptKotlinFragmentDep4Impl @Inject constructor() : KaptKotlinFragmentDep4
 
-
+// ######################################################################################################
 
 interface KaptKotlinFragmentDep5
 
@@ -64,9 +64,9 @@ interface KaptKotlinFragmentDep5
     to = KaptKotlinFragmentDep5::class,
     installIn = BindType.Component.FRAGMENT
 )
-internal class KaptKotlinFragmentDep5Impl @Inject constructor(): KaptKotlinFragmentDep5
+internal class KaptKotlinFragmentDep5Impl @Inject constructor() : KaptKotlinFragmentDep5
 
-
+// ######################################################################################################
 
 interface KaptKotlinFragmentDep6
 
@@ -75,23 +75,23 @@ interface KaptKotlinFragmentDep6
     installIn = BindType.Component.FRAGMENT,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinFragmentDep6Impl1 @Inject constructor(): KaptKotlinFragmentDep6
+internal class KaptKotlinFragmentDep6Impl1 @Inject constructor() : KaptKotlinFragmentDep6
 
 @FragmentScoped
 @BindType(
     installIn = BindType.Component.FRAGMENT,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinFragmentDep6Impl2 @Inject constructor(): KaptKotlinFragmentDep6
+internal class KaptKotlinFragmentDep6Impl2 @Inject constructor() : KaptKotlinFragmentDep6
 
 @FragmentScoped
 @BindType(
     installIn = BindType.Component.FRAGMENT,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinFragmentDep6Impl3 @Inject constructor(): KaptKotlinFragmentDep6
+internal class KaptKotlinFragmentDep6Impl3 @Inject constructor() : KaptKotlinFragmentDep6
 
-
+// ######################################################################################################
 
 interface KaptKotlinFragmentDep7
 
@@ -100,23 +100,23 @@ interface KaptKotlinFragmentDep7
     contributesTo = BindType.Collection.MAP
 )
 @MapLongKey(1L)
-internal class KaptKotlinFragmentDep7Impl1 @Inject constructor(): KaptKotlinFragmentDep7
+internal class KaptKotlinFragmentDep7Impl1 @Inject constructor() : KaptKotlinFragmentDep7
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
     contributesTo = BindType.Collection.MAP
 )
 @MapLongKey(2L)
-internal class KaptKotlinFragmentDep7Impl2 @Inject constructor(): KaptKotlinFragmentDep7
+internal class KaptKotlinFragmentDep7Impl2 @Inject constructor() : KaptKotlinFragmentDep7
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
     contributesTo = BindType.Collection.MAP
 )
 @MapLongKey(3L)
-internal class KaptKotlinFragmentDep7Impl3 @Inject constructor(): KaptKotlinFragmentDep7
+internal class KaptKotlinFragmentDep7Impl3 @Inject constructor() : KaptKotlinFragmentDep7
 
-
+// ######################################################################################################
 
 interface KaptKotlinFragmentDep8
 
@@ -125,16 +125,16 @@ interface KaptKotlinFragmentDep8
     withQualifier = true
 )
 @Named("dep8")
-internal class KaptKotlinFragmentDep8Impl @Inject constructor (): KaptKotlinFragmentDep8
+internal class KaptKotlinFragmentDep8Impl @Inject constructor () : KaptKotlinFragmentDep8
 
-
+// ######################################################################################################
 
 abstract class KaptKotlinFragmentDep9<T>
 
 @BindType(installIn = BindType.Component.FRAGMENT)
-internal class KaptKotlinFragmentDep9Impl @Inject constructor(): KaptKotlinFragmentDep9<Float>()
+internal class KaptKotlinFragmentDep9Impl @Inject constructor() : KaptKotlinFragmentDep9<Float>()
 
-
+// ######################################################################################################
 
 abstract class KaptKotlinFragmentDep10<T>
 
@@ -142,9 +142,9 @@ abstract class KaptKotlinFragmentDep10<T>
     to = KaptKotlinFragmentDep10::class,
     installIn = BindType.Component.FRAGMENT
 )
-internal class KaptKotlinFragmentDep10Impl @Inject constructor(): KaptKotlinFragmentDep10<Float>()
+internal class KaptKotlinFragmentDep10Impl @Inject constructor() : KaptKotlinFragmentDep10<Float>()
 
-
+// ######################################################################################################
 
 abstract class KaptKotlinFragmentDep11<T>
 
@@ -152,16 +152,16 @@ abstract class KaptKotlinFragmentDep11<T>
     installIn = BindType.Component.FRAGMENT,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinFragmentDep11Impl1 @Inject constructor(): KaptKotlinFragmentDep11<Float>()
+internal class KaptKotlinFragmentDep11Impl1 @Inject constructor() : KaptKotlinFragmentDep11<Float>()
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinFragmentDep11Impl2 @Inject constructor(): KaptKotlinFragmentDep11<Float>()
+internal class KaptKotlinFragmentDep11Impl2 @Inject constructor() : KaptKotlinFragmentDep11<Float>()
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinFragmentDep11Impl3 @Inject constructor(): KaptKotlinFragmentDep11<Float>()
+internal class KaptKotlinFragmentDep11Impl3 @Inject constructor() : KaptKotlinFragmentDep11<Float>()

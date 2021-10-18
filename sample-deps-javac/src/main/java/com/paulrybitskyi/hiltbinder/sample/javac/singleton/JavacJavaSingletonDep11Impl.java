@@ -25,5 +25,4 @@ public class JavacJavaSingletonDep11Impl extends JavacJavaSingletonDep11<Integer
 
     @Inject
     public JavacJavaSingletonDep11Impl() {}
-
 }

@@ -30,5 +30,4 @@ public class JavacJavaActivityDep7Impl2 implements JavacJavaActivityDep7 {
 
     @Inject
     public JavacJavaActivityDep7Impl2() {}
-
 }

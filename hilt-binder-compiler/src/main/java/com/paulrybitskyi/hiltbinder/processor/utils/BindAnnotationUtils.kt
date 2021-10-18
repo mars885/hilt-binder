@@ -24,28 +24,23 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 
-
 private const val BIND_ANNOTATION_PARAM_TO = "to"
 private const val BIND_ANNOTATION_PARAM_INSTALL_IN = "installIn"
 private const val BIND_ANNOTATION_PARAM_CUSTOM_COMPONENT = "customComponent"
 private const val BIND_ANNOTATION_PARAM_CONTRIBUTES_TO = "contributesTo"
 private const val BIND_ANNOTATION_PARAM_WITH_QUALIFIER = "withQualifier"
 
-
 internal fun XProcessingEnv.getBindAnnotationDefaultType(): XType {
     return getTypeUnsafely(VOID_TYPE_QUALIFIED_NAME)
 }
-
 
 internal fun XTypeElement.getBindAnnotation(): XAnnotation {
     return checkNotNull(getAnnotation(BIND_TYPE_QUALIFIED_NAME))
 }
 
-
 internal fun XAnnotation.getToArg(default: XType? = null): XType? {
     return getTypeValue(BIND_ANNOTATION_PARAM_TO, default)
 }
-
 
 internal fun XAnnotation.getInstallInArg(): Component {
     return getEnumValue(
@@ -55,11 +50,9 @@ internal fun XAnnotation.getInstallInArg(): Component {
     )
 }
 
-
 internal fun XAnnotation.getCustomComponentArg(default: XType? = null): XType? {
     return getTypeValue(BIND_ANNOTATION_PARAM_CUSTOM_COMPONENT, default)
 }
-
 
 internal fun XAnnotation.getContributesToArg(): Collection {
     return getEnumValue(
@@ -68,7 +61,6 @@ internal fun XAnnotation.getContributesToArg(): Collection {
         Collection.NONE
     )
 }
-
 
 internal fun XAnnotation.getWithQualifierArg(): Boolean {
     return getBooleanValue(BIND_ANNOTATION_PARAM_WITH_QUALIFIER, false)

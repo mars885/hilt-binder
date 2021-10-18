@@ -23,5 +23,4 @@ interface XLogger {
     fun warning(message: String, element: XElement? = null)
 
     fun error(message: String, element: XElement? = null)
-
 }

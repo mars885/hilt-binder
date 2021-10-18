@@ -27,5 +27,4 @@ public class JavacJavaSingletonDep9Impl2 implements JavacJavaSingletonDep9 {
 
     @Inject
     public JavacJavaSingletonDep9Impl2() {}
-
 }

@@ -25,5 +25,4 @@ public class JavacJavaViewDep12Impl implements JavacJavaViewDep12 {
 
     @Inject
     public JavacJavaViewDep12Impl() {}
-
 }

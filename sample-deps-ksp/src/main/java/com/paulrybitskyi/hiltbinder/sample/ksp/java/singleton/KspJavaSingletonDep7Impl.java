@@ -30,5 +30,4 @@ public class KspJavaSingletonDep7Impl implements KspJavaSingletonDep7 {
 
     @Inject
     public KspJavaSingletonDep7Impl() {}
-
 }

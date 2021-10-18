@@ -26,15 +26,11 @@ import javax.lang.model.element.AnnotationMirror
 
 internal object XAnnotationFactory {
 
-
     fun createJavacAnnotation(env: JavacProcessingEnv, delegate: AnnotationMirror): XAnnotation {
         return JavacAnnotation(env, delegate)
     }
 
-
     fun createKspAnnotation(env: KspProcessingEnv, delegate: KSAnnotation): XAnnotation {
         return KspAnnotation(env, delegate)
     }
-
-
 }

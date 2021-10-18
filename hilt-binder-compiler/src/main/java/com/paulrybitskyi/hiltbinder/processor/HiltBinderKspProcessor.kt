@@ -25,8 +25,7 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 
 internal class HiltBinderKspProcessor(
     private val processingEnv: SymbolProcessorEnvironment
-): SymbolProcessor {
-
+) : SymbolProcessor {
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         HiltBinderProcessorFactory.createKspProcessor(processingEnv, resolver)
@@ -35,15 +34,11 @@ internal class HiltBinderKspProcessor(
         return emptyList()
     }
 
-
     @AutoService(SymbolProcessorProvider::class)
     class Provider : SymbolProcessorProvider {
 
         override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
             return HiltBinderKspProcessor(environment)
         }
-
     }
-
-
 }

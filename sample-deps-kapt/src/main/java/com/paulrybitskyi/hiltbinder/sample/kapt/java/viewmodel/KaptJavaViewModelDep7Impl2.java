@@ -30,5 +30,4 @@ public class KaptJavaViewModelDep7Impl2 implements KaptJavaViewModelDep7 {
 
     @Inject
     public KaptJavaViewModelDep7Impl2() {}
-
 }

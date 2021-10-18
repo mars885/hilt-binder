@@ -30,5 +30,4 @@ public class JavacJavaViewDep7Impl3 implements JavacJavaViewDep7 {
 
     @Inject
     public JavacJavaViewDep7Impl3() {}
-
 }

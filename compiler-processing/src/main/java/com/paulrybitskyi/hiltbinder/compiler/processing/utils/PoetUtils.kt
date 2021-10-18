@@ -16,7 +16,6 @@
 
 package com.paulrybitskyi.hiltbinder.compiler.processing.utils
 
-
 internal typealias JavaAnnotationSpec = com.squareup.javapoet.AnnotationSpec
 internal typealias JavaClassName = com.squareup.javapoet.ClassName
 internal typealias JavaTypeName = com.squareup.javapoet.TypeName

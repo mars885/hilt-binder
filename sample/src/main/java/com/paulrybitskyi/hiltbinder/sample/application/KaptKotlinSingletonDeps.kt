@@ -48,12 +48,9 @@ internal class KaptKotlinSingletonDeps @Inject constructor(
     private val kaptKotlinSingletonDeps13: Set<@JvmSuppressWildcards KaptKotlinSingletonDep13<*>>
 ) {
 
-
     fun check() {
         check(kaptKotlinSingletonDeps8.size == 3)
         check(kaptKotlinSingletonDeps9.size == 3)
         check(kaptKotlinSingletonDeps13.size == 3)
     }
-
-
 }

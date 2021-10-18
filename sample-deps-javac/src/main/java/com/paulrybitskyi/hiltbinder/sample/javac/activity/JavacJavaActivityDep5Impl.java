@@ -31,5 +31,4 @@ public class JavacJavaActivityDep5Impl implements JavacJavaActivityDep5 {
 
     @Inject
     public JavacJavaActivityDep5Impl() {}
-
 }

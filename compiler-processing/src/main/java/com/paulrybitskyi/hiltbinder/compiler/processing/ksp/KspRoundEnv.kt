@@ -22,8 +22,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XElementFactor
 
 internal class KspRoundEnv(
     private val env: KspProcessingEnv
-): XRoundEnv {
-
+) : XRoundEnv {
 
     override fun getElementsAnnotatedWith(annotationQualifiedName: String): Sequence<XElement> {
         val kspSymbols = env.resolver.getSymbolsWithAnnotation(annotationQualifiedName)
@@ -31,6 +30,4 @@ internal class KspRoundEnv(
 
         return xElements
     }
-
-
 }

@@ -30,5 +30,4 @@ public class KaptJavaActivityDep8Impl implements KaptJavaActivityDep8 {
 
     @Inject
     public KaptJavaActivityDep8Impl() {}
-
 }

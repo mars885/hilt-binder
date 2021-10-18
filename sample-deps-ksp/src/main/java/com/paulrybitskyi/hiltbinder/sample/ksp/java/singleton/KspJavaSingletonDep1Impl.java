@@ -25,5 +25,4 @@ public class KspJavaSingletonDep1Impl implements KspJavaSingletonDep1 {
 
     @Inject
     public KspJavaSingletonDep1Impl() {}
-
 }

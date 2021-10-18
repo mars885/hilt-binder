@@ -21,11 +21,9 @@ import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
 
-
 internal fun Resolver.getTypeByName(qualifiedName: String): KSType? {
     return getClassDeclarationByName(qualifiedName)?.asType()
 }
-
 
 internal fun Resolver.getSuperclass(classDeclaration: KSClassDeclaration): KSType? {
     return classDeclaration.getSuperclass(builtIns.anyType)

@@ -26,7 +26,6 @@ import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 
-
 internal fun TypeElement.toJavaClassName(): JavaClassName {
     return JavaClassName.get(this)
 }
@@ -39,7 +38,6 @@ internal fun AnnotationMirror.toJavaAnnoSpec(): JavaAnnotationSpec {
     return JavaAnnotationSpec.get(this)
 }
 
-
 internal fun TypeElement.toKotlinClassName(): KotlinClassName {
     throwUnsupportedOpError()
 }
@@ -51,7 +49,6 @@ internal fun TypeMirror.toKotlinTypeName(): KotlinTypeName {
 internal fun AnnotationMirror.toKotlinAnnoSpec(): KotlinAnnotationSpec {
     throwUnsupportedOpError()
 }
-
 
 private fun throwUnsupportedOpError(): Nothing {
     throw UnsupportedOperationException(

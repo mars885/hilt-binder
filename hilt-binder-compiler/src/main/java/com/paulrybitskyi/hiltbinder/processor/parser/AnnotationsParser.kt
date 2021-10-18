@@ -31,7 +31,6 @@ internal class AnnotationsParser(
     private val packageNameProvider: PackageNameProvider
 ) {
 
-
     fun parse(annotatedElements: Sequence<XElement>): List<ModuleSchema> {
         val typeElements = annotatedElements.safeCastEach<XTypeElement>()
         val bindings = typeElements.map(bindingSchemaFactory::createBindingSchema)
@@ -43,6 +42,4 @@ internal class AnnotationsParser(
                 moduleSchemaFactory.createModuleSchema(packageName, component, bindings)
             }
     }
-
-
 }

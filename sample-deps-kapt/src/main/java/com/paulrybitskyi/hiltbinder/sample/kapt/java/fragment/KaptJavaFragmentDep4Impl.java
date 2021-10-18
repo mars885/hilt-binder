@@ -28,5 +28,4 @@ public class KaptJavaFragmentDep4Impl implements KaptJavaFragmentDep4 {
 
     @Inject
     public KaptJavaFragmentDep4Impl() {}
-
 }

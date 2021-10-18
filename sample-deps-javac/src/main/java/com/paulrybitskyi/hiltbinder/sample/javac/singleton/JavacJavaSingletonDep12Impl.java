@@ -25,5 +25,4 @@ public class JavacJavaSingletonDep12Impl extends JavacJavaSingletonDep12<Integer
 
     @Inject
     public JavacJavaSingletonDep12Impl() {}
-
 }

@@ -47,13 +47,10 @@ internal class JavacJavaSingletonDeps @Inject constructor(
     private val javacJavaSingletonDep12: JavacJavaSingletonDep12<Int>,
     private val javacJavaSingletonDeps13: Set<@JvmSuppressWildcards JavacJavaSingletonDep13<*>>
 ) {
-    
-    
+
     fun check() {
         check(javacJavaSingletonDeps8.size == 3)
         check(javacJavaSingletonDeps9.size == 3)
         check(javacJavaSingletonDeps13.size == 3)
     }
-    
-    
 }

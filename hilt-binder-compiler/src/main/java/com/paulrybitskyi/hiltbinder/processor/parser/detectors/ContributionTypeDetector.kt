@@ -33,18 +33,16 @@ internal class ContributionTypeDetector(
     private val messageProvider: MessageProvider
 ) {
 
-
     fun detectType(annotatedElement: XTypeElement): ContributionType? {
         val bindAnnotation = annotatedElement.getBindAnnotation()
         val collection = bindAnnotation.getContributesToArg()
 
-        return when(collection) {
+        return when (collection) {
             Collection.NONE -> null
             Collection.SET -> ContributionType.Set
             Collection.MAP -> annotatedElement.createMapContributionType()
         }
     }
-
 
     private fun XTypeElement.createMapContributionType(): ContributionType {
         val daggerMapKeyType = processingEnv.getTypeUnsafely(MAP_KEY_TYPE_QUALIFIED_NAME)
@@ -53,6 +51,4 @@ internal class ContributionTypeDetector(
 
         return ContributionType.Map(mapKeyAnnotation)
     }
-
-
 }

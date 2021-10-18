@@ -28,5 +28,4 @@ public class KaptJavaActivityDep3Impl implements KaptJavaActivityDep3 {
 
     @Inject
     public KaptJavaActivityDep3Impl() {}
-
 }

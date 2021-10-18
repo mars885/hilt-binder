@@ -30,5 +30,4 @@ public class KaptJavaActivityDep7Impl1 implements KaptJavaActivityDep7 {
 
     @Inject
     public KaptJavaActivityDep7Impl1() {}
-
 }

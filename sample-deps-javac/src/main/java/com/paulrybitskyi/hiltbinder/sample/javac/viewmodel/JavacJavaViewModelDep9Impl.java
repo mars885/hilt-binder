@@ -25,5 +25,4 @@ public class JavacJavaViewModelDep9Impl extends JavacJavaViewModelDep9<Float> {
 
     @Inject
     public JavacJavaViewModelDep9Impl() {}
-
 }

@@ -30,7 +30,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
-
     @Inject lateinit var javacJavaActivityDeps: JavacJavaActivityDeps
     @Inject lateinit var javacJavaCustomComponentManager: JavacJavaCustomComponentManager
 
@@ -45,7 +44,6 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     @Inject lateinit var kspKotlinActivityDeps: KspKotlinActivityDeps
     @Inject lateinit var kspKotlinCustomComponentManager: KspKotlinCustomComponentManager
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +64,6 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
         kspKotlinCustomComponentManager.onCreateComponent()
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
 
@@ -76,6 +73,4 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
         kspJavaCustomComponentManager.onDestroyComponent()
         kspKotlinCustomComponentManager.onDestroyComponent()
     }
-
-
 }

@@ -20,18 +20,15 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotated
 import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 
-
 internal fun XAnnotated.hasAnnotation(annotationType: XType): Boolean {
     return (getAnnotation(annotationType) != null)
 }
-
 
 internal fun XAnnotated.getAnnotation(annotationType: XType): XAnnotation? {
     return annotations.firstOrNull {
         it.type == annotationType
     }
 }
-
 
 internal fun XAnnotated.getAnnoMarkedWithAnotherAnno(
     anotherAnnoType: XType

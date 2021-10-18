@@ -25,5 +25,4 @@ public class KaptJavaFragmentDep9Impl extends KaptJavaFragmentDep9<Float> {
 
     @Inject
     public KaptJavaFragmentDep9Impl() {}
-
 }

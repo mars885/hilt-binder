@@ -44,12 +44,9 @@ internal class JavacJavaActivityDeps @Inject constructor(
     private val javacJavaActivityDeps11: Set<@JvmSuppressWildcards JavacJavaActivityDep11<*>>
 ) {
 
-
     fun check() {
         check(javacJavaActivityDeps6.size == 3)
         check(javacJavaActivityDeps7.size == 3)
         check(javacJavaActivityDeps11.size == 3)
     }
-
-
 }

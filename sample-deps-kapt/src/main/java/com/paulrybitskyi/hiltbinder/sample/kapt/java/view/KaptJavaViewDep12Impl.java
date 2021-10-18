@@ -25,5 +25,4 @@ public class KaptJavaViewDep12Impl implements KaptJavaViewDep12 {
 
     @Inject
     public KaptJavaViewDep12Impl() {}
-
 }
