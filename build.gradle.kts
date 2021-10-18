@@ -18,6 +18,7 @@ import com.android.build.gradle.LibraryExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    detekt()
     gradleVersions()
     dokka()
 }
@@ -39,7 +40,27 @@ buildscript {
     }
 }
 
+detekt {
+    parallel = true
+    buildUponDefaultConfig = true
+    config = files("config/detekt/detekt.yml")
+    reports.html.enabled = true
+}
+
 allprojects {
+    project.subprojects
+        .filter { subproject ->
+            subproject.name !in listOf(
+                "sample-deps-javac",
+                "sample-deps-kapt",
+                "sample-deps-ksp",
+                "sample"
+            )
+        }
+        .forEach { subproject ->
+            subproject.apply(plugin = PLUGIN_DETEKT)
+        }
+
     repositories {
         mavenCentral()
         google()

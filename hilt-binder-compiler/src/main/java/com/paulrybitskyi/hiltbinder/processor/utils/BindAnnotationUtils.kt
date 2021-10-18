@@ -19,7 +19,10 @@ package com.paulrybitskyi.hiltbinder.processor.utils
 import com.paulrybitskyi.hiltbinder.BindType.Collection
 import com.paulrybitskyi.hiltbinder.BindType.Component
 import com.paulrybitskyi.hiltbinder.common.utils.VOID_TYPE_QUALIFIED_NAME
-import com.paulrybitskyi.hiltbinder.compiler.processing.*
+import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
+import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
+import com.paulrybitskyi.hiltbinder.compiler.processing.XType
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 
 
 private const val BIND_ANNOTATION_PARAM_TO = "to"

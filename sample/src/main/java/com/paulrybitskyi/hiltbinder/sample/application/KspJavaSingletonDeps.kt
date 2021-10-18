@@ -16,7 +16,19 @@
 
 package com.paulrybitskyi.hiltbinder.sample.application
 
-import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.*
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep1
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep10
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep11
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep12
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep13
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep2
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep3
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep4
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep5
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep6
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep7
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep8
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.singleton.KspJavaSingletonDep9
 import javax.inject.Inject
 import javax.inject.Named
 

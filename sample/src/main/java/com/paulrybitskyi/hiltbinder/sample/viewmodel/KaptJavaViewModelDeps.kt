@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.viewmodel
 
-import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.*
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep1
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep10
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep11
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep2
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep3
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep4
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep5
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep6
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep7
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep8
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.viewmodel.KaptJavaViewModelDep9
 import javax.inject.Inject
 import javax.inject.Named
 

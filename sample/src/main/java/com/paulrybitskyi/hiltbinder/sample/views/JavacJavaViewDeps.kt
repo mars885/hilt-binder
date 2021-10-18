@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.views
 
-import com.paulrybitskyi.hiltbinder.sample.javac.view.*
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep1
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep10
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep11
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep2
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep3
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep4
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep5
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep6
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep7
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep8
+import com.paulrybitskyi.hiltbinder.sample.javac.view.JavacJavaViewDep9
 import javax.inject.Inject
 import javax.inject.Named
 

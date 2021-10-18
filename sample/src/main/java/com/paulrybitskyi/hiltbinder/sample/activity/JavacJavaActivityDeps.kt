@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.activity
 
-import com.paulrybitskyi.hiltbinder.sample.javac.activity.*
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep1
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep10
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep11
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep2
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep3
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep4
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep5
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep6
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep7
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep8
+import com.paulrybitskyi.hiltbinder.sample.javac.activity.JavacJavaActivityDep9
 import javax.inject.Inject
 import javax.inject.Named
 

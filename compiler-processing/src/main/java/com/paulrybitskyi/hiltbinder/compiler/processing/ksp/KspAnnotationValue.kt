@@ -42,7 +42,7 @@ internal class KspAnnotationValue(
                 is KSType -> valueOf(value.simpleName)
                 else -> default
             }
-        } catch(error: Throwable) {
+        } catch(ignore: Throwable) {
             default
         }
     }

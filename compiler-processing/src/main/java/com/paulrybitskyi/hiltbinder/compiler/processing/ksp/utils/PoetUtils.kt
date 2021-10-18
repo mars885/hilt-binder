@@ -16,12 +16,27 @@
 
 package com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils
 
-import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.symbol.ClassKind
+import com.google.devtools.ksp.symbol.KSAnnotation
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSNode
+import com.google.devtools.ksp.symbol.KSType
+import com.google.devtools.ksp.symbol.KSTypeArgument
+import com.google.devtools.ksp.symbol.Variance
 import com.google.devtools.ksp.visitor.KSEmptyVisitor
 import com.paulrybitskyi.hiltbinder.common.utils.PACKAGE_SEPARATOR
-import com.paulrybitskyi.hiltbinder.compiler.processing.utils.*
-import com.squareup.kotlinpoet.*
+import com.paulrybitskyi.hiltbinder.compiler.processing.utils.JavaAnnotationSpec
+import com.paulrybitskyi.hiltbinder.compiler.processing.utils.JavaClassName
+import com.paulrybitskyi.hiltbinder.compiler.processing.utils.JavaTypeName
+import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinAnnotationSpec
+import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinClassName
+import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinTypeName
+import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.STAR
+import com.squareup.kotlinpoet.TypeName
 
 
 private const val INNER_TYPE_SEPARATOR = '.'

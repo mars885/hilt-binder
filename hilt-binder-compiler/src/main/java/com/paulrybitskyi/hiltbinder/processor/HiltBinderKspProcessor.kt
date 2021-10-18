@@ -17,7 +17,10 @@
 package com.paulrybitskyi.hiltbinder.processor
 
 import com.google.auto.service.AutoService
-import com.google.devtools.ksp.processing.*
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
+import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 
 internal class HiltBinderKspProcessor(

@@ -17,11 +17,22 @@
 package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType.Collection
-import com.paulrybitskyi.hiltbinder.compiler.processing.*
+import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
+import com.paulrybitskyi.hiltbinder.compiler.processing.XBackend
+import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
+import com.paulrybitskyi.hiltbinder.compiler.processing.XType
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 import com.paulrybitskyi.hiltbinder.processor.model.ReturnType
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
-import com.paulrybitskyi.hiltbinder.processor.utils.*
+import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotation
+import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotationDefaultType
+import com.paulrybitskyi.hiltbinder.processor.utils.getContributesToArg
+import com.paulrybitskyi.hiltbinder.processor.utils.getRootType
+import com.paulrybitskyi.hiltbinder.processor.utils.getToArg
+import com.paulrybitskyi.hiltbinder.processor.utils.isGeneric
+import com.paulrybitskyi.hiltbinder.processor.utils.qualifiedName
+import com.paulrybitskyi.hiltbinder.processor.utils.typeElement
 
 internal class BindingReturnTypeDetector(
     private val processingEnv: XProcessingEnv,
@@ -114,6 +125,7 @@ internal class BindingReturnTypeDetector(
         val traversedPossibleReturnTypes = mutableSetOf<String>()
         val rootType = processingEnv.getRootType()
 
+        @Suppress("LoopWithTooManyJumpStatements")
         while(possibleReturnTypes.isNotEmpty()) {
             val possibleReturnType = possibleReturnTypes.removeFirst()
             val possibleReturnTypeElement = possibleReturnType.typeElement

@@ -24,6 +24,7 @@ internal class PackageNameProvider {
 
 
     fun providePackageName(bindings: Sequence<BindingSchema>): String {
+        @Suppress("SpreadOperator")
         return bindings
             .map(BindingSchema::packageName)
             .toList()

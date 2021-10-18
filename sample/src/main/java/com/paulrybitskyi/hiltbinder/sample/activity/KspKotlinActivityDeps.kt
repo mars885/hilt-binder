@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.activity
 
-import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.*
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep1
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep10
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep11
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep2
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep3
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep4
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep5
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep6
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep7
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep8
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinActivityDep9
 import javax.inject.Inject
 import javax.inject.Named
 
