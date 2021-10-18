@@ -79,7 +79,7 @@ object versions {
     const val navigation = "2.3.5"
     const val fragmentKtx = "1.3.6"
     const val constraintLayout = "2.1.1"
-    const val dagger = "2.36"
+    const val dagger = "2.39.1"
     const val materialComponents = "1.4.0"
     const val apacheCommons = "3.12.0"
     const val javaPoet = "1.13.0"
