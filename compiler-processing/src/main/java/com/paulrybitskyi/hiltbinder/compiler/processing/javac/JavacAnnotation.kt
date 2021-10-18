@@ -31,8 +31,7 @@ import javax.lang.model.element.AnnotationMirror
 internal class JavacAnnotation(
     private val env: JavacProcessingEnv,
     private val delegate: AnnotationMirror
-): XAnnotation {
-
+) : XAnnotation {
 
     override val type: XType by lazy {
         XTypeFactory.createJavacType(env, delegate.annotationType)
@@ -51,6 +50,4 @@ internal class JavacAnnotation(
     override val kotlinAnnoSpec: KotlinAnnotationSpec by lazy {
         delegate.toKotlinAnnoSpec()
     }
-
-
 }

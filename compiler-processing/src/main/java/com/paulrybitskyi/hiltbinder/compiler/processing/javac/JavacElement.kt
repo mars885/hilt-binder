@@ -32,8 +32,7 @@ import javax.lang.model.element.Parameterizable
 internal abstract class JavacElement(
     protected val env: JavacProcessingEnv,
     open val delegate: Element
-): XElement {
-
+) : XElement {
 
     override val packageName: String
         get() = env.elementUtils.getPackageName(delegate)
@@ -56,12 +55,9 @@ internal abstract class JavacElement(
             .map { XAnnotationFactory.createJavacAnnotation(env, it) }
     }
 
-
     override fun getAnnotation(annotationQualifiedName: String): XAnnotation? {
         return env.elementUtils.getType(annotationQualifiedName)
             ?.let { annoType -> env.typeUtils.getAnnotation(delegate, annoType) }
             ?.let { annoMirror -> XAnnotationFactory.createJavacAnnotation(env, annoMirror) }
     }
-
-
 }

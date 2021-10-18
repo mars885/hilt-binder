@@ -30,8 +30,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinAnnotationSp
 internal class KspAnnotation(
     private val env: KspProcessingEnv,
     private val delegate: KSAnnotation
-): XAnnotation {
-
+) : XAnnotation {
 
     override val type: XType by lazy {
         XTypeFactory.createKspType(env, delegate.annotationType.resolve())
@@ -50,6 +49,4 @@ internal class KspAnnotation(
     override val kotlinAnnoSpec: KotlinAnnotationSpec by lazy {
         delegate.toKotlinAnnoSpec()
     }
-
-
 }

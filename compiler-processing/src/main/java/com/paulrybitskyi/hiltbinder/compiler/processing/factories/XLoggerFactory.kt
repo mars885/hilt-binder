@@ -24,15 +24,11 @@ import javax.annotation.processing.Messager
 
 internal object XLoggerFactory {
 
-
     fun createJavacLogger(delegate: Messager): XLogger {
         return JavacLogger(delegate)
     }
 
-
     fun createKspLogger(delegate: KSPLogger): XLogger {
         return KspLogger(delegate)
     }
-
-
 }

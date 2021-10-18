@@ -24,27 +24,21 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XLogger
 
 internal class KspLogger(
     private val delegate: KSPLogger
-): XLogger {
-
+) : XLogger {
 
     override fun info(message: String, element: XElement?) {
         delegate.info(message, element?.asKspNode())
     }
 
-
     override fun warning(message: String, element: XElement?) {
         delegate.warn(message, element?.asKspNode())
     }
-
 
     override fun error(message: String, element: XElement?) {
         delegate.error(message, element?.asKspNode())
     }
 
-
     private fun XElement.asKspNode(): KSNode {
         return unsafeCast<KspElement>().delegate
     }
-
-
 }

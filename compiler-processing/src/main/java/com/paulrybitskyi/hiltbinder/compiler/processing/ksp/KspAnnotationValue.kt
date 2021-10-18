@@ -27,32 +27,27 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.simpleName
 internal class KspAnnotationValue(
     private val env: KspProcessingEnv,
     private val value: Any?
-): XAnnotationValue {
-
+) : XAnnotationValue {
 
     override fun getAsBoolean(default: Boolean): Boolean {
         return (value?.safeCast() ?: default)
     }
 
-
     override fun <T : Enum<*>> getAsEnum(valueOf: (String) -> T, default: T): T {
         return try {
-            when(value) {
+            when (value) {
                 is Enum<*> -> value.unsafeCast()
                 is KSType -> valueOf(value.simpleName)
                 else -> default
             }
-        } catch(ignore: Throwable) {
+        } catch (ignore: Throwable) {
             default
         }
     }
-
 
     override fun getAsType(default: XType?): XType? {
         return value?.safeCast<KSType>()
             ?.let { XTypeFactory.createKspType(env, it) }
             ?: default
     }
-
-
 }

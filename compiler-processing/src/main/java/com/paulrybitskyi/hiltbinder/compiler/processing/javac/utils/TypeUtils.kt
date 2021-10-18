@@ -21,7 +21,6 @@ import javax.lang.model.element.Element
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Types
 
-
 internal fun Types.getAnnotation(element: Element, annotationType: TypeMirror): AnnotationMirror? {
     return element.annotationMirrors.firstOrNull {
         isSameType(it.annotationType, annotationType)

@@ -26,5 +26,4 @@ interface XType {
     val kotlinTypeName: KotlinTypeName
 
     fun isAssignableFrom(other: XType): Boolean
-
 }

@@ -24,15 +24,11 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.KspProcessingEnv
 
 internal object XAnnotationValueFactory {
 
-
     fun createJavacValue(env: JavacProcessingEnv, value: Any?): XAnnotationValue {
         return JavacAnnotationValue(env, value)
     }
 
-
     fun createKspValue(env: KspProcessingEnv, value: Any?): XAnnotationValue {
         return KspAnnotationValue(env, value)
     }
-
-
 }

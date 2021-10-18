@@ -25,28 +25,23 @@ import javax.lang.model.type.TypeMirror
 internal class JavacAnnotationValue(
     private val env: JavacProcessingEnv,
     private val value: Any?
-): XAnnotationValue {
-
+) : XAnnotationValue {
 
     override fun getAsBoolean(default: Boolean): Boolean {
         return (value?.safeCast() ?: default)
     }
 
-
     override fun <T : Enum<*>> getAsEnum(valueOf: (String) -> T, default: T): T {
         return try {
             valueOf(value.toString())
-        } catch(ignore: Throwable) {
+        } catch (ignore: Throwable) {
             default
         }
     }
-
 
     override fun getAsType(default: XType?): XType? {
         return value?.safeCast<TypeMirror>()
             ?.let { XTypeFactory.createJavacType(env, it) }
             ?: default
     }
-
-
 }

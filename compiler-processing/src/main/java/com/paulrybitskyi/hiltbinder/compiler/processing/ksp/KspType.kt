@@ -29,8 +29,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinTypeName
 internal class KspType(
     private val env: KspProcessingEnv,
     val delegate: KSType
-): XType {
-
+) : XType {
 
     override val element: XElement by lazy {
         XElementFactory.createKspElement(env, delegate.declaration)
@@ -44,13 +43,11 @@ internal class KspType(
         delegate.toKotlinTypeName()
     }
 
-
     override fun isAssignableFrom(other: XType): Boolean {
         return other.safeCast<KspType>()
             ?.let { delegate.isAssignableFrom(it.delegate) }
             ?: false
     }
-
 
     override fun equals(other: Any?): Boolean {
         return other?.safeCast<KspType>()
@@ -58,15 +55,11 @@ internal class KspType(
             ?: false
     }
 
-
     override fun hashCode(): Int {
         return delegate.hashCode()
     }
 
-
     override fun toString(): String {
         return delegate.toString()
     }
-
-
 }

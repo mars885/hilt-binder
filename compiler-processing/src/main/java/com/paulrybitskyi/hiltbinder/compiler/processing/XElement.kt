@@ -23,5 +23,4 @@ interface XElement : XAnnotated {
     val qualifiedName: String?
     val typeParameterCount: Int
     val originatingElement: XOriginatingElement?
-
 }

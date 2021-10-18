@@ -27,7 +27,6 @@ import com.google.devtools.ksp.symbol.Nullability
 import com.paulrybitskyi.hiltbinder.common.utils.KOTLIN_ENUM_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.common.utils.unsafeCast
 
-
 internal val KSType.simpleName: String
     get() = declaration.simpleNameStr
 
@@ -53,13 +52,11 @@ internal val KSClassDeclaration.isClass: Boolean
 internal val KSDeclaration.packageNameStr: String
     get() = packageName.asString()
 
-
 internal fun KSAnnotated.getAnnotation(annotationType: KSType): KSAnnotation? {
     return annotations.firstOrNull {
         it.annotationType.resolve() == annotationType
     }
 }
-
 
 internal fun KSClassDeclaration.getSuperclass(anyType: KSType): KSType? {
     return superTypes
@@ -71,25 +68,22 @@ internal fun KSClassDeclaration.getSuperclass(anyType: KSType): KSType? {
         }
 }
 
-
 internal fun KSClassDeclaration.getInterfaces(): Sequence<KSType> {
     return superTypes
         .withNotNullablePlatformTypes()
         .filter { it.classDeclaration.classKind == ClassKind.INTERFACE }
 }
 
-
 private fun Sequence<KSTypeReference>.withNotNullablePlatformTypes(): Sequence<KSType> {
     return map { typeReference ->
         val type = typeReference.resolve()
 
-        when(type.nullability) {
+        when (type.nullability) {
             Nullability.PLATFORM -> type.makeNotNullable()
             else -> type
         }
     }
 }
-
 
 internal fun KSClassDeclaration.asType(): KSType {
     return asType(emptyList())

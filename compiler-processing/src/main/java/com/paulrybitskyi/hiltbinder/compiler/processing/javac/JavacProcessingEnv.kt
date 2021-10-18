@@ -37,8 +37,7 @@ import javax.lang.model.util.Types
 internal class JavacProcessingEnv(
     private val delegate: ProcessingEnvironment,
     private val roundEnvironment: RoundEnvironment
-): XProcessingEnv {
-
+) : XProcessingEnv {
 
     val elementUtils: Elements = delegate.elementUtils
     val typeUtils: Types = delegate.typeUtils
@@ -57,19 +56,15 @@ internal class JavacProcessingEnv(
         XFilerFactory.createJavacFiler(delegate.filer)
     }
 
-
     override fun getType(qualifiedName: String): XType? {
         return elementUtils.getType(qualifiedName)?.let {
             XTypeFactory.createJavacType(this, it)
         }
     }
 
-
     override fun getTypeElement(qualifiedName: String): XTypeElement? {
         return elementUtils.getTypeElement(qualifiedName)?.let {
             XTypeElementFactory.createJavacTypeElement(this, it)
         }
     }
-
-
 }

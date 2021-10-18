@@ -31,9 +31,8 @@ import javax.lang.model.element.TypeElement
 internal class JavacTypeElement(
     env: JavacProcessingEnv,
     override val delegate: TypeElement
-): JavacElement(env, delegate), XTypeElement {
+) : JavacElement(env, delegate), XTypeElement {
 
-    
     override val qualifiedName: String by lazy {
         delegate.qualifiedNameStr
     }
@@ -63,20 +62,15 @@ internal class JavacTypeElement(
         delegate.toKotlinClassName()
     }
 
-
     override fun equals(other: Any?): Boolean {
         return (delegate == other?.safeCast<JavacTypeElement>()?.delegate)
     }
-
 
     override fun hashCode(): Int {
         return delegate.hashCode()
     }
 
-
     override fun toString(): String {
         return delegate.toString()
     }
-
-
 }

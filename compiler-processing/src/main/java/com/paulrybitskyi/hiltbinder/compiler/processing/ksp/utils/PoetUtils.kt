@@ -38,10 +38,8 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.STAR
 import com.squareup.kotlinpoet.TypeName
 
-
 private const val INNER_TYPE_SEPARATOR = '.'
 private const val ANNOTATION_INDICATOR_SYMBOL = '@'
-
 
 internal fun KSClassDeclaration.toKotlinClassName(): KotlinClassName {
     val packageName = packageNameStr
@@ -51,24 +49,21 @@ internal fun KSClassDeclaration.toKotlinClassName(): KotlinClassName {
     return ClassName(packageName, simpleNames)
 }
 
-
 internal fun KSType.toKotlinTypeName(): KotlinTypeName {
     return toKotlinTypeName(mutableListOf())
 }
 
-
 private fun KSType.toKotlinTypeName(typeArguments: MutableList<TypeName>): KotlinTypeName {
     val className = classDeclaration.toKotlinClassName()
 
-    if(arguments.isEmpty()) return className
+    if (arguments.isEmpty()) return className
 
-    for(argument in arguments) {
+    for (argument in arguments) {
         typeArguments.add(argument.toKotlinTypeName())
     }
 
     return className.parameterizedBy(typeArguments)
 }
-
 
 private fun KSTypeArgument.toKotlinTypeName(): KotlinTypeName {
     return accept(
@@ -86,18 +81,16 @@ private fun KSTypeArgument.toKotlinTypeName(): KotlinTypeName {
             override fun defaultHandler(node: KSNode, data: Unit): TypeName {
                 throw IllegalArgumentException("Unexpected node: $node.")
             }
-
         },
         Unit
     )
 }
 
-
 internal fun KSAnnotation.toKotlinAnnoSpec(): KotlinAnnotationSpec {
     val className = annotationType.resolve().classDeclaration.toKotlinClassName()
     val annotationSpec = AnnotationSpec.builder(className)
 
-    for(argument in arguments) {
+    for (argument in arguments) {
         val argValue = (argument.value ?: continue)
         val argName = argument.name?.asString()
         val adjustedArgName = when {
@@ -111,9 +104,8 @@ internal fun KSAnnotation.toKotlinAnnoSpec(): KotlinAnnotationSpec {
     return annotationSpec.build()
 }
 
-
 private fun Any.toCodeBlock(argName: String = ""): CodeBlock {
-    return when(this) {
+    return when (this) {
         is Char -> CodeBlock.create(argName, "'%L'", this)
         is Float -> CodeBlock.create(argName, "%Lf", this)
         is String -> CodeBlock.create(argName, "%S", this)
@@ -124,12 +116,11 @@ private fun Any.toCodeBlock(argName: String = ""): CodeBlock {
     }
 }
 
-
 private fun KSType.toCodeBlock(argName: String): CodeBlock {
     val argValueDeclaration = classDeclaration
     val argValueClassName = argValueDeclaration.toKotlinClassName()
     val argValueClassKind = argValueDeclaration.classKind
-    val argValueFormat = when(argValueClassKind) {
+    val argValueFormat = when (argValueClassKind) {
         ClassKind.ENUM_ENTRY -> "%T"
         else -> "%T::class"
     }
@@ -137,15 +128,14 @@ private fun KSType.toCodeBlock(argName: String): CodeBlock {
     return CodeBlock.create(argName, argValueFormat, argValueClassName)
 }
 
-
 private fun ArrayList<*>.toCodeBlock(argName: String): CodeBlock {
     val members = mutableListOf<String>()
 
-    for(member in this) {
+    for (member in this) {
         val codeBlock = member.toCodeBlock()
             .toString()
             .let { codeStr ->
-                if(member is KSAnnotation) {
+                if (member is KSAnnotation) {
                     // Annotations wrapped in arrays/lists should
                     // not start with @ symbol
                     codeStr.trimStart(ANNOTATION_INDICATOR_SYMBOL)
@@ -160,7 +150,6 @@ private fun ArrayList<*>.toCodeBlock(argName: String): CodeBlock {
     return CodeBlock.create(argName, "%L", members)
 }
 
-
 private fun CodeBlock.Companion.create(
     argName: String,
     format: String,
@@ -169,21 +158,17 @@ private fun CodeBlock.Companion.create(
     return of("$argName$format", *args)
 }
 
-
 internal fun KSClassDeclaration.toJavaClassName(): JavaClassName {
     throwUnsupportedOpError()
 }
-
 
 internal fun KSType.toJavaTypeName(): JavaTypeName {
     throwUnsupportedOpError()
 }
 
-
 internal fun KSAnnotation.toJavaAnnoSpec(): JavaAnnotationSpec {
     throwUnsupportedOpError()
 }
-
 
 private fun throwUnsupportedOpError(): Nothing {
     throw UnsupportedOperationException(

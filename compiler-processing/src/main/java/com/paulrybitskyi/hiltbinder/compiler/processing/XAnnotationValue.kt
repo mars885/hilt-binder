@@ -23,5 +23,4 @@ interface XAnnotationValue {
     fun <T : Enum<*>> getAsEnum(valueOf: (String) -> T, default: T): T
 
     fun getAsType(default: XType?): XType?
-
 }

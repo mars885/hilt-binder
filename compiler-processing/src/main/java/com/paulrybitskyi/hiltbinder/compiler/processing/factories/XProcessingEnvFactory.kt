@@ -26,7 +26,6 @@ import javax.annotation.processing.RoundEnvironment
 
 object XProcessingEnvFactory {
 
-
     fun createJavacEnv(
         processingEnv: ProcessingEnvironment,
         roundEnv: RoundEnvironment
@@ -34,13 +33,10 @@ object XProcessingEnvFactory {
         return JavacProcessingEnv(processingEnv, roundEnv)
     }
 
-
     fun createKspEnv(
         processingEnv: SymbolProcessorEnvironment,
         resolver: Resolver
     ): XProcessingEnv {
         return KspProcessingEnv(processingEnv, resolver)
     }
-
-
 }

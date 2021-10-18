@@ -29,5 +29,4 @@ interface XTypeElement : XElement {
     val interfaces: List<XType>
     val javaClassName: JavaClassName
     val kotlinClassName: KotlinClassName
-
 }

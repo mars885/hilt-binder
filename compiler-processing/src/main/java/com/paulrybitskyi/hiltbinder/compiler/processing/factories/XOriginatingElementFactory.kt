@@ -24,15 +24,11 @@ import javax.lang.model.element.Element
 
 internal object XOriginatingElementFactory {
 
-
     fun createJavacElement(element: Element): XOriginatingElement {
         return JavacOriginatingElement(element)
     }
 
-
     fun createKspElement(file: KSFile): XOriginatingElement {
         return KspOriginatingElement(file)
     }
-
-
 }

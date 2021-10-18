@@ -27,9 +27,8 @@ import javax.lang.model.element.ElementKind
 
 internal object XElementFactory {
 
-
     fun createJavacElement(env: JavacProcessingEnv, delegate: Element): XElement {
-        return when(delegate.kind) {
+        return when (delegate.kind) {
             ElementKind.CLASS,
             ElementKind.ENUM,
             ElementKind.INTERFACE,
@@ -38,13 +37,10 @@ internal object XElementFactory {
         }
     }
 
-
     fun createKspElement(env: KspProcessingEnv, delegate: KSAnnotated): XElement {
-        return when(delegate) {
+        return when (delegate) {
             is KSClassDeclaration -> XTypeElementFactory.createKspTypeElement(env, delegate)
             else -> error("A KSP element $delegate is not supported.")
         }
     }
-
-
 }

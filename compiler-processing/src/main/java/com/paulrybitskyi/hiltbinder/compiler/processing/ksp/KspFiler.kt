@@ -24,8 +24,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XFiler
 
 internal class KspFiler(
     private val delegate: CodeGenerator
-): XFiler {
-
+) : XFiler {
 
     override fun createSourceFile(file: XFiler.File) {
         delegate.createNewFile(
@@ -41,12 +40,9 @@ internal class KspFiler(
         .use { writer -> writer.write(file.content) }
     }
 
-
     private fun XFiler.File.getOriginatingSourceFiles(): Array<KSFile> {
         return originatingElements
             .mapNotNull { it.safeCast<KspOriginatingElement>()?.file }
             .toTypedArray()
     }
-
-
 }
