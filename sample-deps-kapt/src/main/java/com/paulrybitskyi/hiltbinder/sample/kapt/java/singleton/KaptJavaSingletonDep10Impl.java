@@ -27,5 +27,4 @@ public class KaptJavaSingletonDep10Impl implements KaptJavaSingletonDep10 {
 
     @Inject
     public KaptJavaSingletonDep10Impl() {}
-
 }

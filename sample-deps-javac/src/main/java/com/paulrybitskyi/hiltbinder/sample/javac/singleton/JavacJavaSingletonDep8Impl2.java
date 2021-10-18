@@ -27,5 +27,4 @@ public class JavacJavaSingletonDep8Impl2 implements JavacJavaSingletonDep8 {
 
     @Inject
     public JavacJavaSingletonDep8Impl2() {}
-
 }

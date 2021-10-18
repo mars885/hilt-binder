@@ -28,5 +28,4 @@ public class JavacJavaActivityDep10Impl extends JavacJavaActivityDep10<Float> {
 
     @Inject
     public JavacJavaActivityDep10Impl() {}
-
 }

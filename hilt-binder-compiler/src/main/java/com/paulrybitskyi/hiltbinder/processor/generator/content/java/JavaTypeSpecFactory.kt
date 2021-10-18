@@ -27,8 +27,7 @@ import javax.lang.model.element.Modifier
 
 internal class JavaTypeSpecFactory(
     private val bindingMethodSpecFactory: JavaBindingMethodSpecFactory
-): TypeSpecFactory<TypeSpec> {
-
+) : TypeSpecFactory<TypeSpec> {
 
     override fun createTypeSpec(moduleSchema: ModuleSchema): TypeSpec {
         return TypeSpec.interfaceBuilder(moduleSchema.interfaceName)
@@ -39,12 +38,9 @@ internal class JavaTypeSpecFactory(
             .build()
     }
 
-
     private fun ModuleSchema.createComponentInstallationAnnotation(): AnnotationSpec {
         return AnnotationSpec.builder(DAGGER_TYPE_INSTALL_IN_JAVA_CLASS_NAME)
             .addMember("value", "\$T.class", componentType.javaClassName)
             .build()
     }
-
-
 }

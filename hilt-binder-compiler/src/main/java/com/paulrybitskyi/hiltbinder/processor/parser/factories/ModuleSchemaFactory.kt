@@ -28,7 +28,6 @@ internal class ModuleSchemaFactory(
     private val moduleInterfaceNameFactory: ModuleInterfaceNameFactory
 ) {
 
-
     fun createModuleSchema(
         packageName: String,
         component: HiltComponent,
@@ -42,10 +41,7 @@ internal class ModuleSchemaFactory(
         )
     }
 
-
     private fun HiltComponent.toTypeElement(): XTypeElement {
         return checkNotNull(processingEnv.getTypeElement(qualifiedName))
     }
-
-
 }

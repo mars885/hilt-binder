@@ -30,5 +30,4 @@ public class KaptJavaViewDep14Impl extends KaptJavaViewDep14 {
 
     @Inject
     public KaptJavaViewDep14Impl() {}
-
 }

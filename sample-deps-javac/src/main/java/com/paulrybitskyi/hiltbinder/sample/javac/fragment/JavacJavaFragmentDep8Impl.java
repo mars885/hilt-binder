@@ -30,5 +30,4 @@ public class JavacJavaFragmentDep8Impl implements JavacJavaFragmentDep8 {
 
     @Inject
     public JavacJavaFragmentDep8Impl() {}
-
 }

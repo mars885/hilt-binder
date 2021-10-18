@@ -25,5 +25,4 @@ public class JavacJavaActivityDep1Impl implements JavacJavaActivityDep1 {
 
     @Inject
     public JavacJavaActivityDep1Impl() {}
-
 }

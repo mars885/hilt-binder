@@ -16,19 +16,15 @@
 
 package com.paulrybitskyi.hiltbinder.processor.generator.content.utils
 
-
 private class ClassInfo(val packageName: String, val className: String)
-
 
 private fun ClassInfo.toJavaClassName(): com.squareup.javapoet.ClassName {
     return com.squareup.javapoet.ClassName.get(packageName, className)
 }
 
-
 private fun ClassInfo.toKotlinClassName(): com.squareup.kotlinpoet.ClassName {
     return com.squareup.kotlinpoet.ClassName(packageName, className)
 }
-
 
 private val DAGGER_TYPE_MODULE_CLASS_INFO = ClassInfo("dagger", "Module")
 private val DAGGER_TYPE_INSTALL_IN_CLASS_INFO = ClassInfo("dagger.hilt", "InstallIn")

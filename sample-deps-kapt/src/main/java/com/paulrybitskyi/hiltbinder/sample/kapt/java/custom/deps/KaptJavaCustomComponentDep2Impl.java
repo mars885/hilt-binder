@@ -31,5 +31,4 @@ public class KaptJavaCustomComponentDep2Impl extends KaptJavaCustomComponentDep2
 
     @Inject
     public KaptJavaCustomComponentDep2Impl() {}
-
 }

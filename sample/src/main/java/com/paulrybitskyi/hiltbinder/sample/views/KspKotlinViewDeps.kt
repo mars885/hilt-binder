@@ -44,12 +44,9 @@ internal class KspKotlinViewDeps @Inject constructor(
     private val kspKotlinViewDeps11: Set<@JvmSuppressWildcards KspKotlinViewDep11<*>>
 ) {
 
-
     fun check() {
         check(kspKotlinViewDeps6.size == 3)
         check(kspKotlinViewDeps7.size == 3)
         check(kspKotlinViewDeps11.size == 3)
     }
-
-
 }

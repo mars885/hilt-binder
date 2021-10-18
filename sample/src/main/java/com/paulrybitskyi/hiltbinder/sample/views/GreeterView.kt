@@ -27,15 +27,13 @@ internal class GreeterView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): AppCompatTextView(context, attrs, defStyleAttr) {
-
+) : AppCompatTextView(context, attrs, defStyleAttr) {
 
     @Inject lateinit var javacJavaViewDeps: JavacJavaViewDeps
     @Inject lateinit var kaptJavaViewDeps: KaptJavaViewDeps
     @Inject lateinit var kaptKotlinViewDeps: KaptKotlinViewDeps
     @Inject lateinit var kspJavaViewDeps: KspJavaViewDeps
     @Inject lateinit var kspKotlinViewDeps: KspKotlinViewDeps
-
 
     init {
         javacJavaViewDeps.check()
@@ -44,6 +42,4 @@ internal class GreeterView @JvmOverloads constructor(
         kspJavaViewDeps.check()
         kspKotlinViewDeps.check()
     }
-
-
 }

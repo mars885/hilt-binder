@@ -31,5 +31,4 @@ public class KaptJavaViewModelDep5Impl implements KaptJavaViewModelDep5 {
 
     @Inject
     public KaptJavaViewModelDep5Impl() {}
-
 }

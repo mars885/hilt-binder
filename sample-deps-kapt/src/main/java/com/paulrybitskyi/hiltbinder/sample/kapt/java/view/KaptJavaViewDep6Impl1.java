@@ -31,5 +31,4 @@ public class KaptJavaViewDep6Impl1 implements KaptJavaViewDep6 {
 
     @Inject
     public KaptJavaViewDep6Impl1() {}
-
 }

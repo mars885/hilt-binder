@@ -21,9 +21,8 @@ import com.paulrybitskyi.hiltbinder.processor.model.PredefinedHiltComponent
 
 internal class PredefinedHiltComponentMapper {
 
-
     fun mapToPredefinedComponent(component: BindType.Component): PredefinedHiltComponent {
-        return when(component) {
+        return when (component) {
             BindType.Component.SINGLETON -> PredefinedHiltComponent.SINGLETON
             BindType.Component.ACTIVITY_RETAINED -> PredefinedHiltComponent.ACTIVITY_RETAINED
             BindType.Component.SERVICE -> PredefinedHiltComponent.SERVICE
@@ -38,6 +37,4 @@ internal class PredefinedHiltComponentMapper {
             )
         }
     }
-
-
 }

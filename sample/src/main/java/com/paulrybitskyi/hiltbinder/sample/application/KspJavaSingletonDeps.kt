@@ -48,12 +48,9 @@ internal class KspJavaSingletonDeps @Inject constructor(
     private val kspJavaSingletonDeps13: Set<@JvmSuppressWildcards KspJavaSingletonDep13<*>>
 ) {
 
-
     fun check() {
         check(kspJavaSingletonDeps8.size == 3)
         check(kspJavaSingletonDeps9.size == 3)
         check(kspJavaSingletonDeps13.size == 3)
     }
-
-
 }

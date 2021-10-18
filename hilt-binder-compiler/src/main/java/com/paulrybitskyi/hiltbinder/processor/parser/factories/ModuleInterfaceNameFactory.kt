@@ -21,17 +21,11 @@ import com.paulrybitskyi.hiltbinder.processor.model.simpleName
 
 internal class ModuleInterfaceNameFactory {
 
-
     private companion object {
-
         private const val INTERFACE_NAME_TEMPLATE = "HiltBinder_%sModule"
-
     }
-
 
     fun createInterfaceName(component: HiltComponent): String {
         return String.format(INTERFACE_NAME_TEMPLATE, component.simpleName)
     }
-
-
 }

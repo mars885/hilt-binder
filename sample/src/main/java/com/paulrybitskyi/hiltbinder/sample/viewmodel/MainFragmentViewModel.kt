@@ -27,8 +27,7 @@ internal class MainFragmentViewModel @Inject constructor(
     private val kaptKotlinDeps: KaptKotlinViewModelDeps,
     private val kspJavaDeps: KspJavaViewModelDeps,
     private val kspKotlinDeps: KspKotlinViewModelDeps
-): ViewModel() {
-
+) : ViewModel() {
 
     fun check() {
         javacJavaDeps.check()
@@ -37,6 +36,4 @@ internal class MainFragmentViewModel @Inject constructor(
         kspJavaDeps.check()
         kspKotlinDeps.check()
     }
-
-
 }

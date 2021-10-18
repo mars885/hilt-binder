@@ -30,5 +30,4 @@ public class JavacJavaViewModelDep7Impl2 implements JavacJavaViewModelDep7 {
 
     @Inject
     public JavacJavaViewModelDep7Impl2() {}
-
 }

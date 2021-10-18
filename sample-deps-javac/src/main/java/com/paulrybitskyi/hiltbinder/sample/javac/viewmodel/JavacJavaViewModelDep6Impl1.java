@@ -31,5 +31,4 @@ public class JavacJavaViewModelDep6Impl1 implements JavacJavaViewModelDep6 {
 
     @Inject
     public JavacJavaViewModelDep6Impl1() {}
-
 }

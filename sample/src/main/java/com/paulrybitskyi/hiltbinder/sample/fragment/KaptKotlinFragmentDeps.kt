@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.fragment
 
-import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.*
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep1
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep10
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep11
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep2
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep3
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep4
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep5
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep6
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep7
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep8
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinFragmentDep9
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -34,12 +44,9 @@ internal class KaptKotlinFragmentDeps @Inject constructor(
     private val kaptKotlinFragmentDeps11: Set<@JvmSuppressWildcards KaptKotlinFragmentDep11<*>>
 ) {
 
-
     fun check() {
         check(kaptKotlinFragmentDeps6.size == 3)
         check(kaptKotlinFragmentDeps7.size == 3)
         check(kaptKotlinFragmentDeps11.size == 3)
     }
-
-
 }

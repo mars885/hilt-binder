@@ -18,13 +18,9 @@ package com.paulrybitskyi.hiltbinder.processor.generator.content
 
 import com.paulrybitskyi.hiltbinder.processor.model.BindingSchema
 
-
 internal interface BindingMethodSpecFactory<MS : Any> {
-
     fun createMethodSpec(bindingSchema: BindingSchema): MS
-
 }
-
 
 internal fun <MS : Any> BindingMethodSpecFactory<MS>.createMethodSpecs(
     bindingSchemas: List<BindingSchema>

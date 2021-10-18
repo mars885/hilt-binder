@@ -30,5 +30,4 @@ public class JavacJavaViewDep13Impl implements JavacJavaViewDep13 {
 
     @Inject
     public JavacJavaViewDep13Impl() {}
-
 }

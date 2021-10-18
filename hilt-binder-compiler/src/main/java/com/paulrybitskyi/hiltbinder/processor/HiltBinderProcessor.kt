@@ -31,26 +31,22 @@ internal class HiltBinderProcessor(
     private val moduleFileGenerator: ModuleFileGenerator
 ) {
 
-
     fun process() {
         try {
             val elements = roundEnv.getElementsAnnotatedWith(BIND_TYPE_QUALIFIED_NAME)
             val moduleSchemas = annotationsParser.parse(elements)
 
             moduleFileGenerator.generateModuleFiles(moduleSchemas)
-        } catch(expected: Throwable) {
+        } catch (expected: Throwable) {
             reportError(expected)
         }
     }
 
-
     private fun reportError(error: Throwable) {
-        if(error is HiltBinderException) {
+        if (error is HiltBinderException) {
             logger.error(checkNotNull(error.message), error.element)
         } else {
             logger.error(error.message ?: error.toString())
         }
     }
-
-
 }

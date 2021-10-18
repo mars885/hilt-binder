@@ -18,28 +18,25 @@ package com.paulrybitskyi.hiltbinder.processor
 
 import com.google.auto.service.AutoService
 import com.paulrybitskyi.hiltbinder.processor.utils.BIND_TYPE_QUALIFIED_NAME
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.AGGREGATING)
 @AutoService(Processor::class)
 internal class HiltBinderJavacProcessor : AbstractProcessor() {
 
-
     override fun getSupportedAnnotationTypes(): Set<String> {
         return setOf(BIND_TYPE_QUALIFIED_NAME)
     }
 
-
     override fun getSupportedSourceVersion(): SourceVersion {
         return SourceVersion.latestSupported()
     }
-
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
         HiltBinderProcessorFactory.createJavacProcessor(processingEnv, roundEnv)
@@ -47,6 +44,4 @@ internal class HiltBinderJavacProcessor : AbstractProcessor() {
 
         return false
     }
-
-
 }

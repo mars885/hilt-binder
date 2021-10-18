@@ -31,5 +31,4 @@ public class JavacJavaActivityDep6Impl1 implements JavacJavaActivityDep6 {
 
     @Inject
     public JavacJavaActivityDep6Impl1() {}
-
 }

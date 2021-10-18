@@ -44,12 +44,9 @@ internal class KaptJavaActivityDeps @Inject constructor(
     private val kaptJavaActivityDeps11: Set<@JvmSuppressWildcards KaptJavaActivityDep11<*>>
 ) {
 
-
     fun check() {
         check(kaptJavaActivityDeps6.size == 3)
         check(kaptJavaActivityDeps7.size == 3)
         check(kaptJavaActivityDeps11.size == 3)
     }
-
-
 }

@@ -31,5 +31,4 @@ public class JavacJavaFragmentDep6Impl2 implements JavacJavaFragmentDep6 {
 
     @Inject
     public JavacJavaFragmentDep6Impl2() {}
-
 }

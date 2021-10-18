@@ -28,5 +28,4 @@ public class KaptJavaViewDep10Impl extends KaptJavaViewDep10<Double> {
 
     @Inject
     public KaptJavaViewDep10Impl() {}
-
 }

@@ -28,5 +28,4 @@ public class JavacJavaFragmentDep11Impl2 extends JavacJavaFragmentDep11<Float> {
 
     @Inject
     public JavacJavaFragmentDep11Impl2() {}
-
 }

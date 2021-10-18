@@ -43,13 +43,10 @@ internal class JavacJavaFragmentDeps @Inject constructor(
     private val javacJavaFragmentDep10: JavacJavaFragmentDep10<Float>,
     private val javacJavaFragmentDeps11: Set<@JvmSuppressWildcards JavacJavaFragmentDep11<*>>
 ) {
-    
-    
+
     fun check() {
         check(javacJavaFragmentDeps6.size == 3)
         check(javacJavaFragmentDeps7.size == 3)
         check(javacJavaFragmentDeps11.size == 3)
     }
-    
-    
 }

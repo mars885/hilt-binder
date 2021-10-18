@@ -25,5 +25,4 @@ public class KaptJavaViewDep9Impl extends KaptJavaViewDep9<Double> {
 
     @Inject
     public KaptJavaViewDep9Impl() {}
-
 }

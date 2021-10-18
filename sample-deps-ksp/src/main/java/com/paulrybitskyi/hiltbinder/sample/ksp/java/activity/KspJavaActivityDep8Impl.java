@@ -30,5 +30,4 @@ public class KspJavaActivityDep8Impl implements KspJavaActivityDep8 {
 
     @Inject
     public KspJavaActivityDep8Impl() {}
-
 }

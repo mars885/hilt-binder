@@ -31,5 +31,4 @@ public class KspJavaActivityDep6Impl3 implements KspJavaActivityDep6 {
 
     @Inject
     public KspJavaActivityDep6Impl3() {}
-
 }

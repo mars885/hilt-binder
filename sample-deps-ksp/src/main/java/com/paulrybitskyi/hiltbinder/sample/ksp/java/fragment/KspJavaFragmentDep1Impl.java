@@ -25,5 +25,4 @@ public class KspJavaFragmentDep1Impl implements KspJavaFragmentDep1 {
 
     @Inject
     public KspJavaFragmentDep1Impl() {}
-
 }

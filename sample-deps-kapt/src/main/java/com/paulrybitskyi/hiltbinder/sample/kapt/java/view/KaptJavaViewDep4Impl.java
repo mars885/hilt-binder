@@ -28,5 +28,4 @@ public class KaptJavaViewDep4Impl implements KaptJavaViewDep4 {
 
     @Inject
     public KaptJavaViewDep4Impl() {}
-
 }

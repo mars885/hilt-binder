@@ -22,14 +22,14 @@ import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import javax.inject.Named
 
-
+// ######################################################################################################
 
 interface KaptKotlinActivityDep1
 
 @BindType(installIn = BindType.Component.ACTIVITY)
-internal class KaptKotlinActivityDep1Impl @Inject constructor(): KaptKotlinActivityDep1
+internal class KaptKotlinActivityDep1Impl @Inject constructor() : KaptKotlinActivityDep1
 
-
+// ######################################################################################################
 
 interface KaptKotlinActivityDep2
 
@@ -37,25 +37,25 @@ interface KaptKotlinActivityDep2
     to = KaptKotlinActivityDep2::class,
     installIn = BindType.Component.ACTIVITY
 )
-internal class KaptKotlinActivityDep2Impl @Inject constructor(): KaptKotlinActivityDep2
+internal class KaptKotlinActivityDep2Impl @Inject constructor() : KaptKotlinActivityDep2
 
-
+// ######################################################################################################
 
 interface KaptKotlinActivityDep3
 
 @ActivityScoped
 @BindType
-internal class KaptKotlinActivityDep3Impl @Inject constructor(): KaptKotlinActivityDep3
+internal class KaptKotlinActivityDep3Impl @Inject constructor() : KaptKotlinActivityDep3
 
-
+// ######################################################################################################
 
 interface KaptKotlinActivityDep4
 
 @ActivityScoped
 @BindType(to = KaptKotlinActivityDep4::class)
-internal class KaptKotlinActivityDep4Impl @Inject constructor(): KaptKotlinActivityDep4
+internal class KaptKotlinActivityDep4Impl @Inject constructor() : KaptKotlinActivityDep4
 
-
+// ######################################################################################################
 
 interface KaptKotlinActivityDep5
 
@@ -64,9 +64,9 @@ interface KaptKotlinActivityDep5
     to = KaptKotlinActivityDep5::class,
     installIn = BindType.Component.ACTIVITY
 )
-internal class KaptKotlinActivityDep5Impl @Inject constructor(): KaptKotlinActivityDep5
+internal class KaptKotlinActivityDep5Impl @Inject constructor() : KaptKotlinActivityDep5
 
-
+// ######################################################################################################
 
 interface KaptKotlinActivityDep6
 
@@ -75,23 +75,23 @@ interface KaptKotlinActivityDep6
     installIn = BindType.Component.ACTIVITY,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinActivityDep6Impl1 @Inject constructor(): KaptKotlinActivityDep6
+internal class KaptKotlinActivityDep6Impl1 @Inject constructor() : KaptKotlinActivityDep6
 
 @ActivityScoped
 @BindType(
     installIn = BindType.Component.ACTIVITY,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinActivityDep6Impl2 @Inject constructor(): KaptKotlinActivityDep6
+internal class KaptKotlinActivityDep6Impl2 @Inject constructor() : KaptKotlinActivityDep6
 
 @ActivityScoped
 @BindType(
     installIn = BindType.Component.ACTIVITY,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinActivityDep6Impl3 @Inject constructor(): KaptKotlinActivityDep6
+internal class KaptKotlinActivityDep6Impl3 @Inject constructor() : KaptKotlinActivityDep6
 
-
+// ######################################################################################################
 
 interface KaptKotlinActivityDep7
 
@@ -100,23 +100,23 @@ interface KaptKotlinActivityDep7
     contributesTo = BindType.Collection.MAP
 )
 @MapStringKey("dep1_1")
-internal class KaptKotlinActivityDep7Impl1 @Inject constructor(): KaptKotlinActivityDep7
+internal class KaptKotlinActivityDep7Impl1 @Inject constructor() : KaptKotlinActivityDep7
 
 @BindType(
     installIn = BindType.Component.ACTIVITY,
     contributesTo = BindType.Collection.MAP
 )
 @MapStringKey("dep1_2")
-internal class KaptKotlinActivityDep7Impl2 @Inject constructor(): KaptKotlinActivityDep7
+internal class KaptKotlinActivityDep7Impl2 @Inject constructor() : KaptKotlinActivityDep7
 
 @BindType(
     installIn = BindType.Component.ACTIVITY,
     contributesTo = BindType.Collection.MAP
 )
 @MapStringKey("dep1_3")
-internal class KaptKotlinActivityDep7Impl3 @Inject constructor(): KaptKotlinActivityDep7
+internal class KaptKotlinActivityDep7Impl3 @Inject constructor() : KaptKotlinActivityDep7
 
-
+// ######################################################################################################
 
 interface KaptKotlinActivityDep8
 
@@ -125,16 +125,16 @@ interface KaptKotlinActivityDep8
     withQualifier = true
 )
 @Named("dep8")
-internal class KaptKotlinActivityDep8Impl @Inject constructor(): KaptKotlinActivityDep8
+internal class KaptKotlinActivityDep8Impl @Inject constructor() : KaptKotlinActivityDep8
 
-
+// ######################################################################################################
 
 abstract class KaptKotlinActivityDep9<T>
 
 @BindType(installIn = BindType.Component.ACTIVITY)
-internal class KaptKotlinActivityDep9Impl @Inject constructor(): KaptKotlinActivityDep9<Float>()
+internal class KaptKotlinActivityDep9Impl @Inject constructor() : KaptKotlinActivityDep9<Float>()
 
-
+// ######################################################################################################
 
 abstract class KaptKotlinActivityDep10<T>
 
@@ -142,9 +142,9 @@ abstract class KaptKotlinActivityDep10<T>
     to = KaptKotlinActivityDep10::class,
     installIn = BindType.Component.ACTIVITY
 )
-internal class KaptKotlinActivityDep10Impl @Inject constructor(): KaptKotlinActivityDep10<Float>()
+internal class KaptKotlinActivityDep10Impl @Inject constructor() : KaptKotlinActivityDep10<Float>()
 
-
+// ######################################################################################################
 
 abstract class KaptKotlinActivityDep11<T>
 
@@ -152,16 +152,16 @@ abstract class KaptKotlinActivityDep11<T>
     installIn = BindType.Component.ACTIVITY,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinActivityDep11Impl1 @Inject constructor(): KaptKotlinActivityDep11<Float>()
+internal class KaptKotlinActivityDep11Impl1 @Inject constructor() : KaptKotlinActivityDep11<Float>()
 
 @BindType(
     installIn = BindType.Component.ACTIVITY,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinActivityDep11Impl2 @Inject constructor(): KaptKotlinActivityDep11<Float>()
+internal class KaptKotlinActivityDep11Impl2 @Inject constructor() : KaptKotlinActivityDep11<Float>()
 
 @BindType(
     installIn = BindType.Component.ACTIVITY,
     contributesTo = BindType.Collection.SET
 )
-internal class KaptKotlinActivityDep11Impl3 @Inject constructor(): KaptKotlinActivityDep11<Float>()
+internal class KaptKotlinActivityDep11Impl3 @Inject constructor() : KaptKotlinActivityDep11<Float>()

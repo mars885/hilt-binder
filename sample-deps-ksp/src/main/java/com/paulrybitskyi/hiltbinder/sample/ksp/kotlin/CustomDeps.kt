@@ -25,7 +25,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 import javax.inject.Scope
 
-
+// ######################################################################################################
 
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
@@ -37,14 +37,11 @@ interface KspKotlinCustomComponent {
 
     @DefineComponent.Builder
     interface Builder {
-
         fun build(): KspKotlinCustomComponent
-
     }
-
 }
 
-
+// ######################################################################################################
 
 interface KspKotlinCustomComponentDep1
 
@@ -52,9 +49,9 @@ interface KspKotlinCustomComponentDep1
     installIn = BindType.Component.CUSTOM,
     customComponent = KspKotlinCustomComponent::class
 )
-internal class KspKotlinCustomComponentDep1Impl @Inject constructor(): KspKotlinCustomComponentDep1
+internal class KspKotlinCustomComponentDep1Impl @Inject constructor() : KspKotlinCustomComponentDep1
 
-
+// ######################################################################################################
 
 abstract class KspKotlinCustomComponentDep2
 
@@ -63,30 +60,25 @@ abstract class KspKotlinCustomComponentDep2
     installIn = BindType.Component.CUSTOM,
     customComponent = KspKotlinCustomComponent::class
 )
-internal class KspKotlinCustomComponentDep2Impl @Inject constructor(): KspKotlinCustomComponentDep2()
+internal class KspKotlinCustomComponentDep2Impl @Inject constructor() : KspKotlinCustomComponentDep2()
 
-
+// ######################################################################################################
 
 class KspKotlinCustomComponentManager @Inject constructor(
     private val customComponentBuilder: KspKotlinCustomComponent.Builder
 ) {
-
 
     private var customComponent: KspKotlinCustomComponent? = null
 
     private var customComponentDep1: KspKotlinCustomComponentDep1? = null
     private var customComponentDep2: KspKotlinCustomComponentDep2? = null
 
-
     @EntryPoint
     @InstallIn(KspKotlinCustomComponent::class)
     internal interface DependenciesProvider {
-
         fun getCustomComponentDep1(): KspKotlinCustomComponentDep1
         fun getCustomComponentDep2(): KspKotlinCustomComponentDep2
-
     }
-
 
     fun onCreateComponent() {
         customComponent = customComponentBuilder.build()
@@ -103,10 +95,7 @@ class KspKotlinCustomComponentManager @Inject constructor(
         checkNotNull(customComponentDep2)
     }
 
-
     fun onDestroyComponent() {
         customComponent = null
     }
-
-
 }

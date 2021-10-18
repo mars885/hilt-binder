@@ -44,12 +44,9 @@ internal class JavacJavaViewModelDeps @Inject constructor(
     private val javacJavaViewModelDeps11: Set<@JvmSuppressWildcards JavacJavaViewModelDep11<*>>
 ) {
 
-
     fun check() {
         check(javacJavaViewModelDeps6.size == 3)
         check(javacJavaViewModelDeps7.size == 3)
         check(javacJavaViewModelDeps11.size == 3)
     }
-
-
 }

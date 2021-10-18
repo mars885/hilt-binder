@@ -16,5 +16,4 @@
 
 package com.paulrybitskyi.hiltbinder.common.utils
 
-
 const val PACKAGE_SEPARATOR = '.'

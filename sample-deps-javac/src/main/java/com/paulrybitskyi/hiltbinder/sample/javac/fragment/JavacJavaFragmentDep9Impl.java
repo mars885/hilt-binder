@@ -25,5 +25,4 @@ public class JavacJavaFragmentDep9Impl extends JavacJavaFragmentDep9<Float> {
 
     @Inject
     public JavacJavaFragmentDep9Impl() {}
-
 }

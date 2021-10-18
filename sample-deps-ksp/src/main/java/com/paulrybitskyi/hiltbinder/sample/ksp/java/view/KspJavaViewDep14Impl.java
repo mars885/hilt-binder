@@ -30,5 +30,4 @@ public class KspJavaViewDep14Impl extends KspJavaViewDep14 {
 
     @Inject
     public KspJavaViewDep14Impl() {}
-
 }

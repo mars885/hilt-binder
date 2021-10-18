@@ -25,5 +25,4 @@ public class KaptJavaSingletonDep12Impl extends KaptJavaSingletonDep12<Integer> 
 
     @Inject
     public KaptJavaSingletonDep12Impl() {}
-
 }

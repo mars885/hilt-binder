@@ -22,7 +22,6 @@ import org.apache.commons.lang3.StringUtils
 
 internal class PackageNameProvider {
 
-
     fun providePackageName(bindings: Sequence<BindingSchema>): String {
         @Suppress("SpreadOperator")
         return bindings
@@ -32,6 +31,4 @@ internal class PackageNameProvider {
             .let { StringUtils.getCommonPrefix(*it) }
             .trimEnd(PACKAGE_SEPARATOR)
     }
-
-
 }

@@ -44,12 +44,9 @@ internal class KspJavaActivityDeps @Inject constructor(
     private val kspJavaActivityDeps11: Set<@JvmSuppressWildcards KspJavaActivityDep11<*>>
 ) {
 
-
     fun check() {
         check(kspJavaActivityDeps6.size == 3)
         check(kspJavaActivityDeps7.size == 3)
         check(kspJavaActivityDeps11.size == 3)
     }
-
-
 }

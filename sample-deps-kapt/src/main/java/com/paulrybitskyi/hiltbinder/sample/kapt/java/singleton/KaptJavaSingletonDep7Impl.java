@@ -30,5 +30,4 @@ public class KaptJavaSingletonDep7Impl implements KaptJavaSingletonDep7 {
 
     @Inject
     public KaptJavaSingletonDep7Impl() {}
-
 }

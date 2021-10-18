@@ -44,12 +44,9 @@ internal class KaptJavaFragmentDeps @Inject constructor(
     private val kaptJavaFragmentDeps11: Set<@JvmSuppressWildcards KaptJavaFragmentDep11<*>>
 ) {
 
-
     fun check() {
         check(kaptJavaFragmentDeps6.size == 3)
         check(kaptJavaFragmentDeps7.size == 3)
         check(kaptJavaFragmentDeps11.size == 3)
     }
-
-
 }

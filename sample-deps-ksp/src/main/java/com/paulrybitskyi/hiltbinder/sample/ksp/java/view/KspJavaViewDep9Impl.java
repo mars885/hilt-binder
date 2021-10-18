@@ -25,5 +25,4 @@ public class KspJavaViewDep9Impl implements KspJavaViewDep9<Double> {
 
     @Inject
     public KspJavaViewDep9Impl() {}
-
 }

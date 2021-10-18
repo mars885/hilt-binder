@@ -19,11 +19,9 @@ package com.paulrybitskyi.hiltbinder.processor.utils
 import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 
-
 internal fun XAnnotation.getBooleanValue(name: String, default: Boolean): Boolean {
     return (args[name]?.getAsBoolean(default) ?: default)
 }
-
 
 internal fun <T : Enum<*>> XAnnotation.getEnumValue(
     name: String,
@@ -32,7 +30,6 @@ internal fun <T : Enum<*>> XAnnotation.getEnumValue(
 ): T {
     return (args[name]?.getAsEnum(valueOf, default) ?: default)
 }
-
 
 internal fun XAnnotation.getTypeValue(name: String, default: XType?): XType? {
     return (args[name]?.getAsType(default) ?: default)

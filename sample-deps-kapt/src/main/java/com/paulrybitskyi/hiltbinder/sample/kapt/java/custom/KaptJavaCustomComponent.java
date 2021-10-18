@@ -25,9 +25,6 @@ public interface KaptJavaCustomComponent {
 
     @DefineComponent.Builder
     interface Builder {
-
         KaptJavaCustomComponent build();
-
     }
-
 }

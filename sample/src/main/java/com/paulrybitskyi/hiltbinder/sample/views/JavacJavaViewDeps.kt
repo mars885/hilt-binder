@@ -43,13 +43,10 @@ internal class JavacJavaViewDeps @Inject constructor(
     private val javacJavaViewDep10: JavacJavaViewDep10<Double>,
     private val javacJavaViewDeps11: Set<@JvmSuppressWildcards JavacJavaViewDep11<*>>
 ) {
-    
-    
+
     fun check() {
         check(javacJavaViewDeps6.size == 3)
         check(javacJavaViewDeps7.size == 3)
         check(javacJavaViewDeps11.size == 3)
     }
-    
-    
 }

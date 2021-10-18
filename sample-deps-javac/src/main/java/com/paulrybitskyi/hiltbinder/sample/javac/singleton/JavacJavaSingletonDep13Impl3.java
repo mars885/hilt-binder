@@ -25,5 +25,4 @@ public class JavacJavaSingletonDep13Impl3 extends JavacJavaSingletonDep13<Intege
 
     @Inject
     public JavacJavaSingletonDep13Impl3() {}
-
 }

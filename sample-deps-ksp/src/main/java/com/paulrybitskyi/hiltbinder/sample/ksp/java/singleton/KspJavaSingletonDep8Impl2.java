@@ -27,5 +27,4 @@ public class KspJavaSingletonDep8Impl2 implements KspJavaSingletonDep8 {
 
     @Inject
     public KspJavaSingletonDep8Impl2() {}
-
 }

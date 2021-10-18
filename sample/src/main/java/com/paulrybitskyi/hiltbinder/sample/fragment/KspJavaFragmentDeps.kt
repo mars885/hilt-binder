@@ -44,12 +44,9 @@ internal class KspJavaFragmentDeps @Inject constructor(
     private val kspJavaFragmentDeps11: Set<@JvmSuppressWildcards KspJavaFragmentDep11<*>>
 ) {
 
-
     fun check() {
         check(kspJavaFragmentDeps6.size == 3)
         check(kspJavaFragmentDeps7.size == 3)
         check(kspJavaFragmentDeps11.size == 3)
     }
-
-
 }

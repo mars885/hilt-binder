@@ -96,7 +96,7 @@ configure<SigningExtension> {
 
 tasks {
     named<Javadoc>("javadoc") {
-        if(JavaVersion.current().isJava9Compatible) {
+        if (JavaVersion.current().isJava9Compatible) {
             (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
         }
     }

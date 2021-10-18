@@ -31,5 +31,4 @@ public class JavacJavaFragmentDep5Impl implements JavacJavaFragmentDep5 {
 
     @Inject
     public JavacJavaFragmentDep5Impl() {}
-
 }

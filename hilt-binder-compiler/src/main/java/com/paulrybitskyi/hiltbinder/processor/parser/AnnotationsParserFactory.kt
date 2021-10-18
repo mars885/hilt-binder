@@ -30,7 +30,6 @@ import com.paulrybitskyi.hiltbinder.processor.parser.providers.PackageNameProvid
 
 internal object AnnotationsParserFactory {
 
-
     fun create(processingEnv: XProcessingEnv): AnnotationsParser {
         return AnnotationsParser(
             bindingSchemaFactory = createBindingSchemaFactory(processingEnv),
@@ -38,7 +37,6 @@ internal object AnnotationsParserFactory {
             packageNameProvider = createPackageNameProvider()
         )
     }
-
 
     private fun createBindingSchemaFactory(processingEnv: XProcessingEnv): BindingSchemaFactory {
         return BindingSchemaFactory(
@@ -50,7 +48,6 @@ internal object AnnotationsParserFactory {
         )
     }
 
-
     private fun createHiltComponentDetector(processingEnv: XProcessingEnv): HiltComponentDetector {
         return HiltComponentDetector(
             processingEnv = processingEnv,
@@ -59,16 +56,13 @@ internal object AnnotationsParserFactory {
         )
     }
 
-
     private fun createPredefinedHiltComponentMapper(): PredefinedHiltComponentMapper {
         return PredefinedHiltComponentMapper()
     }
 
-
     private fun createMessageProvider(): MessageProvider {
         return MessageProvider()
     }
-
 
     private fun createContributionTypeDetector(processingEnv: XProcessingEnv): ContributionTypeDetector {
         return ContributionTypeDetector(
@@ -77,14 +71,12 @@ internal object AnnotationsParserFactory {
         )
     }
 
-
     private fun createQualifierAnnotationDetector(processingEnv: XProcessingEnv): QualifierAnnotationDetector {
         return QualifierAnnotationDetector(
             processingEnv = processingEnv,
             messageProvider = createMessageProvider()
         )
     }
-
 
     private fun createBindingReturnTypeDetector(processingEnv: XProcessingEnv): BindingReturnTypeDetector {
         return BindingReturnTypeDetector(
@@ -93,11 +85,9 @@ internal object AnnotationsParserFactory {
         )
     }
 
-
     private fun createBindingMethodNameFactory(): BindingMethodNameFactory {
         return BindingMethodNameFactory()
     }
-
 
     private fun createModuleSchemaFactory(processingEnv: XProcessingEnv): ModuleSchemaFactory {
         return ModuleSchemaFactory(
@@ -106,15 +96,11 @@ internal object AnnotationsParserFactory {
         )
     }
 
-
     private fun createModuleInterfaceNameFactory(): ModuleInterfaceNameFactory {
         return ModuleInterfaceNameFactory()
     }
 
-
     private fun createPackageNameProvider(): PackageNameProvider {
         return PackageNameProvider()
     }
-
-
 }

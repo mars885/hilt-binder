@@ -25,5 +25,4 @@ public class JavacJavaViewDep9Impl extends JavacJavaViewDep9<Double> {
 
     @Inject
     public JavacJavaViewDep9Impl() {}
-
 }

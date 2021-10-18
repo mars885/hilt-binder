@@ -28,5 +28,4 @@ public class KspJavaActivityDep2Impl implements KspJavaActivityDep2 {
 
     @Inject
     public KspJavaActivityDep2Impl() {}
-
 }

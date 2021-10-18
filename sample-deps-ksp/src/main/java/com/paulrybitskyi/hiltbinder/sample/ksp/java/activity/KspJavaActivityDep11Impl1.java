@@ -28,5 +28,4 @@ public class KspJavaActivityDep11Impl1 extends KspJavaActivityDep11<Float> {
 
     @Inject
     public KspJavaActivityDep11Impl1() {}
-
 }

@@ -22,15 +22,13 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XBackend
 import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 
-
 internal fun XProcessingEnv.getTypeUnsafely(qualifiedName: String): XType {
     return checkNotNull(getType(qualifiedName))
 }
 
-
 internal fun XProcessingEnv.getRootType(backend: XBackend = this.backend): XType {
     return getTypeUnsafely(
-        when(backend) {
+        when (backend) {
             XBackend.JAVAC -> OBJECT_TYPE_QUALIFIED_NAME
             XBackend.KSP -> ANY_TYPE_QUALIFIED_NAME
         }

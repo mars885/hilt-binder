@@ -33,7 +33,6 @@ import com.squareup.kotlinpoet.TypeName
 
 internal class KotlinBindingMethodSpecFactory : BindingMethodSpecFactory<FunSpec> {
 
-
     override fun createMethodSpec(bindingSchema: BindingSchema): FunSpec {
         return FunSpec.builder(bindingSchema.methodName)
             .addAnnotation(DAGGER_TYPE_BINDS_KOTLIN_CLASS_NAME)
@@ -45,23 +44,20 @@ internal class KotlinBindingMethodSpecFactory : BindingMethodSpecFactory<FunSpec
             .build()
     }
 
-
     private fun FunSpec.Builder.addMultibindingAnnotationsIfExist(
         contributionType: ContributionType?
     ): FunSpec.Builder = apply {
-        if(contributionType == null) return@apply
+        if (contributionType == null) return@apply
 
-        when(contributionType) {
+        when (contributionType) {
             is ContributionType.Set -> contributeToSet()
             is ContributionType.Map -> contributeToMap(contributionType.mapKeyAnnotation)
         }
     }
 
-
     private fun FunSpec.Builder.contributeToSet(): FunSpec.Builder = apply {
         addAnnotation(DAGGER_TYPE_INTO_SET_KOTLIN_CLASS_NAME)
     }
-
 
     private fun FunSpec.Builder.contributeToMap(
         mapKeyAnnotation: XAnnotation
@@ -70,20 +66,18 @@ internal class KotlinBindingMethodSpecFactory : BindingMethodSpecFactory<FunSpec
         addAnnotation(mapKeyAnnotation.kotlinAnnoSpec)
     }
 
-
     private fun FunSpec.Builder.addQualifierAnnotationIfExists(
         qualifierAnnotation: XAnnotation?
     ): FunSpec.Builder = apply {
-        if(qualifierAnnotation == null) return@apply
+        if (qualifierAnnotation == null) return@apply
 
         addAnnotation(qualifierAnnotation.kotlinAnnoSpec)
     }
 
-
     private fun ReturnType.toTypeName(): TypeName {
-        return when(this) {
+        return when (this) {
             is ReturnType.Standard -> type.typeElement.kotlinClassName
-            is ReturnType.Generic -> when(this) {
+            is ReturnType.Generic -> when (this) {
                 is ReturnType.Generic.Parameterized -> type.kotlinTypeName
                 is ReturnType.Generic.UnboundedWildcard -> {
                     val typeArgs = List(typeParamCount) { STAR }
@@ -93,6 +87,4 @@ internal class KotlinBindingMethodSpecFactory : BindingMethodSpecFactory<FunSpec
             }
         }
     }
-
-
 }

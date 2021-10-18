@@ -40,7 +40,6 @@ internal class HiltComponentDetector(
     private val messageProvider: MessageProvider
 ) {
 
-
     fun detectComponent(annotatedElement: XTypeElement): HiltComponent {
         val componentInferredFromScope = inferFromScopeAnnotation(annotatedElement)
         val explicitComponent = detectExplicitComponent(annotatedElement)
@@ -50,9 +49,8 @@ internal class HiltComponentDetector(
         return (componentInferredFromScope ?: explicitComponent ?: returnDefaultComponent())
     }
 
-
     private fun inferFromScopeAnnotation(annotatedElement: XTypeElement): HiltComponent.Predefined? {
-        if(shouldInstallInViewWithFragmentComponent(annotatedElement)) {
+        if (shouldInstallInViewWithFragmentComponent(annotatedElement)) {
             return HiltComponent.Predefined(PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
         }
 
@@ -66,7 +64,6 @@ internal class HiltComponentDetector(
             ?.let(HiltComponent::Predefined)
     }
 
-
     private fun shouldInstallInViewWithFragmentComponent(annotatedElement: XTypeElement): Boolean {
         val viewScopeType = processingEnv.getTypeUnsafely(PredefinedHiltComponent.VIEW.scopeQualifiedName)
         val hasViewScope = annotatedElement.hasAnnotation(viewScopeType)
@@ -79,7 +76,6 @@ internal class HiltComponentDetector(
         return (hasViewScope && hasWithFragmentBindingsAnno)
     }
 
-
     private fun detectExplicitComponent(annotatedElement: XTypeElement): HiltComponent? {
         val bindAnnotation = annotatedElement.getBindAnnotation()
         val component = bindAnnotation.getInstallInArg()
@@ -91,11 +87,9 @@ internal class HiltComponentDetector(
         }
     }
 
-
     private fun detectExplicitPredefinedComponent(component: Component): HiltComponent.Predefined {
         return HiltComponent.Predefined(predefinedHiltComponentMapper.mapToPredefinedComponent(component))
     }
-
 
     private fun detectExplicitCustomComponent(
         bindAnnotation: XAnnotation,
@@ -104,7 +98,7 @@ internal class HiltComponentDetector(
         val defaultType = processingEnv.getBindAnnotationDefaultType()
         val customComponentType = checkNotNull(bindAnnotation.getCustomComponentArg(defaultType))
 
-        if(customComponentType == defaultType) {
+        if (customComponentType == defaultType) {
             throw HiltBinderException(
                 messageProvider.undefinedCustomComponentError(),
                 annotatedElement
@@ -113,7 +107,6 @@ internal class HiltComponentDetector(
 
         return HiltComponent.Custom(customComponentType.typeElement)
     }
-
 
     private fun checkComponentMismatch(
         componentInferredFromScope: HiltComponent?,
@@ -126,15 +119,12 @@ internal class HiltComponentDetector(
             (componentInferredFromScope != explicitComponent)
         )
 
-        if(mismatchExists) {
+        if (mismatchExists) {
             throw HiltBinderException(messageProvider.componentMismatchError(), annotatedElement)
         }
     }
 
-
     private fun returnDefaultComponent(): HiltComponent {
         return HiltComponent.Predefined(PredefinedHiltComponent.SINGLETON)
     }
-
-
 }

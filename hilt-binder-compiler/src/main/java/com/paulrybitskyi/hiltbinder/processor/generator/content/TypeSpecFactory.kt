@@ -19,7 +19,5 @@ package com.paulrybitskyi.hiltbinder.processor.generator.content
 import com.paulrybitskyi.hiltbinder.processor.model.ModuleSchema
 
 internal interface TypeSpecFactory<TS : Any> {
-
     fun createTypeSpec(moduleSchema: ModuleSchema): TS
-
 }

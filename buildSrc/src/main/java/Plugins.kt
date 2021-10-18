@@ -20,6 +20,7 @@ import org.gradle.plugin.use.PluginDependencySpec
 
 
 const val PLUGIN_DETEKT = "io.gitlab.arturbosch.detekt"
+const val PLUGIN_KTLINT = "org.jlleitschuh.gradle.ktlint"
 const val PLUGIN_GRADLE_VERSIONS = "com.github.ben-manes.versions"
 const val PLUGIN_DOKKA = "org.jetbrains.dokka"
 const val PLUGIN_SHADOW = "com.github.johnrengelman.shadow"
@@ -37,6 +38,11 @@ const val PLUGIN_SIGNING = "org.gradle.signing"
 
 fun PluginDependenciesSpec.detekt(): PluginDependencySpec {
     return (id(PLUGIN_DETEKT) version versions.detektPlugin)
+}
+
+
+fun PluginDependenciesSpec.ktlint(): PluginDependencySpec {
+    return (id(PLUGIN_KTLINT) version versions.ktlintPlugin)
 }
 
 

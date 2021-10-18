@@ -31,5 +31,4 @@ public class KspJavaViewDep6Impl1 implements KspJavaViewDep6 {
 
     @Inject
     public KspJavaViewDep6Impl1() {}
-
 }

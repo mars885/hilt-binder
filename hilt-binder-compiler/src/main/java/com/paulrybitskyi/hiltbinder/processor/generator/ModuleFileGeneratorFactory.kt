@@ -28,7 +28,6 @@ import com.paulrybitskyi.hiltbinder.processor.generator.content.kotlin.KotlinTyp
 
 internal object ModuleFileGeneratorFactory {
 
-
     fun create(processingEnv: XProcessingEnv): ModuleFileGenerator {
         val outputLanguage = getOutputLanguage(processingEnv.backend)
 
@@ -39,25 +38,22 @@ internal object ModuleFileGeneratorFactory {
         )
     }
 
-
     private fun getOutputLanguage(backend: XBackend): Language {
         // At the moment, for Javac only Java is generated while
         // for KSP only Kotlin is generated.
 
-        return when(backend) {
+        return when (backend) {
             XBackend.JAVAC -> Language.JAVA
             XBackend.KSP -> Language.KOTLIN
         }
     }
 
-
     private fun createModuleFileContentGenerator(language: Language): ModuleFileContentGenerator {
-        return when(language) {
+        return when (language) {
             Language.JAVA -> createJavaModuleFileContentGenerator()
             Language.KOTLIN -> createKotlinModuleFileContentGenerator()
         }
     }
-
 
     private fun createJavaModuleFileContentGenerator(): JavaModuleFileContentGenerator {
         return JavaModuleFileContentGenerator(
@@ -65,18 +61,15 @@ internal object ModuleFileGeneratorFactory {
         )
     }
 
-
     private fun createJavaTypeSpecFactory(): JavaTypeSpecFactory {
         return JavaTypeSpecFactory(
             bindingMethodSpecFactory = createJavaBindingMethodSpecFactory()
         )
     }
 
-
     private fun createJavaBindingMethodSpecFactory(): JavaBindingMethodSpecFactory {
         return JavaBindingMethodSpecFactory()
     }
-
 
     private fun createKotlinModuleFileContentGenerator(): KotlinModuleFileContentGenerator {
         return KotlinModuleFileContentGenerator(
@@ -84,17 +77,13 @@ internal object ModuleFileGeneratorFactory {
         )
     }
 
-
     private fun createKotlinTypeSpecFactory(): KotlinTypeSpecFactory {
         return KotlinTypeSpecFactory(
             bindingMethodSpecFactory = createKotlinBindingMethodSpecFactory()
         )
     }
 
-
     private fun createKotlinBindingMethodSpecFactory(): KotlinBindingMethodSpecFactory {
         return KotlinBindingMethodSpecFactory()
     }
-
-
 }

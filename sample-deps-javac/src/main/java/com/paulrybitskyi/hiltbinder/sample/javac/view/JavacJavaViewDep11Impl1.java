@@ -28,5 +28,4 @@ public class JavacJavaViewDep11Impl1 extends JavacJavaViewDep11<Float> {
 
     @Inject
     public JavacJavaViewDep11Impl1() {}
-
 }

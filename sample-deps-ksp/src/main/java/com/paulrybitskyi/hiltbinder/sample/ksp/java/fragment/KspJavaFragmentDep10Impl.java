@@ -28,5 +28,4 @@ public class KspJavaFragmentDep10Impl extends KspJavaFragmentDep10<Float> {
 
     @Inject
     public KspJavaFragmentDep10Impl() {}
-
 }

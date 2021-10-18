@@ -20,7 +20,6 @@ import com.paulrybitskyi.hiltbinder.common.utils.unsafeCast
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 
-
 internal val XType.isGeneric: Boolean
     get() = (element.typeParameterCount > 0)
 

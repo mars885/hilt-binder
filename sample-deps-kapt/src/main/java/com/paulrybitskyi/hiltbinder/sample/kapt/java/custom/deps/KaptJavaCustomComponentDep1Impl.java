@@ -29,5 +29,4 @@ public class KaptJavaCustomComponentDep1Impl implements KaptJavaCustomComponentD
 
     @Inject
     public KaptJavaCustomComponentDep1Impl() {}
-
 }

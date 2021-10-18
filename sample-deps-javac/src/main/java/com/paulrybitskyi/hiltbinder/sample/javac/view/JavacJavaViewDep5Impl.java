@@ -32,5 +32,4 @@ public class JavacJavaViewDep5Impl implements JavacJavaViewDep5 {
 
     @Inject
     public JavacJavaViewDep5Impl() {}
-
 }

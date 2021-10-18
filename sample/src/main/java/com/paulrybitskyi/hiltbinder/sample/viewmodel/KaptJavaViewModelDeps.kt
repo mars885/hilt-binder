@@ -44,12 +44,9 @@ internal class KaptJavaViewModelDeps @Inject constructor(
     private val kaptJavaViewModelDeps11: Set<@JvmSuppressWildcards KaptJavaViewModelDep11<*>>
 ) {
 
-
     fun check() {
         check(kaptJavaViewModelDeps6.size == 3)
         check(kaptJavaViewModelDeps7.size == 3)
         check(kaptJavaViewModelDeps11.size == 3)
     }
-
-
 }

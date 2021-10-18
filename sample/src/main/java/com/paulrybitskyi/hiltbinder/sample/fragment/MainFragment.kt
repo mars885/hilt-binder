@@ -28,7 +28,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 internal class MainFragment : Fragment(R.layout.fragment_main) {
 
-
     private val viewModel by viewModels<MainFragmentViewModel>()
 
     @Inject lateinit var javacJavaFragmentDeps: JavacJavaFragmentDeps
@@ -36,7 +35,6 @@ internal class MainFragment : Fragment(R.layout.fragment_main) {
     @Inject lateinit var kaptKotlinFragmentDeps: KaptKotlinFragmentDeps
     @Inject lateinit var kspJavaFragmentDeps: KspJavaFragmentDeps
     @Inject lateinit var kspKotlinFragmentDeps: KspKotlinFragmentDeps
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,6 +46,4 @@ internal class MainFragment : Fragment(R.layout.fragment_main) {
         kspJavaFragmentDeps.check()
         kspKotlinFragmentDeps.check()
     }
-
-
 }

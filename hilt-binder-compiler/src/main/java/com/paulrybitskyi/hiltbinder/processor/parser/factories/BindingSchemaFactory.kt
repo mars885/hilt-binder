@@ -31,13 +31,9 @@ internal class BindingSchemaFactory(
     private val bindingMethodNameFactory: BindingMethodNameFactory
 ) {
 
-
     private companion object {
-
         private const val BINDING_PARAM_NAME = "binding"
-
     }
-
 
     fun createBindingSchema(annotatedElement: XTypeElement): BindingSchema {
         val packageName = annotatedElement.packageName
@@ -58,6 +54,4 @@ internal class BindingSchemaFactory(
             returnType = returnType
         )
     }
-
-
 }

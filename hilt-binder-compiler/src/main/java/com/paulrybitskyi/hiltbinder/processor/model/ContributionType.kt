@@ -19,9 +19,6 @@ package com.paulrybitskyi.hiltbinder.processor.model
 import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
 
 internal sealed class ContributionType {
-
     object Set : ContributionType()
-
-    class Map(val mapKeyAnnotation: XAnnotation): ContributionType()
-
+    class Map(val mapKeyAnnotation: XAnnotation) : ContributionType()
 }
