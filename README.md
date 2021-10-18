@@ -62,8 +62,8 @@ If you are using pure Java (no Kotlin code), add the following to your module-le
 
 ````kotlin
 dependencies {
-    implementation("com.paulrybitskyi:hilt-binder:1.1.0")
-    annotationProcessor("com.paulrybitskyi:hilt-binder-compiler:1.1.0")
+    implementation("com.paulrybitskyi:hilt-binder:1.1.1")
+    annotationProcessor("com.paulrybitskyi:hilt-binder-compiler:1.1.1")
 }
 ````
 
@@ -77,16 +77,14 @@ plugins {
 }
 
 dependencies {
-    implementation("com.paulrybitskyi:hilt-binder:1.1.0")
-    kapt("com.paulrybitskyi:hilt-binder-compiler:1.1.0")
+    implementation("com.paulrybitskyi:hilt-binder:1.1.1")
+    kapt("com.paulrybitskyi:hilt-binder-compiler:1.1.1")
 }
 ````
 
 ### KSP
 
 A [KSP](https://github.com/google/ksp) implementation of the library. KSP is a replacement for KAPT to run annotation processors natively on the Kotlin compiler, significantly reducing build times.
-
-The implementation is experimental insofar as KSP itself is experimental, so if you find any bugs using it, please report them for further investigation.
 
 To use the KSP implementation, go to your project's `settings.gradle.kts` file and add `google()` to `repositories` for the KSP plugin.
 
@@ -107,8 +105,8 @@ plugins {
 }
 
 dependencies {
-    implementation("com.paulrybitskyi:hilt-binder:1.1.0")
-    ksp("com.paulrybitskyi:hilt-binder-compiler:1.1.0")
+    implementation("com.paulrybitskyi:hilt-binder:1.1.1")
+    ksp("com.paulrybitskyi:hilt-binder-compiler:1.1.1")
 }
 ````
 
