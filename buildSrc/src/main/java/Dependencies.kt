@@ -18,7 +18,6 @@
 
 import org.gradle.api.JavaVersion
 
-
 object appConfig {
 
     const val compileSdkVersion = 30
@@ -30,9 +29,7 @@ object appConfig {
 
     val javaCompatibilityVersion = JavaVersion.VERSION_11
     val kotlinCompatibilityVersion = JavaVersion.VERSION_11
-
 }
-
 
 object publishingConfig {
 
@@ -63,9 +60,7 @@ object publishingConfig {
     var artifactName = ""
     var artifactVersion = ""
     var artifactDescription = ""
-
 }
-
 
 object versions {
 
@@ -93,9 +88,7 @@ object versions {
     const val truth = "1.1.3"
     const val ktCompileTesting = "1.4.5"
     const val burst = "1.2.0"
-
 }
-
 
 object deps {
 
@@ -147,5 +140,4 @@ object deps {
     const val truth = "com.google.truth:truth:${versions.truth}"
     const val kspCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.ktCompileTesting}"
     const val burst = "com.squareup.burst:burst-junit4:${versions.burst}"
-
 }
