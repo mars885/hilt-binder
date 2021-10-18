@@ -125,7 +125,7 @@ interface KaptKotlinFragmentDep8
     withQualifier = true
 )
 @Named("dep8")
-internal class KaptKotlinFragmentDep8Impl @Inject constructor (): KaptKotlinFragmentDep8
+internal class KaptKotlinFragmentDep8Impl @Inject constructor () : KaptKotlinFragmentDep8
 
 // ######################################################################################################
 
