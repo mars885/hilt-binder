@@ -16,7 +16,19 @@
 
 package com.paulrybitskyi.hiltbinder.sample.application
 
-import com.paulrybitskyi.hiltbinder.sample.javac.singleton.*
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep1
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep10
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep11
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep12
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep13
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep2
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep3
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep4
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep5
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep6
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep7
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep8
+import com.paulrybitskyi.hiltbinder.sample.javac.singleton.JavacJavaSingletonDep9
 import javax.inject.Inject
 import javax.inject.Named
 

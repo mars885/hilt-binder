@@ -31,6 +31,7 @@ internal class JavacFiler(
         val qualifiedFileName = file.createQualifiedFileName()
         val originatingElements = file.getOriginatingElements()
 
+        @Suppress("SpreadOperator")
         delegate.createSourceFile(qualifiedFileName, *originatingElements)
             .openWriter()
             .use { writer -> writer.write(file.content) }

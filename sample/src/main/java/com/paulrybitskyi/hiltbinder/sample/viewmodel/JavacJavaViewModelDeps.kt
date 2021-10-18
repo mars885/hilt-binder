@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.viewmodel
 
-import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.*
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep1
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep10
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep11
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep2
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep3
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep4
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep5
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep6
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep7
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep8
+import com.paulrybitskyi.hiltbinder.sample.javac.viewmodel.JavacJavaViewModelDep9
 import javax.inject.Inject
 import javax.inject.Named
 

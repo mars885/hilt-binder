@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.fragment
 
-import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.*
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep1
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep10
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep11
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep2
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep3
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep4
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep5
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep6
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep7
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep8
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep9
 import javax.inject.Inject
 import javax.inject.Named
 

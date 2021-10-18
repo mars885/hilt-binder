@@ -92,6 +92,7 @@ internal class JavaBindingMethodSpecFactory : BindingMethodSpecFactory<MethodSpe
                         WildcardTypeName.subtypeOf(TypeName.OBJECT)
                     }
 
+                    @Suppress("SpreadOperator")
                     ParameterizedTypeName.get(rawType, *wildcards.toTypedArray())
                 }
             }

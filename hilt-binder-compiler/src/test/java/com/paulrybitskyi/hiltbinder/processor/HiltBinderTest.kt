@@ -41,6 +41,7 @@ import java.io.File
 // tests should be abandoned in favor of TestParameterInjector
 // (https://github.com/google/TestParameterInjector) after this issue
 // (https://github.com/google/TestParameterInjector/issues/6) is resolved.
+@Suppress("LargeClass", "LongMethod", "MaxLineLength")
 @RunWith(BurstJUnit4::class)
 internal class HiltBinderTest {
 

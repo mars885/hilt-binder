@@ -21,7 +21,12 @@ import com.paulrybitskyi.hiltbinder.common.utils.safeCast
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XTypeFactory
-import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.*
+import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.asType
+import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.getInterfaces
+import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.getSuperclass
+import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.isClass
+import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.toJavaClassName
+import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.toKotlinClassName
 import com.paulrybitskyi.hiltbinder.compiler.processing.utils.JavaClassName
 import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinClassName
 

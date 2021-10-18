@@ -16,7 +16,19 @@
 
 package com.paulrybitskyi.hiltbinder.sample.application
 
-import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.*
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep1
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep10
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep11
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep12
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep13
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep2
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep3
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep4
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep5
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep6
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep7
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep8
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinSingletonDep9
 import javax.inject.Inject
 import javax.inject.Named
 

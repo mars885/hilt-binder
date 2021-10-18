@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.fragment
 
-import com.paulrybitskyi.hiltbinder.sample.javac.fragment.*
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep1
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep10
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep11
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep2
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep3
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep4
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep5
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep6
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep7
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep8
+import com.paulrybitskyi.hiltbinder.sample.javac.fragment.JavacJavaFragmentDep9
 import javax.inject.Inject
 import javax.inject.Named
 

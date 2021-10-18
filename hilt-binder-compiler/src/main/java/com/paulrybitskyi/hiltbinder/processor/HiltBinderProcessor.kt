@@ -38,8 +38,8 @@ internal class HiltBinderProcessor(
             val moduleSchemas = annotationsParser.parse(elements)
 
             moduleFileGenerator.generateModuleFiles(moduleSchemas)
-        } catch(error: Throwable) {
-            reportError(error)
+        } catch(expected: Throwable) {
+            reportError(expected)
         }
     }
 

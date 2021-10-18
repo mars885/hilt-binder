@@ -16,7 +16,11 @@
 
 package com.paulrybitskyi.hiltbinder.sample.views.withfragment
 
-import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.*
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep1
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinFragmentDep2
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinViewDep12
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinViewDep13
+import com.paulrybitskyi.hiltbinder.sample.ksp.kotlin.KspKotlinViewDep14
 import javax.inject.Inject
 
 internal class KspKotlinViewWithFragmentDeps @Inject constructor(

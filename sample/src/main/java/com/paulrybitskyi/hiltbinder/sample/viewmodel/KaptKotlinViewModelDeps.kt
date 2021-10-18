@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.viewmodel
 
-import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.*
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep1
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep10
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep11
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep2
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep3
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep4
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep5
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep6
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep7
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep8
+import com.paulrybitskyi.hiltbinder.sample.kapt.kotlin.KaptKotlinViewModelDep9
 import javax.inject.Inject
 import javax.inject.Named
 

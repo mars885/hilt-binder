@@ -36,7 +36,7 @@ internal class JavacAnnotationValue(
     override fun <T : Enum<*>> getAsEnum(valueOf: (String) -> T, default: T): T {
         return try {
             valueOf(value.toString())
-        } catch(error: Throwable) {
+        } catch(ignore: Throwable) {
             default
         }
     }

@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.fragment
 
-import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.*
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep1
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep10
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep11
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep2
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep3
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep4
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep5
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep6
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep7
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep8
+import com.paulrybitskyi.hiltbinder.sample.kapt.java.fragment.KaptJavaFragmentDep9
 import javax.inject.Inject
 import javax.inject.Named
 

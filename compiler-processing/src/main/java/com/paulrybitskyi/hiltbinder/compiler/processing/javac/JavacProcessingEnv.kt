@@ -16,8 +16,18 @@
 
 package com.paulrybitskyi.hiltbinder.compiler.processing.javac
 
-import com.paulrybitskyi.hiltbinder.compiler.processing.*
-import com.paulrybitskyi.hiltbinder.compiler.processing.factories.*
+import com.paulrybitskyi.hiltbinder.compiler.processing.XBackend
+import com.paulrybitskyi.hiltbinder.compiler.processing.XFiler
+import com.paulrybitskyi.hiltbinder.compiler.processing.XLogger
+import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
+import com.paulrybitskyi.hiltbinder.compiler.processing.XRoundEnv
+import com.paulrybitskyi.hiltbinder.compiler.processing.XType
+import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
+import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XFilerFactory
+import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XLoggerFactory
+import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XRoundEnvFactory
+import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XTypeElementFactory
+import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XTypeFactory
 import com.paulrybitskyi.hiltbinder.compiler.processing.javac.utils.getType
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment

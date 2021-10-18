@@ -26,7 +26,13 @@ import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.PredefinedHiltComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
-import com.paulrybitskyi.hiltbinder.processor.utils.*
+import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotation
+import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotationDefaultType
+import com.paulrybitskyi.hiltbinder.processor.utils.getCustomComponentArg
+import com.paulrybitskyi.hiltbinder.processor.utils.getInstallInArg
+import com.paulrybitskyi.hiltbinder.processor.utils.getTypeUnsafely
+import com.paulrybitskyi.hiltbinder.processor.utils.hasAnnotation
+import com.paulrybitskyi.hiltbinder.processor.utils.typeElement
 
 internal class HiltComponentDetector(
     private val processingEnv: XProcessingEnv,

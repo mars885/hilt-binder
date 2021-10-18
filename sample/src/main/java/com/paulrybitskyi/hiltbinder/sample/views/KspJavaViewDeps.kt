@@ -16,7 +16,17 @@
 
 package com.paulrybitskyi.hiltbinder.sample.views
 
-import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.*
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep1
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep10
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep11
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep2
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep3
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep4
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep5
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep6
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep7
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep8
+import com.paulrybitskyi.hiltbinder.sample.ksp.java.view.KspJavaViewDep9
 import javax.inject.Inject
 import javax.inject.Named
 
