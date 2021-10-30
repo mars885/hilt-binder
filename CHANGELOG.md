@@ -1,10 +1,15 @@
 Change Log
 ==========
 
+## Version 1.1.2 *(2021-10-30)*
+
+* Fix: Revert back to Java 8 as the target version of the libraries & the project.
+
 ## Version 1.1.1 *(2021-10-19)*
 
 Stable KSP support.
 
+* New: Set Java 11 as the target version of the libraries & the project.
 * Upgrade: [KSP 1.5.31](https://github.com/google/ksp/releases/tag/1.5.31-1.0.0).
 * Upgrade: [Kotlin 1.5.31](https://github.com/JetBrains/kotlin/releases/tag/v1.5.31).
 * Upgrade: [Dagger Hilt 2.39.1](https://github.com/google/dagger/releases/tag/dagger-2.39.1).
