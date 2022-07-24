@@ -5265,7 +5265,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test1.class)
+                    @MapClassKey()
                     @Named("one")
                     public class Test1 implements Testable {}
                     """.trimIndent()
@@ -5282,7 +5282,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test2.class)
+                    @MapClassKey()
                     @Named("two")
                     public class Test2 implements Testable {}
                     """.trimIndent()
@@ -5299,7 +5299,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test3.class)
+                    @MapClassKey()
                     @Named("three")
                     public class Test3 implements Testable {}
                     """.trimIndent()
@@ -5319,7 +5319,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test1::class)
+                    @MapClassKey
                     @Named("one")
                     class Test1 : Testable
                     """.trimIndent()
@@ -5336,7 +5336,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test2::class)
+                    @MapClassKey
                     @Named("two")
                     class Test2 : Testable
                     """.trimIndent()
@@ -5353,7 +5353,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test3::class)
+                    @MapClassKey
                     @Named("three")
                     class Test3 : Testable
                     """.trimIndent()
