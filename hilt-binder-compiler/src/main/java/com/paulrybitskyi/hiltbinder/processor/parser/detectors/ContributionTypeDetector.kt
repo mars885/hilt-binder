@@ -26,7 +26,10 @@ import com.paulrybitskyi.hiltbinder.processor.model.ContributionType
 import com.paulrybitskyi.hiltbinder.processor.model.MAP_KEY_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
-import com.paulrybitskyi.hiltbinder.processor.utils.*
+import com.paulrybitskyi.hiltbinder.processor.utils.getAnnoMarkedWithAnotherAnno
+import com.paulrybitskyi.hiltbinder.processor.utils.getContributesToArg
+import com.paulrybitskyi.hiltbinder.processor.utils.getTypeUnsafely
+import com.paulrybitskyi.hiltbinder.processor.utils.getTypeValue
 
 private val MAP_CLASS_QUALIFIED_NAME = MapClassKey::class.qualifiedName!!
 private val MAP_CLASS_AUTO_QUALIFIED_NAME = MapClassKey.Auto::class.qualifiedName!!
@@ -37,32 +40,37 @@ internal class ContributionTypeDetector(
     private val messageProvider: MessageProvider
 ) {
 
-    fun detectType(annotatedElement: XTypeElement): ContributionType? {
-        val bindAnnotation = annotatedElement.getBindAnnotation()
+    fun detectType(
+        annotatedElement: XTypeElement,
+        bindAnnotation: XAnnotation,
+        annotatedAnnotation: XTypeElement? = null,
+    ): ContributionType? {
         val collection = bindAnnotation.getContributesToArg()
 
         return when (collection) {
             Collection.NONE -> null
             Collection.SET -> ContributionType.Set
-            Collection.MAP -> annotatedElement.createMapContributionType()
+            Collection.MAP -> annotatedElement.createMapContributionType(annotatedElement.type)
+                ?: annotatedAnnotation?.createMapContributionType(annotatedElement.type)
+                ?: throw HiltBinderException(messageProvider.noMapKeyError(), annotatedElement)
         }
     }
 
-    private fun XTypeElement.createMapContributionType(): ContributionType {
+    private fun XTypeElement.createMapContributionType(autoType: XType): ContributionType? {
         val daggerMapKeyType = processingEnv.getTypeUnsafely(MAP_KEY_TYPE_QUALIFIED_NAME)
-        val mapKeyAnnotation = wrapKeyAnnotation(getAnnoMarkedWithAnotherAnno(daggerMapKeyType))
-            ?: throw HiltBinderException(messageProvider.noMapKeyError(), this)
+        val mapKeyAnnotation = wrapKeyAnnotation(getAnnoMarkedWithAnotherAnno(daggerMapKeyType), autoType)
+            ?: return null
 
         return ContributionType.Map(mapKeyAnnotation)
     }
 
-    private fun XTypeElement.wrapKeyAnnotation(annotation: XAnnotation?): XAnnotation? {
+    private fun wrapKeyAnnotation(annotation: XAnnotation?, autoType: XType): XAnnotation? {
         annotation ?: return null
 
         if (annotation.type.element.qualifiedName == MAP_CLASS_QUALIFIED_NAME) {
             val value = annotation.getTypeValue(MAP_CLASS_PARAM_VALUE, null)
             if (value == null || value.element.qualifiedName == MAP_CLASS_AUTO_QUALIFIED_NAME) {
-                return XMapClassKeyWrapper(annotation, type)
+                return XMapClassKeyWrapper(annotation, autoType)
             }
         }
         return annotation

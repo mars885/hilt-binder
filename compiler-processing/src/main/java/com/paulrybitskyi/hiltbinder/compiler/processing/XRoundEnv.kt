@@ -17,5 +17,5 @@
 package com.paulrybitskyi.hiltbinder.compiler.processing
 
 interface XRoundEnv {
-    fun getElementsAnnotatedWith(annotationQualifiedName: String): Sequence<XElement>
+    fun getElementsAnnotatedWith(vararg annotationQualifiedNames: String): Sequence<XElement>
 }

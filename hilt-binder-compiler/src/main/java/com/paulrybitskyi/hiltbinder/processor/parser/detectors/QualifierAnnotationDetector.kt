@@ -23,7 +23,6 @@ import com.paulrybitskyi.hiltbinder.processor.model.QUALIFIER_TYPE_QUALIFIED_NAM
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.utils.getAnnoMarkedWithAnotherAnno
-import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotation
 import com.paulrybitskyi.hiltbinder.processor.utils.getTypeUnsafely
 import com.paulrybitskyi.hiltbinder.processor.utils.getWithQualifierArg
 
@@ -32,8 +31,8 @@ internal class QualifierAnnotationDetector(
     private val messageProvider: MessageProvider
 ) {
 
-    fun detectAnnotation(annotatedElement: XTypeElement): XAnnotation? {
-        if (!annotatedElement.getBindAnnotation().getWithQualifierArg()) return null
+    fun detectAnnotation(annotatedElement: XTypeElement, bindAnnotation: XAnnotation): XAnnotation? {
+        if (!bindAnnotation.getWithQualifierArg()) return null
 
         val qualifierType = processingEnv.getTypeUnsafely(QUALIFIER_TYPE_QUALIFIED_NAME)
 

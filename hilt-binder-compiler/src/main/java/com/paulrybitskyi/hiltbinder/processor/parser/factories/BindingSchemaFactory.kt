@@ -16,12 +16,16 @@
 
 package com.paulrybitskyi.hiltbinder.processor.parser.factories
 
+import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 import com.paulrybitskyi.hiltbinder.processor.model.BindingSchema
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.BindingReturnTypeDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.ContributionTypeDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.HiltComponentDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.QualifierAnnotationDetector
+import com.paulrybitskyi.hiltbinder.processor.utils.getAsBindAnnotation
+import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotation
+import com.paulrybitskyi.hiltbinder.processor.utils.qualifiedName
 
 internal class BindingSchemaFactory(
     private val hiltComponentDetector: HiltComponentDetector,
@@ -35,12 +39,31 @@ internal class BindingSchemaFactory(
         private const val BINDING_PARAM_NAME = "binding"
     }
 
+    fun createBindingSchema(
+        annotatedElement: XTypeElement,
+        predefinedMap: Map<String, XTypeElement>,
+    ): List<BindingSchema> {
+        return annotatedElement.annotations
+            .mapNotNull { predefinedMap[it.type.qualifiedName] }
+            .map { createBindingSchema(annotatedElement, it.getAsBindAnnotation().getBindAnnotation(), it) }
+            .toList()
+    }
+
     fun createBindingSchema(annotatedElement: XTypeElement): BindingSchema {
+        return createBindingSchema(annotatedElement, annotatedElement.getBindAnnotation())
+    }
+
+    private fun createBindingSchema(
+        annotatedElement: XTypeElement,
+        bindAnnotation: XAnnotation,
+        annotatedAnnotation: XTypeElement? = null,
+    ): BindingSchema {
         val packageName = annotatedElement.packageName
-        val component = hiltComponentDetector.detectComponent(annotatedElement)
-        val contributionType = contributionTypeDetector.detectType(annotatedElement)
-        val qualifierAnnotation = qualifierAnnotationDetector.detectAnnotation(annotatedElement)
-        val returnType = bindingReturnTypeDetector.detectReturnType(annotatedElement)
+        val component = hiltComponentDetector.detectComponent(annotatedElement, bindAnnotation)
+        val contributionType =
+            contributionTypeDetector.detectType(annotatedElement, bindAnnotation, annotatedAnnotation)
+        val qualifierAnnotation = qualifierAnnotationDetector.detectAnnotation(annotatedElement, bindAnnotation)
+        val returnType = bindingReturnTypeDetector.detectReturnType(annotatedElement, bindAnnotation)
         val methodName = bindingMethodNameFactory.createMethodName(annotatedElement)
 
         return BindingSchema(

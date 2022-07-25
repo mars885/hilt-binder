@@ -24,10 +24,9 @@ internal class KspRoundEnv(
     private val env: KspProcessingEnv
 ) : XRoundEnv {
 
-    override fun getElementsAnnotatedWith(annotationQualifiedName: String): Sequence<XElement> {
-        val kspSymbols = env.resolver.getSymbolsWithAnnotation(annotationQualifiedName)
-        val xElements = kspSymbols.map { XElementFactory.createKspElement(env, it) }
-
-        return xElements
+    override fun getElementsAnnotatedWith(vararg annotationQualifiedNames: String): Sequence<XElement> {
+        return annotationQualifiedNames.asSequence()
+            .flatMap(env.resolver::getSymbolsWithAnnotation)
+            .map { XElementFactory.createKspElement(env, it) }
     }
 }

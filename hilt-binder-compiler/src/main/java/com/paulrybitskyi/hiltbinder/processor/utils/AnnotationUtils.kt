@@ -34,3 +34,7 @@ internal fun <T : Enum<*>> XAnnotation.getEnumValue(
 internal fun XAnnotation.getTypeValue(name: String, default: XType?): XType? {
     return (args[name]?.getAsType(default) ?: default)
 }
+
+internal fun XAnnotation.getAnnotationValue(name: String, default: XAnnotation?): XAnnotation? {
+    return (args[name]?.getAsAnnotation(default) ?: default)
+}

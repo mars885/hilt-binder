@@ -26,13 +26,7 @@ import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.PredefinedHiltComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
-import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotation
-import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotationDefaultType
-import com.paulrybitskyi.hiltbinder.processor.utils.getCustomComponentArg
-import com.paulrybitskyi.hiltbinder.processor.utils.getInstallInArg
-import com.paulrybitskyi.hiltbinder.processor.utils.getTypeUnsafely
-import com.paulrybitskyi.hiltbinder.processor.utils.hasAnnotation
-import com.paulrybitskyi.hiltbinder.processor.utils.typeElement
+import com.paulrybitskyi.hiltbinder.processor.utils.*
 
 internal class HiltComponentDetector(
     private val processingEnv: XProcessingEnv,
@@ -40,9 +34,9 @@ internal class HiltComponentDetector(
     private val messageProvider: MessageProvider
 ) {
 
-    fun detectComponent(annotatedElement: XTypeElement): HiltComponent {
+    fun detectComponent(annotatedElement: XTypeElement, bindAnnotation: XAnnotation): HiltComponent {
         val componentInferredFromScope = inferFromScopeAnnotation(annotatedElement)
-        val explicitComponent = detectExplicitComponent(annotatedElement)
+        val explicitComponent = detectExplicitComponent(annotatedElement, bindAnnotation)
 
         checkComponentMismatch(componentInferredFromScope, explicitComponent, annotatedElement)
 
@@ -76,8 +70,7 @@ internal class HiltComponentDetector(
         return (hasViewScope && hasWithFragmentBindingsAnno)
     }
 
-    private fun detectExplicitComponent(annotatedElement: XTypeElement): HiltComponent? {
-        val bindAnnotation = annotatedElement.getBindAnnotation()
+    private fun detectExplicitComponent(annotatedElement: XTypeElement, bindAnnotation: XAnnotation): HiltComponent? {
         val component = bindAnnotation.getInstallInArg()
 
         return when {

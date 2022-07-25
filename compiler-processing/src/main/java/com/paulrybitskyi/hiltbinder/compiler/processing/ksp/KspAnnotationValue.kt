@@ -16,11 +16,14 @@
 
 package com.paulrybitskyi.hiltbinder.compiler.processing.ksp
 
+import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSType
 import com.paulrybitskyi.hiltbinder.common.utils.safeCast
 import com.paulrybitskyi.hiltbinder.common.utils.unsafeCast
+import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotationValue
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
+import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XAnnotationFactory
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XTypeFactory
 import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.simpleName
 
@@ -48,6 +51,12 @@ internal class KspAnnotationValue(
     override fun getAsType(default: XType?): XType? {
         return value?.safeCast<KSType>()
             ?.let { XTypeFactory.createKspType(env, it) }
+            ?: default
+    }
+
+    override fun getAsAnnotation(default: XAnnotation?): XAnnotation? {
+        return value?.safeCast<KSAnnotation>()
+            ?.let { XAnnotationFactory.createKspAnnotation(env, it) }
             ?: default
     }
 }
