@@ -488,6 +488,54 @@ public interface HiltBinder_SingletonComponentModule {
 }
 ````
 
+### Custom annotations as BindType
+
+If you need to use a lot of params in each BindType, then you can replace it by your custom annotation and mark it with
+AsBindType.
+
+Example for view models used in a RecyclerView in a fragment. We can create annotation:
+
+````kotlin
+@AsBindType(
+  BindType(
+    to = ViewModel::class,
+    contributesTo = BindType.Collection.MAP,
+    installIn = BindType.Component.FRAGMENT,
+  )
+)
+@MapClassKey
+annotation class FragmentViewModel
+````
+
+Then mark some view models with it:
+
+````kotlin
+@FragmentViewModel
+class InstrumentItemViewModel @Inject constructor(
+  private val store: IStore,
+  private val coordinator: ICoordinator,
+) : BaseViewModel()
+
+@FragmentViewModel
+class OrderItemViewModel @Inject constructor(
+  private val store: IStore,
+) : BaseViewModel()
+````
+
+And after that use it in some ViewModelFactory:
+
+````kotlin
+class ViewModelFactory @Inject constructor(
+  private val providersMap: @JvmSuppressWildcards Map<Class<*>, Provider<ViewModel>>
+) : ViewModelProvider.Factory {
+  override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    val creator = providersMap[modelClass] ?: throw IllegalArgumentException("unknown model class $modelClass")
+    @Suppress("UNCHECKED_CAST")
+    return creator.get() as T
+  }
+}
+````
+
 ## Sample
 
 The project contains a [sample](https://github.com/mars885/hilt-binder/tree/master/sample/src/main/java/com/paulrybitskyi/hiltbinder/sample) application that illustrates the aforementioned examples as well as some advanced ones.
