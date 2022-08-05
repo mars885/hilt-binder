@@ -17,6 +17,9 @@
 package com.paulrybitskyi.hiltbinder.processor
 
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.TruthJUnit.assume
+import com.google.testing.junit.testparameterinjector.TestParameter
+import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import com.paulrybitskyi.hiltbinder.BindType
 import com.paulrybitskyi.hiltbinder.processor.model.HiltComponent
 import com.paulrybitskyi.hiltbinder.processor.model.PredefinedHiltComponent
@@ -24,7 +27,6 @@ import com.paulrybitskyi.hiltbinder.processor.model.WITH_FRAGMENT_BINDINGS_TYPE_
 import com.paulrybitskyi.hiltbinder.processor.parser.PredefinedHiltComponentMapper
 import com.paulrybitskyi.hiltbinder.processor.parser.factories.ModuleInterfaceNameFactory
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
-import com.squareup.burst.BurstJUnit4
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.KotlinCompilation.ExitCode
 import com.tschuchort.compiletesting.SourceFile
@@ -33,16 +35,11 @@ import com.tschuchort.compiletesting.SourceFile.Companion.kotlin
 import com.tschuchort.compiletesting.kspSourcesDir
 import com.tschuchort.compiletesting.symbolProcessorProviders
 import java.io.File
-import org.junit.Assume
 import org.junit.Test
 import org.junit.runner.RunWith
 
-// TODO (26.05.2021): Burst library for parameterizing
-// tests should be abandoned in favor of TestParameterInjector
-// (https://github.com/google/TestParameterInjector) after this issue
-// (https://github.com/google/TestParameterInjector/issues/6) is resolved.
 @Suppress("LargeClass", "LongMethod", "MaxLineLength")
-@RunWith(BurstJUnit4::class)
+@RunWith(TestParameterInjector::class)
 internal class HiltBinderTest {
 
     internal companion object {
@@ -74,8 +71,11 @@ internal class HiltBinderTest {
             .filter { (it != BindType.Component.NONE) && (it != BindType.Component.CUSTOM) }
     }
 
+    @TestParameter
+    private lateinit var scenario: Scenario
+
     @Test
-    fun `Binds class implicitly to its single interface`(scenario: Scenario) {
+    fun `Binds class implicitly to its single interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -147,7 +147,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly to its single interface`(scenario: Scenario) {
+    fun `Binds class explicitly to its single interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -219,7 +219,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class implicitly to its superclass`(scenario: Scenario) {
+    fun `Binds class implicitly to its superclass`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_ABSTRACT_TEST_FILE,
@@ -291,7 +291,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly to its superclass`(scenario: Scenario) {
+    fun `Binds class explicitly to its superclass`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_ABSTRACT_TEST_FILE,
@@ -363,7 +363,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly, which has two interfaces, to specific interface`(scenario: Scenario) {
+    fun `Binds class explicitly, which has two interfaces, to specific interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -449,7 +449,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly, which has superclass and interface, to superclass`(scenario: Scenario) {
+    fun `Binds class explicitly, which has superclass and interface, to superclass`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -523,7 +523,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly, which has superclass and interface, to interface`(scenario: Scenario) {
+    fun `Binds class explicitly, which has superclass and interface, to interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -597,7 +597,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly to root type`(scenario: Scenario) {
+    fun `Binds class explicitly to root type`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -669,7 +669,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly, which has superclass, to root type`(scenario: Scenario) {
+    fun `Binds class explicitly, which has superclass, to root type`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_ABSTRACT_TEST_FILE,
@@ -743,7 +743,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly, which has interface, to root type`(scenario: Scenario) {
+    fun `Binds class explicitly, which has interface, to root type`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -817,7 +817,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly, which has superclass and interface, to root type`(scenario: Scenario) {
+    fun `Binds class explicitly, which has superclass and interface, to root type`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -893,7 +893,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly, which has superclass, to its superclass's implemented interface`(scenario: Scenario) {
+    fun `Binds class explicitly, which has superclass, to its superclass's implemented interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -973,7 +973,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly, which has superclass, to its superclass's superclass`(scenario: Scenario) {
+    fun `Binds class explicitly, which has superclass, to its superclass's superclass`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -1059,7 +1059,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly, which has interface, to its interface's base interface`(scenario: Scenario) {
+    fun `Binds class explicitly, which has interface, to its interface's base interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -1139,7 +1139,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds enum class implicitly to its interface`(scenario: Scenario) {
+    fun `Binds enum class implicitly to its interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -1211,7 +1211,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds enum class explicitly to its interface`(scenario: Scenario) {
+    fun `Binds enum class explicitly to its interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -1283,8 +1283,8 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds Kotlin object class implicitly to its interface`(scenario: Scenario) {
-        Assume.assumeTrue(scenario.inputLanguage == Language.KOTLIN)
+    fun `Binds Kotlin object class implicitly to its interface`() {
+        assume().that(scenario.inputLanguage).isEqualTo(Language.KOTLIN)
 
         val sourceFiles = listOf(
             KOTLIN_TESTABLE_FILE,
@@ -1343,8 +1343,8 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds Kotlin object class explicitly to its interface`(scenario: Scenario) {
-        Assume.assumeTrue(scenario.inputLanguage == Language.KOTLIN)
+    fun `Binds Kotlin object class explicitly to its interface`() {
+        assume().that(scenario.inputLanguage).isEqualTo(Language.KOTLIN)
 
         val sourceFiles = listOf(
             KOTLIN_TESTABLE_FILE,
@@ -1403,8 +1403,8 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds Kotlin object class implicitly to its superclass`(scenario: Scenario) {
-        Assume.assumeTrue(scenario.inputLanguage == Language.KOTLIN)
+    fun `Binds Kotlin object class implicitly to its superclass`() {
+        assume().that(scenario.inputLanguage).isEqualTo(Language.KOTLIN)
 
         val sourceFiles = listOf(
             KOTLIN_ABSTRACT_TEST_FILE,
@@ -1463,8 +1463,8 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds Kotlin object class explicitly to its superclass`(scenario: Scenario) {
-        Assume.assumeTrue(scenario.inputLanguage == Language.KOTLIN)
+    fun `Binds Kotlin object class explicitly to its superclass`() {
+        assume().that(scenario.inputLanguage).isEqualTo(Language.KOTLIN)
 
         val sourceFiles = listOf(
             KOTLIN_ABSTRACT_TEST_FILE,
@@ -1523,7 +1523,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class implicitly to its parameterized interface`(scenario: Scenario) {
+    fun `Binds class implicitly to its parameterized interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -1603,7 +1603,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly to its direct parameterized interface`(scenario: Scenario) {
+    fun `Binds class explicitly to its direct parameterized interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -1683,7 +1683,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly to its indirect parameterized interface`(scenario: Scenario) {
+    fun `Binds class explicitly to its indirect parameterized interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -1771,7 +1771,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class implicitly to its parameterized superclass`(scenario: Scenario) {
+    fun `Binds class implicitly to its parameterized superclass`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -1851,7 +1851,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly to its direct parameterized superclass`(scenario: Scenario) {
+    fun `Binds class explicitly to its direct parameterized superclass`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -1931,7 +1931,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class explicitly to its indirect parameterized superclass`(scenario: Scenario) {
+    fun `Binds class explicitly to its indirect parameterized superclass`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -2019,7 +2019,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class to heavily parameterized type`(scenario: Scenario) {
+    fun `Binds class to heavily parameterized type`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -2137,7 +2137,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Fails to bind class implicitly, which does not have superclass or interface`(scenario: Scenario) {
+    fun `Fails to bind class implicitly, which does not have superclass or interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -2170,7 +2170,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Fails to bind class implicitly, which has two interfaces`(scenario: Scenario) {
+    fun `Fails to bind class implicitly, which has two interfaces`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -2219,7 +2219,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Fails to bind class implicitly, which has superclass and interface`(scenario: Scenario) {
+    fun `Fails to bind class implicitly, which has superclass and interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -2256,9 +2256,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Fails to bind class explicitly, which does not have superclass or interface, to interface`(
-        scenario: Scenario
-    ) {
+    fun `Fails to bind class explicitly, which does not have superclass or interface, to interface`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -2293,7 +2291,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Fails to bind class explicitly, which does not have superclass or interface, to class`(scenario: Scenario) {
+    fun `Fails to bind class explicitly, which does not have superclass or interface, to class`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_ABSTRACT_TEST_FILE,
@@ -2328,7 +2326,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Installs binding in predefined component, which is inferred from scope annotation`(scenario: Scenario) {
+    fun `Installs binding in predefined component, which is inferred from scope annotation`() {
         for (component in PredefinedHiltComponent.values()) {
             val isViewWithFragmentComponent = (component == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
             val withFragmentBindingAnnotation = if (isViewWithFragmentComponent) {
@@ -2414,7 +2412,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Installs binding in predefined component, which is explicitly specified in annotation`(scenario: Scenario) {
+    fun `Installs binding in predefined component, which is explicitly specified in annotation`() {
         for (predefinedComponent in PREDEFINED_COMPONENTS) {
             val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
             val predefinedHiltComponent = HiltComponent.Predefined(mappedComponent)
@@ -2491,9 +2489,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Installs binding in predefined component, which is specified both by the scope annotation and explicitly`(
-        scenario: Scenario
-    ) {
+    fun `Installs binding in predefined component, which is specified both by the scope annotation and explicitly`() {
         for (predefinedComponent in PREDEFINED_COMPONENTS) {
             val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
             val isViewWithFragmentComponent = (mappedComponent == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
@@ -2580,9 +2576,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Fails to install binding in predefined component, when scope's component and explicit component differs`(
-        scenario: Scenario
-    ) {
+    fun `Fails to install binding in predefined component, when scope's component and explicit component differs`() {
         for (predefinedComponent in PREDEFINED_COMPONENTS) {
             val mappedComponent = PREDEFINED_HILT_COMPONENT_MAPPER.mapToPredefinedComponent(predefinedComponent)
             val isViewWithFragmentComponent = (mappedComponent == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
@@ -2640,7 +2634,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Installs scoped binding in custom component successfully`(scenario: Scenario) {
+    fun `Installs scoped binding in custom component successfully`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -2763,7 +2757,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Installs unscoped binding in custom component successfully`(scenario: Scenario) {
+    fun `Installs unscoped binding in custom component successfully`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -2859,7 +2853,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Installs multiple bindings in custom component successfully`(scenario: Scenario) {
+    fun `Installs multiple bindings in custom component successfully`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -3006,7 +3000,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Fails to install binding in custom component, when its type is unspecified`(scenario: Scenario) {
+    fun `Fails to install binding in custom component, when its type is unspecified`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -3041,7 +3035,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class with predefined qualifier`(scenario: Scenario) {
+    fun `Binds class with predefined qualifier`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -3123,7 +3117,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Binds class with custom qualifier`(scenario: Scenario) {
+    fun `Binds class with custom qualifier`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -3234,7 +3228,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Fails to bind class, which is specified to have qualifier, but does not have it`(scenario: Scenario) {
+    fun `Fails to bind class, which is specified to have qualifier, but does not have it`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -3269,7 +3263,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Verify that all annotation properties are properly copied in binding method`(scenario: Scenario) {
+    fun `Verify that all annotation properties are properly copied in binding method`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -3666,7 +3660,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound classes into multibound set`(scenario: Scenario) {
+    fun `Saves bound classes into multibound set`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -3794,7 +3788,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound parameterized classes into multibound set`(scenario: Scenario) {
+    fun `Saves bound parameterized classes into multibound set`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -3928,7 +3922,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound classes into qualified multibound set`(scenario: Scenario) {
+    fun `Saves bound classes into qualified multibound set`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -4100,7 +4094,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Fails to save bound class, which does not have @MapKey annotation, into multibound map`(scenario: Scenario) {
+    fun `Fails to save bound class, which does not have @MapKey annotation, into multibound map`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -4135,7 +4129,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound classes into multibound map using standard integer key annotation`(scenario: Scenario) {
+    fun `Saves bound classes into multibound map using standard integer key annotation`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -4283,7 +4277,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound classes into multibound map using standard long key annotation`(scenario: Scenario) {
+    fun `Saves bound classes into multibound map using standard long key annotation`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -4431,7 +4425,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound classes into multibound map using standard string key annotation`(scenario: Scenario) {
+    fun `Saves bound classes into multibound map using standard string key annotation`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -4579,7 +4573,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound classes into multibound map using standard class key annotation`(scenario: Scenario) {
+    fun `Saves bound classes into multibound map using standard class key annotation`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -4727,9 +4721,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound parameterized classes into multibound map using standard class key annotation`(
-        scenario: Scenario
-    ) {
+    fun `Saves bound parameterized classes into multibound map using standard class key annotation`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -4883,7 +4875,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound classes into multibound map using custom @MapKey annotation`(scenario: Scenario) {
+    fun `Saves bound classes into multibound map using custom @MapKey annotation`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -5063,7 +5055,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound parameterized classes into multibound map using custom @MapKey annotation`(scenario: Scenario) {
+    fun `Saves bound parameterized classes into multibound map using custom @MapKey annotation`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -5249,7 +5241,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Saves bound classes into qualified multibound map`(scenario: Scenario) {
+    fun `Saves bound classes into qualified multibound map`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 JAVA_TESTABLE_FILE,
@@ -5441,7 +5433,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Verify that binding method is properly formatted`(scenario: Scenario) {
+    fun `Verify that binding method is properly formatted`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(
@@ -5545,7 +5537,7 @@ internal class HiltBinderTest {
     }
 
     @Test
-    fun `Verify that common prefix package name is used based on bindings of component`(scenario: Scenario) {
+    fun `Verify that common prefix package name is used based on bindings of component`() {
         val sourceFiles = when (scenario.inputLanguage) {
             Language.JAVA -> listOf(
                 java(

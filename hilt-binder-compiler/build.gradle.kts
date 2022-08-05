@@ -88,7 +88,7 @@ dependencies {
     testImplementation(deps.kspCore)
     testImplementation(deps.kspApi)
     testImplementation(deps.kspCompileTesting)
-    testImplementation(deps.burst)
+    testImplementation(deps.testParamInjector)
 
     // Some Hilt Android classes have to be present on the classpath
     // when testing. Since hilt-binder-compiler is a jar artifact and
