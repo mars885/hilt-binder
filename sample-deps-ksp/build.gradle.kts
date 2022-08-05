@@ -33,7 +33,23 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            sourceSets {
+                getByName("debug") {
+                    java.srcDir(File("build/generated/ksp/debug/java"))
+                    java.srcDir(File("build/generated/ksp/debug/kotlin"))
+                }
+            }
+        }
+
         getByName("release") {
+            sourceSets {
+                getByName("release") {
+                    java.srcDir(File("build/generated/ksp/release/java"))
+                    java.srcDir(File("build/generated/ksp/release/kotlin"))
+                }
+            }
+
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }

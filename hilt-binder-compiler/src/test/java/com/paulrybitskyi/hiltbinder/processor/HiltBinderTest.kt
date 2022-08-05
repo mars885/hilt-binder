@@ -2119,8 +2119,8 @@ internal class HiltBinderTest {
                 @InstallIn(SingletonComponent::class)
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
-                  fun bind_Test(binding: Test): Testable<Testable1<Int, Float, String>, Testable2<Int, Float,
-                      String>, Testable3<*, *, *>>
+                  fun bind_Test(
+                      binding: Test): Testable<Testable1<Int, Float, String>, Testable2<Int, Float, String>, Testable3<*, *, *>>
                 }
                 """.trimIndent()
         }
@@ -3647,7 +3647,7 @@ internal class HiltBinderTest {
                     enumArray = [CustomQualifierType.ONE, CustomQualifierType.TWO, CustomQualifierType.THREE],
                     annotationArray = [InnerAnno(intValue = 0, longValue = 1, classValue = Test::class),
                         InnerAnno(intValue = 10, longValue = 100, classValue = Testable::class)],
-                    classArray = [Test::class, Testable::class, CustomQualifierClass::class]
+                    classArray = [Test::class, Testable::class, CustomQualifierClass::class],
                   )
                   fun bind_Test(binding: Test): Testable
                 }
