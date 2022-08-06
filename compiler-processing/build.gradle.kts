@@ -23,6 +23,7 @@ dependencies {
 
     implementation(deps.javaPoet)
     implementation(deps.kotlinPoet)
+    implementation(deps.kotlinPoetKsp)
 
     compileOnly(deps.kspApi)
 }
