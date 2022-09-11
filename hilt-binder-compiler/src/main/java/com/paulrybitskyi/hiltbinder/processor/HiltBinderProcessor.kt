@@ -23,6 +23,7 @@ import com.paulrybitskyi.hiltbinder.processor.generator.generateModuleFiles
 import com.paulrybitskyi.hiltbinder.processor.parser.AnnotationsParser
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.utils.BIND_TYPE_QUALIFIED_NAME
+import com.paulrybitskyi.hiltbinder.processor.utils.BIND_TYPE_WITH_QUALIFIED_NAME
 
 internal class HiltBinderProcessor(
     private val roundEnv: XRoundEnv,
@@ -33,8 +34,9 @@ internal class HiltBinderProcessor(
 
     fun process() {
         try {
-            val elements = roundEnv.getElementsAnnotatedWith(BIND_TYPE_QUALIFIED_NAME)
-            val moduleSchemas = annotationsParser.parse(elements)
+            val primaryElements = roundEnv.getElementsAnnotatedWith(BIND_TYPE_QUALIFIED_NAME)
+            val predefinedElements = roundEnv.getElementsAnnotatedWith(BIND_TYPE_WITH_QUALIFIED_NAME)
+            val moduleSchemas = annotationsParser.parse(primaryElements, predefinedElements)
 
             moduleFileGenerator.generateModuleFiles(moduleSchemas)
         } catch (expected: Throwable) {

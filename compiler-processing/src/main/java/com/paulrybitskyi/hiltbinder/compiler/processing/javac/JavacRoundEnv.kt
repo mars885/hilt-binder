@@ -26,15 +26,14 @@ internal class JavacRoundEnv(
     private val delegate: RoundEnvironment
 ) : XRoundEnv {
 
-    override fun getElementsAnnotatedWith(annotationQualifiedName: String): Sequence<XElement> {
-        val annotationTypeElement = env.elementUtils.getTypeElement(annotationQualifiedName)
-            ?: error("A type element with name = $annotationQualifiedName cannot be found.")
+    override fun getElementsAnnotatedWith(vararg annotationQualifiedNames: String): Sequence<XElement> {
+        val annotationTypeElements = annotationQualifiedNames.map {
+            env.elementUtils.getTypeElement(it)
+                ?: error("A type element with name = $it cannot be found.")
+        }.toTypedArray()
 
-        val javacElements = delegate.getElementsAnnotatedWith(annotationTypeElement)
-        val xElements = javacElements
-            .map { XElementFactory.createJavacElement(env, it) }
+        return delegate.getElementsAnnotatedWithAny(*annotationTypeElements)
             .asSequence()
-
-        return xElements
+            .map { XElementFactory.createJavacElement(env, it) }
     }
 }

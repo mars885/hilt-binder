@@ -23,9 +23,13 @@ import kotlin.reflect.KClass
  * An analog to [dagger.multibindings.ClassKey] that is used for marking
  * a type (class or interface) being contributed to a multibound map.
  *
+ * The [value] can be skipped to use a marked type as key.
+ *
  * See [com.paulrybitskyi.hiltbinder.BindType] for examples.
  */
 @MapKey
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
-annotation class MapClassKey(val value: KClass<*>)
+annotation class MapClassKey(val value: KClass<*> = Auto::class) {
+    class Auto
+}

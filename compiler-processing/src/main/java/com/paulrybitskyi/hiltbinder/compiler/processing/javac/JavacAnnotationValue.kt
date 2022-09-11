@@ -17,9 +17,14 @@
 package com.paulrybitskyi.hiltbinder.compiler.processing.javac
 
 import com.paulrybitskyi.hiltbinder.common.utils.safeCast
+import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotationValue
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
+import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XAnnotationFactory
+import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XAnnotationValueFactory
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XTypeFactory
+import javax.lang.model.element.AnnotationMirror
+import javax.lang.model.element.AnnotationValue
 import javax.lang.model.type.TypeMirror
 
 internal class JavacAnnotationValue(
@@ -42,6 +47,18 @@ internal class JavacAnnotationValue(
     override fun getAsType(default: XType?): XType? {
         return value?.safeCast<TypeMirror>()
             ?.let { XTypeFactory.createJavacType(env, it) }
+            ?: default
+    }
+
+    override fun getAsAnnotation(default: XAnnotation?): XAnnotation? {
+        return value?.safeCast<AnnotationMirror>()
+            ?.let { XAnnotationFactory.createJavacAnnotation(env, it) }
+            ?: default
+    }
+
+    override fun getAsArray(default: List<XAnnotationValue>?): List<XAnnotationValue>? {
+        return value?.safeCast<List<AnnotationValue>>()
+            ?.map { XAnnotationValueFactory.createJavacValue(env, it.value) }
             ?: default
     }
 }

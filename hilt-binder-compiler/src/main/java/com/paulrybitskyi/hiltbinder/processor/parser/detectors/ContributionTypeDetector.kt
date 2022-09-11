@@ -17,38 +17,82 @@
 package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType.Collection
+import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
+import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
+import com.paulrybitskyi.hiltbinder.keys.MapClassKey
 import com.paulrybitskyi.hiltbinder.processor.model.ContributionType
 import com.paulrybitskyi.hiltbinder.processor.model.MAP_KEY_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
 import com.paulrybitskyi.hiltbinder.processor.utils.getAnnoMarkedWithAnotherAnno
-import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotation
 import com.paulrybitskyi.hiltbinder.processor.utils.getContributesToArg
 import com.paulrybitskyi.hiltbinder.processor.utils.getTypeUnsafely
+import com.paulrybitskyi.hiltbinder.processor.utils.getTypeValue
+
+private val MAP_CLASS_QUALIFIED_NAME = MapClassKey::class.qualifiedName!!
+private val MAP_CLASS_AUTO_QUALIFIED_NAME = MapClassKey.Auto::class.qualifiedName!!
+private val MAP_CLASS_PARAM_VALUE = MapClassKey::value.name
 
 internal class ContributionTypeDetector(
     private val processingEnv: XProcessingEnv,
     private val messageProvider: MessageProvider
 ) {
 
-    fun detectType(annotatedElement: XTypeElement): ContributionType? {
-        val bindAnnotation = annotatedElement.getBindAnnotation()
+    fun detectType(
+        annotatedElement: XTypeElement,
+        bindAnnotation: XAnnotation,
+        annotatedAnnotation: XTypeElement? = null,
+    ): ContributionType? {
         val collection = bindAnnotation.getContributesToArg()
 
         return when (collection) {
             Collection.NONE -> null
             Collection.SET -> ContributionType.Set
-            Collection.MAP -> annotatedElement.createMapContributionType()
+            Collection.MAP -> annotatedElement.createMapContributionType(annotatedElement.type)
+                ?: annotatedAnnotation?.createMapContributionType(annotatedElement.type)
+                ?: throw HiltBinderException(messageProvider.noMapKeyError(), annotatedElement)
         }
     }
 
-    private fun XTypeElement.createMapContributionType(): ContributionType {
+    private fun XTypeElement.createMapContributionType(autoType: XType): ContributionType? {
         val daggerMapKeyType = processingEnv.getTypeUnsafely(MAP_KEY_TYPE_QUALIFIED_NAME)
-        val mapKeyAnnotation = getAnnoMarkedWithAnotherAnno(daggerMapKeyType)
-            ?: throw HiltBinderException(messageProvider.noMapKeyError(), this)
+        val mapKeyAnnotation = wrapKeyAnnotation(getAnnoMarkedWithAnotherAnno(daggerMapKeyType), autoType)
+            ?: return null
 
         return ContributionType.Map(mapKeyAnnotation)
+    }
+
+    private fun wrapKeyAnnotation(annotation: XAnnotation?, autoType: XType): XAnnotation? {
+        annotation ?: return null
+
+        if (annotation.type.element.qualifiedName == MAP_CLASS_QUALIFIED_NAME) {
+            val value = annotation.getTypeValue(MAP_CLASS_PARAM_VALUE, null)
+            if (value == null || value.element.qualifiedName == MAP_CLASS_AUTO_QUALIFIED_NAME) {
+                return XMapClassKeyWrapper(annotation, autoType)
+            }
+        }
+        return annotation
+    }
+
+    private class XMapClassKeyWrapper(
+        private val annotation: XAnnotation,
+        private val keyType: XType,
+    ) : XAnnotation by annotation {
+
+        override val javaAnnoSpec get() = wrapJavaAnnoSpec()
+
+        override val kotlinAnnoSpec get() = wrapKotlinAnnoSpec()
+
+        private fun wrapJavaAnnoSpec() = annotation.javaAnnoSpec.toBuilder().apply {
+            members.clear()
+            addMember(MAP_CLASS_PARAM_VALUE, "\$T.class", keyType.javaTypeName)
+        }.build()
+
+        private fun wrapKotlinAnnoSpec() = annotation.kotlinAnnoSpec.toBuilder().apply {
+            members.clear()
+            addMember("%T::class", keyType.kotlinTypeName)
+        }.build()
     }
 }

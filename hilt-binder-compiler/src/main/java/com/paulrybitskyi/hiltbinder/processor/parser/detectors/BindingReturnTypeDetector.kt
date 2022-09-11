@@ -17,30 +17,18 @@
 package com.paulrybitskyi.hiltbinder.processor.parser.detectors
 
 import com.paulrybitskyi.hiltbinder.BindType.Collection
-import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
-import com.paulrybitskyi.hiltbinder.compiler.processing.XBackend
-import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
-import com.paulrybitskyi.hiltbinder.compiler.processing.XType
-import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
+import com.paulrybitskyi.hiltbinder.compiler.processing.*
 import com.paulrybitskyi.hiltbinder.processor.model.ReturnType
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
 import com.paulrybitskyi.hiltbinder.processor.parser.providers.MessageProvider
-import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotation
-import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotationDefaultType
-import com.paulrybitskyi.hiltbinder.processor.utils.getContributesToArg
-import com.paulrybitskyi.hiltbinder.processor.utils.getRootType
-import com.paulrybitskyi.hiltbinder.processor.utils.getToArg
-import com.paulrybitskyi.hiltbinder.processor.utils.isGeneric
-import com.paulrybitskyi.hiltbinder.processor.utils.qualifiedName
-import com.paulrybitskyi.hiltbinder.processor.utils.typeElement
+import com.paulrybitskyi.hiltbinder.processor.utils.*
 
 internal class BindingReturnTypeDetector(
     private val processingEnv: XProcessingEnv,
     private val messageProvider: MessageProvider
 ) {
 
-    fun detectReturnType(annotatedElement: XTypeElement): ReturnType {
-        val bindAnnotation = annotatedElement.getBindAnnotation()
+    fun detectReturnType(annotatedElement: XTypeElement, bindAnnotation: XAnnotation): ReturnType {
         val collection = bindAnnotation.getContributesToArg()
         val returnType = retrieveReturnType(bindAnnotation, annotatedElement)
 

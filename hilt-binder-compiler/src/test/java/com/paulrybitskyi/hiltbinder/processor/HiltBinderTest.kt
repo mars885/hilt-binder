@@ -5257,7 +5257,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test1.class)
+                    @MapClassKey()
                     @Named("one")
                     public class Test1 implements Testable {}
                     """.trimIndent()
@@ -5274,7 +5274,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test2.class)
+                    @MapClassKey()
                     @Named("two")
                     public class Test2 implements Testable {}
                     """.trimIndent()
@@ -5291,7 +5291,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test3.class)
+                    @MapClassKey()
                     @Named("three")
                     public class Test3 implements Testable {}
                     """.trimIndent()
@@ -5311,7 +5311,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test1::class)
+                    @MapClassKey
                     @Named("one")
                     class Test1 : Testable
                     """.trimIndent()
@@ -5328,7 +5328,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test2::class)
+                    @MapClassKey
                     @Named("two")
                     class Test2 : Testable
                     """.trimIndent()
@@ -5345,7 +5345,7 @@ internal class HiltBinderTest {
                       contributesTo = BindType.Collection.MAP,
                       withQualifier = true
                     )
-                    @MapClassKey(Test3::class)
+                    @MapClassKey
                     @Named("three")
                     class Test3 : Testable
                     """.trimIndent()
@@ -5727,6 +5727,110 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "com/paulrybitskyi/hiltbinder/testing/HiltBinder_SingletonComponentModule",
+            scenario.outputLanguage
+        )
+
+        assertThat(result.exitCode).isEqualTo(ExitCode.OK)
+        assertThat(actualGeneratedFile.exists()).isTrue()
+        assertThat(actualGeneratedFile.readText()).isEqualTo(expectedGeneratedFile)
+    }
+
+    @Test
+    fun `Verify that annotations marked with AsBindType have behavior like BindType`() {
+        val sourceFiles = when (scenario.inputLanguage) {
+            Language.JAVA -> listOf(
+                JAVA_TESTABLE_FILE,
+                java(
+                    "Test.java",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.BindTypeWith;
+                    import com.paulrybitskyi.hiltbinder.AsBindType;
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+
+                    @AsBindType(
+                        bindType = @BindType(
+                            installIn = BindType.Component.SINGLETON,
+                            contributesTo = BindType.Collection.MAP
+                        )
+                    )
+                    @MapClassKey
+                    @interface MyBindType{}
+
+                    @BindTypeWith(MyBindType.class)
+                    public class Test implements Testable {}
+                    """.trimIndent()
+                )
+            )
+            Language.KOTLIN -> listOf(
+                KOTLIN_TESTABLE_FILE,
+                kotlin(
+                    "Test.kt",
+                    """
+                    import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.BindTypeWith
+                    import com.paulrybitskyi.hiltbinder.AsBindType
+                    import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+
+                    @AsBindType(
+                        BindType(
+                            installIn = BindType.Component.SINGLETON,
+                            contributesTo = BindType.Collection.MAP,
+                        )
+                    )
+                    @MapClassKey
+                    annotation class MyBindType
+
+                    @BindTypeWith(MyBindType::class)
+                    class Test : Testable
+                    """.trimIndent()
+                )
+            )
+        }
+        val expectedGeneratedFile = when (scenario.outputLanguage) {
+            Language.JAVA -> """
+                // Generated by @BindType. Do not modify!
+
+                import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
+                import dagger.Binds;
+                import dagger.Module;
+                import dagger.hilt.InstallIn;
+                import dagger.hilt.components.SingletonComponent;
+                import dagger.multibindings.IntoMap;
+
+                @Module
+                @InstallIn(SingletonComponent.class)
+                public interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test.class)
+                  Testable bind_Test(Test binding);
+                }
+                """.trimIndent()
+            Language.KOTLIN -> """
+                // Generated by @BindType. Do not modify!
+
+                import com.paulrybitskyi.hiltbinder.keys.MapClassKey
+                import dagger.Binds
+                import dagger.Module
+                import dagger.hilt.InstallIn
+                import dagger.hilt.components.SingletonComponent
+                import dagger.multibindings.IntoMap
+
+                @Module
+                @InstallIn(SingletonComponent::class)
+                internal interface HiltBinder_SingletonComponentModule {
+                  @Binds
+                  @IntoMap
+                  @MapClassKey(Test::class)
+                  fun bind_Test(binding: Test): Testable
+                }
+                """.trimIndent()
+        }
+        val compilation = setupCompilation(sourceFiles, scenario.processorType)
+        val result = compilation.compile()
+        val actualGeneratedFile = compilation.getGeneratedFile(
+            "HiltBinder_SingletonComponentModule",
             scenario.outputLanguage
         )
 
