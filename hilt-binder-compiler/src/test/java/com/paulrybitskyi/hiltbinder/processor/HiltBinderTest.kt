@@ -5744,6 +5744,7 @@ internal class HiltBinderTest {
                     "Test.java",
                     """
                     import com.paulrybitskyi.hiltbinder.BindType;
+                    import com.paulrybitskyi.hiltbinder.BindTypeWith;
                     import com.paulrybitskyi.hiltbinder.AsBindType;
                     import com.paulrybitskyi.hiltbinder.keys.MapClassKey;
 
@@ -5756,7 +5757,7 @@ internal class HiltBinderTest {
                     @MapClassKey
                     @interface MyBindType{}
 
-                    @MyBindType
+                    @BindTypeWith(MyBindType.class)
                     public class Test implements Testable {}
                     """.trimIndent()
                 )
@@ -5767,6 +5768,7 @@ internal class HiltBinderTest {
                     "Test.kt",
                     """
                     import com.paulrybitskyi.hiltbinder.BindType
+                    import com.paulrybitskyi.hiltbinder.BindTypeWith
                     import com.paulrybitskyi.hiltbinder.AsBindType
                     import com.paulrybitskyi.hiltbinder.keys.MapClassKey
 
@@ -5779,7 +5781,7 @@ internal class HiltBinderTest {
                     @MapClassKey
                     annotation class MyBindType
 
-                    @MyBindType
+                    @BindTypeWith(MyBindType::class)
                     class Test : Testable
                     """.trimIndent()
                 )

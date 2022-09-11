@@ -19,6 +19,7 @@ package com.paulrybitskyi.hiltbinder.processor.utils
 import com.paulrybitskyi.hiltbinder.AsBindType
 import com.paulrybitskyi.hiltbinder.BindType.Collection
 import com.paulrybitskyi.hiltbinder.BindType.Component
+import com.paulrybitskyi.hiltbinder.BindTypeWith
 import com.paulrybitskyi.hiltbinder.common.utils.VOID_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.XProcessingEnv
@@ -41,6 +42,10 @@ internal fun XTypeElement.getBindAnnotation(): XAnnotation {
 
 internal fun XTypeElement.getAsBindAnnotation(): XAnnotation {
     return checkNotNull(getAnnotation(AS_BIND_TYPE_QUALIFIED_NAME))
+}
+
+internal fun XTypeElement.getBindWithAnnotation(): XAnnotation {
+    return checkNotNull(getAnnotation(BIND_TYPE_WITH_QUALIFIED_NAME))
 }
 
 internal fun XAnnotation.getToArg(default: XType? = null): XType? {
@@ -73,4 +78,9 @@ internal fun XAnnotation.getWithQualifierArg(): Boolean {
 
 internal fun XAnnotation.getBindAnnotation(): XAnnotation {
     return checkNotNull(getAnnotationValue(AsBindType::bindType.name, null))
+}
+
+internal fun XAnnotation.getBindWithAnnotations(): List<XType> {
+    return checkNotNull(getArrayValue(BindTypeWith::value.name, null))
+        .map { checkNotNull(it.getAsType(null)) }
 }

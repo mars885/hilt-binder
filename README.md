@@ -510,13 +510,13 @@ annotation class FragmentViewModel
 Then mark some view models with it:
 
 ````kotlin
-@FragmentViewModel
+@BindTypeWith(FragmentViewModel::class)
 class InstrumentItemViewModel @Inject constructor(
   private val store: IStore,
   private val coordinator: ICoordinator,
 ) : BaseViewModel()
 
-@FragmentViewModel
+@BindTypeWith(FragmentViewModel::class)
 class OrderItemViewModel @Inject constructor(
   private val store: IStore,
 ) : BaseViewModel()

@@ -24,6 +24,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotation
 import com.paulrybitskyi.hiltbinder.compiler.processing.XAnnotationValue
 import com.paulrybitskyi.hiltbinder.compiler.processing.XType
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XAnnotationFactory
+import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XAnnotationValueFactory
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XTypeFactory
 import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.simpleName
 
@@ -57,6 +58,15 @@ internal class KspAnnotationValue(
     override fun getAsAnnotation(default: XAnnotation?): XAnnotation? {
         return value?.safeCast<KSAnnotation>()
             ?.let { XAnnotationFactory.createKspAnnotation(env, it) }
+            ?: default
+    }
+
+    override fun getAsArray(default: List<XAnnotationValue>?): List<XAnnotationValue>? {
+        if (value !is List<*>) {
+            return value?.let { listOf(XAnnotationValueFactory.createKspValue(env, it)) } ?: default
+        }
+        return value.safeCast<List<*>>()
+            ?.map { XAnnotationValueFactory.createKspValue(env, it) }
             ?: default
     }
 }

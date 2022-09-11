@@ -23,9 +23,7 @@ import com.paulrybitskyi.hiltbinder.processor.parser.detectors.BindingReturnType
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.ContributionTypeDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.HiltComponentDetector
 import com.paulrybitskyi.hiltbinder.processor.parser.detectors.QualifierAnnotationDetector
-import com.paulrybitskyi.hiltbinder.processor.utils.getAsBindAnnotation
-import com.paulrybitskyi.hiltbinder.processor.utils.getBindAnnotation
-import com.paulrybitskyi.hiltbinder.processor.utils.qualifiedName
+import com.paulrybitskyi.hiltbinder.processor.utils.*
 
 internal class BindingSchemaFactory(
     private val hiltComponentDetector: HiltComponentDetector,
@@ -39,14 +37,16 @@ internal class BindingSchemaFactory(
         private const val BINDING_PARAM_NAME = "binding"
     }
 
-    fun createBindingSchema(
+    fun createBindingSchemaWith(
         annotatedElement: XTypeElement,
-        predefinedMap: Map<String, XTypeElement>,
     ): List<BindingSchema> {
-        return annotatedElement.annotations
-            .mapNotNull { predefinedMap[it.type.qualifiedName] }
-            .map { createBindingSchema(annotatedElement, it.getAsBindAnnotation().getBindAnnotation(), it) }
-            .toList()
+        return annotatedElement.getBindWithAnnotation().getBindWithAnnotations().map {
+            createBindingSchema(
+                annotatedElement,
+                it.typeElement.getAsBindAnnotation().getBindAnnotation(),
+                it.typeElement
+            )
+        }.toList()
     }
 
     fun createBindingSchema(annotatedElement: XTypeElement): BindingSchema {

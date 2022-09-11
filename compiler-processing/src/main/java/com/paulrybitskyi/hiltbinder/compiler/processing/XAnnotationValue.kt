@@ -25,4 +25,6 @@ interface XAnnotationValue {
     fun getAsType(default: XType?): XType?
 
     fun getAsAnnotation(default: XAnnotation?): XAnnotation?
+
+    fun getAsArray(default: List<XAnnotationValue>?): List<XAnnotationValue>?
 }

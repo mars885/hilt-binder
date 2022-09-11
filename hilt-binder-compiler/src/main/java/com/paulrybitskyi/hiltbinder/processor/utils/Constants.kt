@@ -18,7 +18,9 @@ package com.paulrybitskyi.hiltbinder.processor.utils
 
 import com.paulrybitskyi.hiltbinder.AsBindType
 import com.paulrybitskyi.hiltbinder.BindType
+import com.paulrybitskyi.hiltbinder.BindTypeWith
 
 internal val BIND_TYPE_SIMPLE_NAME = BindType::class.simpleName!!
 internal val BIND_TYPE_QUALIFIED_NAME = BindType::class.qualifiedName!!
 internal val AS_BIND_TYPE_QUALIFIED_NAME = AsBindType::class.qualifiedName!!
+internal val BIND_TYPE_WITH_QUALIFIED_NAME = BindTypeWith::class.qualifiedName!!

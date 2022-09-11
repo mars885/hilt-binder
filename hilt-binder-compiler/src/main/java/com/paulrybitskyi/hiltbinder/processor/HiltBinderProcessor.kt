@@ -16,16 +16,14 @@
 
 package com.paulrybitskyi.hiltbinder.processor
 
-import com.paulrybitskyi.hiltbinder.common.utils.safeCastEach
 import com.paulrybitskyi.hiltbinder.compiler.processing.XLogger
 import com.paulrybitskyi.hiltbinder.compiler.processing.XRoundEnv
-import com.paulrybitskyi.hiltbinder.compiler.processing.XTypeElement
 import com.paulrybitskyi.hiltbinder.processor.generator.ModuleFileGenerator
 import com.paulrybitskyi.hiltbinder.processor.generator.generateModuleFiles
 import com.paulrybitskyi.hiltbinder.processor.parser.AnnotationsParser
 import com.paulrybitskyi.hiltbinder.processor.parser.HiltBinderException
-import com.paulrybitskyi.hiltbinder.processor.utils.AS_BIND_TYPE_QUALIFIED_NAME
 import com.paulrybitskyi.hiltbinder.processor.utils.BIND_TYPE_QUALIFIED_NAME
+import com.paulrybitskyi.hiltbinder.processor.utils.BIND_TYPE_WITH_QUALIFIED_NAME
 
 internal class HiltBinderProcessor(
     private val roundEnv: XRoundEnv,
@@ -36,14 +34,9 @@ internal class HiltBinderProcessor(
 
     fun process() {
         try {
-            val predefinedMap = roundEnv.getElementsAnnotatedWith(AS_BIND_TYPE_QUALIFIED_NAME)
-                .safeCastEach<XTypeElement>()
-                .map { it.qualifiedName to it }
-                .toMap()
-
             val primaryElements = roundEnv.getElementsAnnotatedWith(BIND_TYPE_QUALIFIED_NAME)
-            val predefinedElements = roundEnv.getElementsAnnotatedWith(*predefinedMap.keys.toTypedArray())
-            val moduleSchemas = annotationsParser.parse(primaryElements, predefinedElements, predefinedMap)
+            val predefinedElements = roundEnv.getElementsAnnotatedWith(BIND_TYPE_WITH_QUALIFIED_NAME)
+            val moduleSchemas = annotationsParser.parse(primaryElements, predefinedElements)
 
             moduleFileGenerator.generateModuleFiles(moduleSchemas)
         } catch (expected: Throwable) {

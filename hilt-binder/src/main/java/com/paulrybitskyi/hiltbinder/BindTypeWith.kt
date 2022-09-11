@@ -1,7 +1,9 @@
 package com.paulrybitskyi.hiltbinder
 
+import kotlin.reflect.KClass
+
 /**
- * Denotes a annotation that can be used in [BindTypeWith] instead of [BindType] with specified params.
+ * Like [BindType] but with predefined params thought [AsBindType].
  *
  * Example for view models used in a RecyclerView in a fragment. We can create annotation:
  * ````kotlin
@@ -30,8 +32,8 @@ package com.paulrybitskyi.hiltbinder
  *  ) : ViewModelProvider.Factory { ... }
  * ````
  */
-@Target(AnnotationTarget.ANNOTATION_CLASS)
+@Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
-annotation class AsBindType(
-    val bindType: BindType,
+annotation class BindTypeWith(
+    vararg val value: KClass<out Annotation>,
 )
