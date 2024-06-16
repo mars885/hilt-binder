@@ -26,6 +26,7 @@ android {
     compileSdk = appConfig.compileSdkVersion
 
     defaultConfig {
+        namespace = "com.paulrybitskyi.hiltbinder.sample.ksp"
         minSdk = appConfig.minSdkVersion
         targetSdk = appConfig.targetSdkVersion
 

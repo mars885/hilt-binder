@@ -14,9 +14,7 @@
   ~ limitations under the License.
 -->
 
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.paulrybitskyi.hiltbinder.sample">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:name=".application.SampleApplication"

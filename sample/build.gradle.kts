@@ -26,6 +26,7 @@ android {
 
     defaultConfig {
         applicationId = appConfig.applicationId
+        namespace = appConfig.applicationId
         minSdk = appConfig.minSdkVersion
         targetSdk = appConfig.targetSdkVersion
         versionCode = appConfig.versionCode
