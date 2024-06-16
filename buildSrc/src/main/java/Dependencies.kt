@@ -64,8 +64,8 @@ object publishingConfig {
 
 object versions {
 
-    const val kotlin = "1.7.10" // also in buildSrc build.gradle.kts file
-    const val gradlePlugin = "8.4.1" // also in buildSrc build.gradle.kts file
+    const val kotlin = "1.8.0" // also in buildSrc build.gradle.kts file
+    const val gradlePlugin = "7.2.1" // also in buildSrc build.gradle.kts file
     const val detektPlugin = "1.20.0"
     const val ktlintPlugin = "10.3.0"
     const val gradleVersionsPlugin = "0.42.0"
@@ -82,11 +82,11 @@ object versions {
     const val kotlinPoet = "1.12.0"
     const val incap = "0.3"
     const val autoService = "1.0"
-    const val ksp = "1.7.0-1.0.6"
+    const val ksp = "1.8.0-1.0.9"
     const val jUnit = "4.13.2"
     const val jUnitExt = "1.1.2"
     const val truth = "1.1.3"
-    const val ktCompileTesting = "1.4.9"
+    const val ktCompileTesting = "1.5.0"
     const val testParamInjector = "1.0"
 }
 
