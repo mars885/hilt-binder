@@ -24,8 +24,8 @@ repositories {
 }
 
 dependencies {
-    implementation("com.android.tools.build:gradle:7.2.1")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
+    implementation("com.android.tools.build:gradle:7.4.0")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
     // See https://github.com/google/dagger/issues/3068#issuecomment-999118496
     // for why it should be here.
     implementation("com.squareup:javapoet:1.13.0")

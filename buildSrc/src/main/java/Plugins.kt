@@ -75,7 +75,7 @@ fun PluginDependenciesSpec.kotlinKapt(): PluginDependencySpec {
 }
 
 fun PluginDependenciesSpec.ksp(): PluginDependencySpec {
-    return (id(PLUGIN_KSP) version versions.ksp)
+    return id(PLUGIN_KSP)
 }
 
 fun PluginDependenciesSpec.daggerHiltAndroid(): PluginDependencySpec {
