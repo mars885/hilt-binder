@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import com.android.build.gradle.LibraryExtension
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
@@ -74,21 +72,6 @@ allprojects {
     repositories {
         mavenCentral()
         google()
-    }
-
-    tasks.withType(KotlinCompile::class.java) {
-        kotlinOptions {
-            jvmTarget = appConfig.kotlinCompatibilityVersion.toString()
-        }
-    }
-
-    plugins.withId(PLUGIN_ANDROID_LIBRARY) {
-        extensions.findByType<LibraryExtension>()?.run {
-            compileOptions {
-                sourceCompatibility = appConfig.javaCompatibilityVersion
-                targetCompatibility = appConfig.javaCompatibilityVersion
-            }
-        }
     }
 
     configure<KtlintExtension> {

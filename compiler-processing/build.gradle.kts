@@ -18,6 +18,10 @@ plugins {
     kotlin()
 }
 
+kotlin {
+    jvmToolchain(appConfig.exportableLibJavaCompatVersion)
+}
+
 dependencies {
     implementation(project(deps.local.commonUtils))
 

@@ -34,12 +34,14 @@ import com.tschuchort.compiletesting.SourceFile.Companion.java
 import com.tschuchort.compiletesting.SourceFile.Companion.kotlin
 import com.tschuchort.compiletesting.kspSourcesDir
 import com.tschuchort.compiletesting.symbolProcessorProviders
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import java.io.File
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @Suppress("LargeClass", "LongMethod", "MaxLineLength")
 @RunWith(TestParameterInjector::class)
+@OptIn(ExperimentalCompilerApi::class)
 internal class HiltBinderTest {
 
     internal companion object {

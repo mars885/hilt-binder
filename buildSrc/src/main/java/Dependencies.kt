@@ -27,8 +27,10 @@ object appConfig {
     const val versionCode = 1
     const val versionName = "1.0.0"
 
-    val javaCompatibilityVersion = JavaVersion.VERSION_1_8
-    val kotlinCompatibilityVersion = JavaVersion.VERSION_1_8
+    const val exportableLibJavaCompatVersion = 8
+
+    val androidModuleJavaCompatVersion = JavaVersion.VERSION_17
+    val androidModuleKotlinCompatVersion = JavaVersion.VERSION_17
 }
 
 object publishingConfig {
@@ -64,8 +66,8 @@ object publishingConfig {
 
 object versions {
 
-    const val kotlin = "1.9.0" // also in buildSrc build.gradle.kts file
-    const val gradlePlugin = "7.4.0" // also in buildSrc build.gradle.kts file
+    const val kotlin = "1.9.24" // also in buildSrc build.gradle.kts file
+    const val gradlePlugin = "8.1.0" // also in buildSrc build.gradle.kts file
     const val detektPlugin = "1.20.0"
     const val ktlintPlugin = "10.3.0"
     const val gradleVersionsPlugin = "0.42.0"
@@ -82,11 +84,11 @@ object versions {
     const val kotlinPoet = "1.12.0"
     const val incap = "0.3"
     const val autoService = "1.0"
-    const val ksp = "1.9.0-1.0.13"
+    const val ksp = "1.9.24-1.0.20"
     const val jUnit = "4.13.2"
     const val jUnitExt = "1.1.2"
     const val truth = "1.1.3"
-    const val ktCompileTesting = "1.5.0"
+    const val ktCompileTesting = "1.6.0"
     const val testParamInjector = "1.0"
 }
 
