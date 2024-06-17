@@ -86,7 +86,7 @@ object versions {
     const val incap = "1.0.0"
     const val autoService = "1.1.1"
     const val jUnit = "4.13.2"
-    const val truth = "1.1.3"
+    const val truth = "1.4.2"
     const val ktCompileTesting = "1.6.0"
     const val testParamInjector = "1.0"
 }
