@@ -80,7 +80,7 @@ object versions {
     const val fragmentKtx = "1.8.0"
     const val constraintLayout = "2.1.4"
     const val materialComponents = "1.12.0"
-    const val apacheCommons = "3.12.0"
+    const val apacheCommons = "3.14.0"
     const val javaPoet = "1.13.0" // also in buildSrc build.gradle.kts file
     const val kotlinPoet = "1.12.0"
     const val incap = "0.3"
