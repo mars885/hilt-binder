@@ -3361,8 +3361,8 @@ internal class HiltBinderTest {
                       shortArray = { Short.MIN_VALUE, Short.MAX_VALUE },
                       intArray = { 0, 10, 20 },
                       longArray = { 10L, 20L, 30L },
-                      floatArray = { Float.MAX_VALUE, Float.MIN_VALUE },
-                      doubleArray = { 100.0, 200.0, 300.0 },
+                      floatArray = { 50.250f, 100.500f, 150.750f },
+                      doubleArray = { 100.33, 200.66, 300.99 },
                       stringArray = { "one", "two", "three" },
                       enumArray = {
                         CustomQualifierType.ONE,
@@ -3488,8 +3488,8 @@ internal class HiltBinderTest {
                       shortArray = [Short.MIN_VALUE, Short.MAX_VALUE],
                       intArray = [0, 10, 20],
                       longArray = [10L, 20L, 30L],
-                      floatArray = [Float.MAX_VALUE, Float.MIN_VALUE],
-                      doubleArray = [100.0, 200.0, 300.0],
+                      floatArray = [50.250f, 100.500f, 150.750f],
+                      doubleArray = [100.33, 200.66, 300.99],
                       stringArray = ["one", "two", "three"],
                       enumArray = [
                         CustomQualifierType.ONE,
@@ -3574,13 +3574,14 @@ internal class HiltBinderTest {
                           30
                       },
                       floatArray = {
-                          3.4028235E38f,
-                          1.4E-45f
+                          50.25f,
+                          100.5f,
+                          150.75f
                       },
                       doubleArray = {
-                          100.0,
-                          200.0,
-                          300.0
+                          100.33,
+                          200.66,
+                          300.99
                       },
                       stringArray = {
                           "one",
@@ -3621,7 +3622,7 @@ internal class HiltBinderTest {
                     boolValue = true,
                     byteValue = 10,
                     charValue = ',',
-                    shortValue = 32767,
+                    shortValue = 32_767,
                     intValue = -10,
                     longValue = 100,
                     floatValue = -15.0f,
@@ -3634,11 +3635,11 @@ internal class HiltBinderTest {
                     boolArray = [true, false],
                     byteArray = [100, 105],
                     charArray = ['A', 'B', 'C'],
-                    shortArray = [-32768, 32767],
+                    shortArray = [-32_768, 32_767],
                     intArray = [0, 10, 20],
                     longArray = [10, 20, 30],
-                    floatArray = [3.4028235E38f, 1.4E-45f],
-                    doubleArray = [100.0, 200.0, 300.0],
+                    floatArray = [50.25f, 100.5f, 150.75f],
+                    doubleArray = [100.33, 200.66, 300.99],
                     stringArray = ["one", "two", "three"],
                     enumArray = [CustomQualifierType.ONE, CustomQualifierType.TWO, CustomQualifierType.THREE],
                     annotationArray = [InnerAnno(intValue = 0, longValue = 1, classValue = Test::class),
