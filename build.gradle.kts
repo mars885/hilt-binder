@@ -33,10 +33,10 @@ buildscript {
     }
 
     dependencies {
-        classpath(deps.plugins.androidGradle)
-        classpath(deps.plugins.kotlinGradle)
-        classpath(deps.plugins.kspGradle)
-        classpath(deps.plugins.daggerHiltGradle)
+        classpath(deps.plugins.kotlin)
+        classpath(deps.plugins.android)
+        classpath(deps.plugins.ksp)
+        classpath(deps.plugins.daggerHilt)
         classpath(deps.plugins.gradleVersions)
         classpath(deps.plugins.dokka)
         classpath(deps.plugins.shadow)
