@@ -75,7 +75,7 @@ object versions {
     const val shadowPlugin = "8.0.0"
     const val ksp = "1.9.24-1.0.20"
     const val dagger = "2.51.1"
-    const val appCompat = "1.4.2"
+    const val appCompat = "1.7.0"
     const val navigation = "2.5.1"
     const val fragmentKtx = "1.5.1"
     const val constraintLayout = "2.1.4"
