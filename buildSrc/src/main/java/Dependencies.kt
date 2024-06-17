@@ -83,7 +83,7 @@ object versions {
     const val apacheCommons = "3.14.0"
     const val javaPoet = "1.13.0" // also in buildSrc build.gradle.kts file
     const val kotlinPoet = "1.17.0"
-    const val incap = "0.3"
+    const val incap = "1.0.0"
     const val autoService = "1.0"
     const val jUnit = "4.13.2"
     const val truth = "1.1.3"
