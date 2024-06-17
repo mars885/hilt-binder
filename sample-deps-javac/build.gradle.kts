@@ -25,7 +25,6 @@ android {
     defaultConfig {
         namespace = "com.paulrybitskyi.hiltbinder.sample.javac"
         minSdk = appConfig.minSdkVersion
-        targetSdk = appConfig.targetSdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

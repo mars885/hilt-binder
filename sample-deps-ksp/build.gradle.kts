@@ -28,7 +28,6 @@ android {
     defaultConfig {
         namespace = "com.paulrybitskyi.hiltbinder.sample.ksp"
         minSdk = appConfig.minSdkVersion
-        targetSdk = appConfig.targetSdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
