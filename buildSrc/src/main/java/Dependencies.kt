@@ -72,7 +72,7 @@ object versions {
     const val ktlintPlugin = "10.3.0"
     const val gradleVersionsPlugin = "0.51.0"
     const val dokkaPlugin = "1.9.20"
-    const val shadowPlugin = "7.1.2"
+    const val shadowPlugin = "8.0.0"
     const val ksp = "1.9.24-1.0.20"
     const val dagger = "2.51.1"
     const val appCompat = "1.4.2"
