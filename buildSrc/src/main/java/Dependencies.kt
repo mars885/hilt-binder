@@ -69,7 +69,7 @@ object versions {
     const val kotlin = "1.9.24" // also in buildSrc build.gradle.kts file
     const val gradlePlugin = "8.1.0" // also in buildSrc build.gradle.kts file
     const val detektPlugin = "1.20.0"
-    const val ktlintPlugin = "10.3.0"
+    const val ktlintPlugin = "12.1.1"
     const val gradleVersionsPlugin = "0.51.0"
     const val dokkaPlugin = "1.9.20"
     const val shadowPlugin = "8.0.0"
