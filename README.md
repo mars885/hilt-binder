@@ -62,8 +62,8 @@ If you are using pure Java (no Kotlin code), add the following to your module-le
 
 ````kotlin
 dependencies {
-    implementation("com.paulrybitskyi:hilt-binder:1.1.2")
-    annotationProcessor("com.paulrybitskyi:hilt-binder-compiler:1.1.2")
+    implementation("com.paulrybitskyi:hilt-binder:1.1.3")
+    annotationProcessor("com.paulrybitskyi:hilt-binder-compiler:1.1.3")
 }
 ````
 
@@ -77,8 +77,8 @@ plugins {
 }
 
 dependencies {
-    implementation("com.paulrybitskyi:hilt-binder:1.1.2")
-    kapt("com.paulrybitskyi:hilt-binder-compiler:1.1.2")
+    implementation("com.paulrybitskyi:hilt-binder:1.1.3")
+    kapt("com.paulrybitskyi:hilt-binder-compiler:1.1.3")
 }
 ````
 
@@ -105,8 +105,8 @@ plugins {
 }
 
 dependencies {
-    implementation("com.paulrybitskyi:hilt-binder:1.1.2")
-    ksp("com.paulrybitskyi:hilt-binder-compiler:1.1.2")
+    implementation("com.paulrybitskyi:hilt-binder:1.1.3")
+    ksp("com.paulrybitskyi:hilt-binder-compiler:1.1.3")
 }
 ````
 
