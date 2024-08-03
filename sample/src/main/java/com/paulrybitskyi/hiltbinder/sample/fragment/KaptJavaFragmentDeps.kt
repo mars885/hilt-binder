@@ -41,7 +41,7 @@ internal class KaptJavaFragmentDeps @Inject constructor(
     @Named("dep8") private val kaptJavaFragmentDep8: KaptJavaFragmentDep8,
     private val kaptJavaFragmentDep9: KaptJavaFragmentDep9<Float>,
     private val kaptJavaFragmentDep10: KaptJavaFragmentDep10<Float>,
-    private val kaptJavaFragmentDeps11: Set<@JvmSuppressWildcards KaptJavaFragmentDep11<*>>
+    private val kaptJavaFragmentDeps11: Set<@JvmSuppressWildcards KaptJavaFragmentDep11<*>>,
 ) {
 
     fun check() {

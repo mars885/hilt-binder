@@ -30,7 +30,7 @@ import javax.lang.model.element.TypeElement
 
 internal class JavacTypeElement(
     env: JavacProcessingEnv,
-    override val delegate: TypeElement
+    override val delegate: TypeElement,
 ) : JavacElement(env, delegate), XTypeElement {
 
     override val qualifiedName: String by lazy {

@@ -45,7 +45,7 @@ internal class KspKotlinSingletonDeps @Inject constructor(
     @Named("dep10") private val kspKotlinSingletonDep10: KspKotlinSingletonDep10,
     private val kspKotlinSingletonDep11: KspKotlinSingletonDep11<Int>,
     private val kspKotlinSingletonDep12: KspKotlinSingletonDep12<Int>,
-    private val kspKotlinSingletonDeps13: Set<@JvmSuppressWildcards KspKotlinSingletonDep13<*>>
+    private val kspKotlinSingletonDeps13: Set<@JvmSuppressWildcards KspKotlinSingletonDep13<*>>,
 ) {
 
     fun check() {

@@ -29,7 +29,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinAnnotationSp
 
 internal class KspAnnotation(
     private val env: KspProcessingEnv,
-    private val delegate: KSAnnotation
+    private val delegate: KSAnnotation,
 ) : XAnnotation {
 
     override val type: XType by lazy {

@@ -31,7 +31,7 @@ internal fun XAnnotated.getAnnotation(annotationType: XType): XAnnotation? {
 }
 
 internal fun XAnnotated.getAnnoMarkedWithAnotherAnno(
-    anotherAnnoType: XType
+    anotherAnnoType: XType,
 ): XAnnotation? {
     return annotations.firstOrNull {
         it.type.element.hasAnnotation(anotherAnnoType)

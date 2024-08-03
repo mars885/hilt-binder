@@ -20,5 +20,5 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XOriginatingElement
 import javax.lang.model.element.Element
 
 internal class JavacOriginatingElement(
-    val element: Element
+    val element: Element,
 ) : XOriginatingElement

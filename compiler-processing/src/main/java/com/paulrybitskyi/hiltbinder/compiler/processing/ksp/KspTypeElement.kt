@@ -32,7 +32,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.utils.KotlinClassName
 
 internal class KspTypeElement(
     env: KspProcessingEnv,
-    override val delegate: KSClassDeclaration
+    override val delegate: KSClassDeclaration,
 ) : KspElement(env, delegate), XTypeElement {
 
     override val qualifiedName: String by lazy {

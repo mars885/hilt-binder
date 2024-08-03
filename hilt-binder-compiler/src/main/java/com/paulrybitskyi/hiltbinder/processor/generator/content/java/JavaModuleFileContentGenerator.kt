@@ -25,7 +25,7 @@ import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.TypeSpec
 
 internal class JavaModuleFileContentGenerator(
-    private val typeSpecFactory: JavaTypeSpecFactory
+    private val typeSpecFactory: JavaTypeSpecFactory,
 ) : ModuleFileContentGenerator {
 
     override fun generateFileContent(moduleSchema: ModuleSchema): String {

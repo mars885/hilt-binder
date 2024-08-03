@@ -34,7 +34,7 @@ internal object ModuleFileGeneratorFactory {
         return ModuleFileGenerator(
             outputLanguage = outputLanguage,
             moduleFileContentGenerator = createModuleFileContentGenerator(outputLanguage),
-            filer = processingEnv.filer
+            filer = processingEnv.filer,
         )
     }
 
@@ -57,13 +57,13 @@ internal object ModuleFileGeneratorFactory {
 
     private fun createJavaModuleFileContentGenerator(): JavaModuleFileContentGenerator {
         return JavaModuleFileContentGenerator(
-            typeSpecFactory = createJavaTypeSpecFactory()
+            typeSpecFactory = createJavaTypeSpecFactory(),
         )
     }
 
     private fun createJavaTypeSpecFactory(): JavaTypeSpecFactory {
         return JavaTypeSpecFactory(
-            bindingMethodSpecFactory = createJavaBindingMethodSpecFactory()
+            bindingMethodSpecFactory = createJavaBindingMethodSpecFactory(),
         )
     }
 
@@ -73,13 +73,13 @@ internal object ModuleFileGeneratorFactory {
 
     private fun createKotlinModuleFileContentGenerator(): KotlinModuleFileContentGenerator {
         return KotlinModuleFileContentGenerator(
-            typeSpecFactory = createKotlinTypeSpecFactory()
+            typeSpecFactory = createKotlinTypeSpecFactory(),
         )
     }
 
     private fun createKotlinTypeSpecFactory(): KotlinTypeSpecFactory {
         return KotlinTypeSpecFactory(
-            bindingMethodSpecFactory = createKotlinBindingMethodSpecFactory()
+            bindingMethodSpecFactory = createKotlinBindingMethodSpecFactory(),
         )
     }
 

@@ -30,7 +30,7 @@ internal class BindingMethodNameFactory {
         val qualifiedName = annotatedElement.qualifiedName
         val formattedQualifiedName = qualifiedName.replace(
             PACKAGE_SEPARATOR,
-            METHOD_NAME_WORD_SEPARATOR
+            METHOD_NAME_WORD_SEPARATOR,
         )
 
         return (METHOD_NAME_PREFIX + formattedQualifiedName)

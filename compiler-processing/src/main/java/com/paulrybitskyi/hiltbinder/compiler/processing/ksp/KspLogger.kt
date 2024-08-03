@@ -23,7 +23,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XElement
 import com.paulrybitskyi.hiltbinder.compiler.processing.XLogger
 
 internal class KspLogger(
-    private val delegate: KSPLogger
+    private val delegate: KSPLogger,
 ) : XLogger {
 
     override fun info(message: String, element: XElement?) {

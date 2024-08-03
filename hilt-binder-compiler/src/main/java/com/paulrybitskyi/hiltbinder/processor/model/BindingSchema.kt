@@ -27,5 +27,5 @@ internal class BindingSchema(
     val methodName: String,
     val paramType: XTypeElement,
     val paramName: String,
-    val returnType: ReturnType
+    val returnType: ReturnType,
 )

@@ -31,7 +31,7 @@ import javax.lang.model.element.Parameterizable
 
 internal abstract class JavacElement(
     protected val env: JavacProcessingEnv,
-    open val delegate: Element
+    open val delegate: Element,
 ) : XElement {
 
     override val packageName: String

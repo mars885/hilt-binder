@@ -34,7 +34,7 @@ internal object AnnotationsParserFactory {
         return AnnotationsParser(
             bindingSchemaFactory = createBindingSchemaFactory(processingEnv),
             moduleSchemaFactory = createModuleSchemaFactory(processingEnv),
-            packageNameProvider = createPackageNameProvider()
+            packageNameProvider = createPackageNameProvider(),
         )
     }
 
@@ -44,7 +44,7 @@ internal object AnnotationsParserFactory {
             contributionTypeDetector = createContributionTypeDetector(processingEnv),
             qualifierAnnotationDetector = createQualifierAnnotationDetector(processingEnv),
             bindingReturnTypeDetector = createBindingReturnTypeDetector(processingEnv),
-            bindingMethodNameFactory = createBindingMethodNameFactory()
+            bindingMethodNameFactory = createBindingMethodNameFactory(),
         )
     }
 
@@ -52,7 +52,7 @@ internal object AnnotationsParserFactory {
         return HiltComponentDetector(
             processingEnv = processingEnv,
             predefinedHiltComponentMapper = createPredefinedHiltComponentMapper(),
-            messageProvider = createMessageProvider()
+            messageProvider = createMessageProvider(),
         )
     }
 
@@ -67,21 +67,21 @@ internal object AnnotationsParserFactory {
     private fun createContributionTypeDetector(processingEnv: XProcessingEnv): ContributionTypeDetector {
         return ContributionTypeDetector(
             processingEnv = processingEnv,
-            messageProvider = createMessageProvider()
+            messageProvider = createMessageProvider(),
         )
     }
 
     private fun createQualifierAnnotationDetector(processingEnv: XProcessingEnv): QualifierAnnotationDetector {
         return QualifierAnnotationDetector(
             processingEnv = processingEnv,
-            messageProvider = createMessageProvider()
+            messageProvider = createMessageProvider(),
         )
     }
 
     private fun createBindingReturnTypeDetector(processingEnv: XProcessingEnv): BindingReturnTypeDetector {
         return BindingReturnTypeDetector(
             processingEnv = processingEnv,
-            messageProvider = createMessageProvider()
+            messageProvider = createMessageProvider(),
         )
     }
 
@@ -92,7 +92,7 @@ internal object AnnotationsParserFactory {
     private fun createModuleSchemaFactory(processingEnv: XProcessingEnv): ModuleSchemaFactory {
         return ModuleSchemaFactory(
             processingEnv = processingEnv,
-            moduleInterfaceNameFactory = createModuleInterfaceNameFactory()
+            moduleInterfaceNameFactory = createModuleInterfaceNameFactory(),
         )
     }
 

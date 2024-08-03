@@ -28,5 +28,5 @@ internal class JavacJavaViewWithFragmentDeps @Inject constructor(
     private val javacJavaViewDep13: JavacJavaViewDep13,
     private val javacJavaViewDep14: JavacJavaViewDep14,
     private val javacJavaFragmentDep1: JavacJavaFragmentDep1,
-    private val javacJavaFragmentDep2: JavacJavaFragmentDep2
+    private val javacJavaFragmentDep2: JavacJavaFragmentDep2,
 )

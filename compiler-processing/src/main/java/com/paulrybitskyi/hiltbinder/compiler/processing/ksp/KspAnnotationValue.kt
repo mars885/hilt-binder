@@ -26,7 +26,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.simpleName
 
 internal class KspAnnotationValue(
     private val env: KspProcessingEnv,
-    private val value: Any?
+    private val value: Any?,
 ) : XAnnotationValue {
 
     override fun getAsBoolean(default: Boolean): Boolean {

@@ -41,7 +41,7 @@ internal class KspJavaViewModelDeps @Inject constructor(
     @Named("dep8") private val kspJavaViewModelDep8: KspJavaViewModelDep8,
     private val kspJavaViewModelDep9: KspJavaViewModelDep9<Float>,
     private val kspJavaViewModelDep10: KspJavaViewModelDep10<Float>,
-    private val kspJavaViewModelDeps11: Set<@JvmSuppressWildcards KspJavaViewModelDep11<*>>
+    private val kspJavaViewModelDeps11: Set<@JvmSuppressWildcards KspJavaViewModelDep11<*>>,
 ) {
 
     fun check() {

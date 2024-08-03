@@ -41,7 +41,7 @@ internal class KaptKotlinViewModelDeps @Inject constructor(
     @Named("dep8") private val kaptKotlinViewModelDep8: KaptKotlinViewModelDep8,
     private val kaptKotlinViewModelDep9: KaptKotlinViewModelDep9<Float>,
     private val kaptKotlinViewModelDep10: KaptKotlinViewModelDep10<Float>,
-    private val kaptKotlinViewModelDeps11: Set<@JvmSuppressWildcards KaptKotlinViewModelDep11<*>>
+    private val kaptKotlinViewModelDeps11: Set<@JvmSuppressWildcards KaptKotlinViewModelDep11<*>>,
 ) {
 
     fun check() {

@@ -26,7 +26,7 @@ import javax.inject.Inject
 internal class GreeterView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
 
     @Inject lateinit var javacJavaViewDeps: JavacJavaViewDeps

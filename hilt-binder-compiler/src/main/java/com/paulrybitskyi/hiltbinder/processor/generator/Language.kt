@@ -18,5 +18,5 @@ package com.paulrybitskyi.hiltbinder.processor.generator
 
 internal enum class Language(val fileExtension: String) {
     JAVA("java"),
-    KOTLIN("kt")
+    KOTLIN("kt"),
 }

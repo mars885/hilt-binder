@@ -24,7 +24,7 @@ import javax.lang.model.type.TypeMirror
 
 internal class JavacAnnotationValue(
     private val env: JavacProcessingEnv,
-    private val value: Any?
+    private val value: Any?,
 ) : XAnnotationValue {
 
     override fun getAsBoolean(default: Boolean): Boolean {

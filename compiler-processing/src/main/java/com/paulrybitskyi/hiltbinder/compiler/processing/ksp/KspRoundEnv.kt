@@ -21,7 +21,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.XRoundEnv
 import com.paulrybitskyi.hiltbinder.compiler.processing.factories.XElementFactory
 
 internal class KspRoundEnv(
-    private val env: KspProcessingEnv
+    private val env: KspProcessingEnv,
 ) : XRoundEnv {
 
     override fun getElementsAnnotatedWith(annotationQualifiedName: String): Sequence<XElement> {

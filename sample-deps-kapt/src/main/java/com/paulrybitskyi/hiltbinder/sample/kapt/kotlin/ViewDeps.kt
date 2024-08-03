@@ -60,7 +60,7 @@ interface KaptKotlinViewDep5
 @ViewScoped
 @BindType(
     to = KaptKotlinViewDep5::class,
-    installIn = BindType.Component.VIEW
+    installIn = BindType.Component.VIEW,
 )
 internal class KaptKotlinViewDep5Impl @Inject constructor() : KaptKotlinViewDep5
 
@@ -71,21 +71,21 @@ interface KaptKotlinViewDep6
 @ViewScoped
 @BindType(
     installIn = BindType.Component.VIEW,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KaptKotlinViewDep6Impl1 @Inject constructor() : KaptKotlinViewDep6
 
 @ViewScoped
 @BindType(
     installIn = BindType.Component.VIEW,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KaptKotlinViewDep6Impl2 @Inject constructor() : KaptKotlinViewDep6
 
 @ViewScoped
 @BindType(
     installIn = BindType.Component.VIEW,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KaptKotlinViewDep6Impl3 @Inject constructor() : KaptKotlinViewDep6
 
@@ -95,21 +95,21 @@ interface KaptKotlinViewDep7
 
 @BindType(
     installIn = BindType.Component.VIEW,
-    contributesTo = BindType.Collection.MAP
+    contributesTo = BindType.Collection.MAP,
 )
 @MapLongKey(1L)
 internal class KaptKotlinViewDep7Impl1 @Inject constructor() : KaptKotlinViewDep7
 
 @BindType(
     installIn = BindType.Component.VIEW,
-    contributesTo = BindType.Collection.MAP
+    contributesTo = BindType.Collection.MAP,
 )
 @MapLongKey(2L)
 internal class KaptKotlinViewDep7Impl2 @Inject constructor() : KaptKotlinViewDep7
 
 @BindType(
     installIn = BindType.Component.VIEW,
-    contributesTo = BindType.Collection.MAP
+    contributesTo = BindType.Collection.MAP,
 )
 @MapLongKey(3L)
 internal class KaptKotlinViewDep7Impl3 @Inject constructor() : KaptKotlinViewDep7
@@ -120,7 +120,7 @@ interface KaptKotlinViewDep8
 
 @BindType(
     installIn = BindType.Component.VIEW,
-    withQualifier = true
+    withQualifier = true,
 )
 @Named("dep8")
 internal class KaptKotlinViewDep8Impl @Inject constructor() : KaptKotlinViewDep8
@@ -138,7 +138,7 @@ abstract class KaptKotlinViewDep10<T>
 
 @BindType(
     to = KaptKotlinViewDep10::class,
-    installIn = BindType.Component.VIEW
+    installIn = BindType.Component.VIEW,
 )
 internal class KaptKotlinViewDep10Impl @Inject constructor() : KaptKotlinViewDep10<Double>()
 
@@ -148,19 +148,19 @@ abstract class KaptKotlinViewDep11<T>
 
 @BindType(
     installIn = BindType.Component.VIEW,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KaptKotlinViewDep11Impl1 @Inject constructor() : KaptKotlinViewDep11<Float>()
 
 @BindType(
     installIn = BindType.Component.VIEW,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KaptKotlinViewDep11Impl2 @Inject constructor() : KaptKotlinViewDep11<Float>()
 
 @BindType(
     installIn = BindType.Component.VIEW,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KaptKotlinViewDep11Impl3 @Inject constructor() : KaptKotlinViewDep11<Float>()
 

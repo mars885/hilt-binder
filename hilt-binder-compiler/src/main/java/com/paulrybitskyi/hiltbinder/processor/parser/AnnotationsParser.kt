@@ -28,7 +28,7 @@ import com.paulrybitskyi.hiltbinder.processor.parser.providers.PackageNameProvid
 internal class AnnotationsParser(
     private val bindingSchemaFactory: BindingSchemaFactory,
     private val moduleSchemaFactory: ModuleSchemaFactory,
-    private val packageNameProvider: PackageNameProvider
+    private val packageNameProvider: PackageNameProvider,
 ) {
 
     fun parse(annotatedElements: Sequence<XElement>): List<ModuleSchema> {

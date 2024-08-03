@@ -24,7 +24,7 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 
 internal class HiltBinderKspProcessor(
-    private val processingEnv: SymbolProcessorEnvironment
+    private val processingEnv: SymbolProcessorEnvironment,
 ) : SymbolProcessor {
 
     override fun process(resolver: Resolver): List<KSAnnotated> {

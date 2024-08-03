@@ -41,7 +41,7 @@ internal class KaptKotlinActivityDeps @Inject constructor(
     @Named("dep8") private val kaptKotlinActivityDep8: KaptKotlinActivityDep8,
     private val kaptKotlinActivityDep9: KaptKotlinActivityDep9<Float>,
     private val kaptKotlinActivityDep10: KaptKotlinActivityDep10<Float>,
-    private val kaptKotlinActivityDeps11: Set<@JvmSuppressWildcards KaptKotlinActivityDep11<*>>
+    private val kaptKotlinActivityDeps11: Set<@JvmSuppressWildcards KaptKotlinActivityDep11<*>>,
 ) {
 
     fun check() {

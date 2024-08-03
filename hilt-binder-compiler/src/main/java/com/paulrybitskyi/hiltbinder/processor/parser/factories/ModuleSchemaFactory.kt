@@ -25,19 +25,19 @@ import com.paulrybitskyi.hiltbinder.processor.model.qualifiedName
 
 internal class ModuleSchemaFactory(
     private val processingEnv: XProcessingEnv,
-    private val moduleInterfaceNameFactory: ModuleInterfaceNameFactory
+    private val moduleInterfaceNameFactory: ModuleInterfaceNameFactory,
 ) {
 
     fun createModuleSchema(
         packageName: String,
         component: HiltComponent,
-        bindings: List<BindingSchema>
+        bindings: List<BindingSchema>,
     ): ModuleSchema {
         return ModuleSchema(
             packageName = packageName,
             interfaceName = moduleInterfaceNameFactory.createInterfaceName(component),
             componentType = component.toTypeElement(),
-            bindings = bindings.sortedBy(BindingSchema::methodName)
+            bindings = bindings.sortedBy(BindingSchema::methodName),
         )
     }
 

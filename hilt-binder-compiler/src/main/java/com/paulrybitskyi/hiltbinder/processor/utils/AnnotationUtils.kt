@@ -26,7 +26,7 @@ internal fun XAnnotation.getBooleanValue(name: String, default: Boolean): Boolea
 internal fun <T : Enum<*>> XAnnotation.getEnumValue(
     name: String,
     valueOf: (String) -> T,
-    default: T
+    default: T,
 ): T {
     return (args[name]?.getAsEnum(valueOf, default) ?: default)
 }

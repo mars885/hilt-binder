@@ -23,7 +23,7 @@ interface XFiler {
         val name: String,
         val extension: String,
         val content: String,
-        val originatingElements: List<XOriginatingElement>
+        val originatingElements: List<XOriginatingElement>,
     )
 
     fun createSourceFile(file: File)

@@ -37,7 +37,7 @@ import com.paulrybitskyi.hiltbinder.processor.utils.typeElement
 internal class HiltComponentDetector(
     private val processingEnv: XProcessingEnv,
     private val predefinedHiltComponentMapper: PredefinedHiltComponentMapper,
-    private val messageProvider: MessageProvider
+    private val messageProvider: MessageProvider,
 ) {
 
     fun detectComponent(annotatedElement: XTypeElement): HiltComponent {
@@ -69,7 +69,7 @@ internal class HiltComponentDetector(
         val hasViewScope = annotatedElement.hasAnnotation(viewScopeType)
 
         val withFragmentBindingsType = processingEnv.getTypeUnsafely(
-            WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME
+            WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME,
         )
         val hasWithFragmentBindingsAnno = annotatedElement.hasAnnotation(withFragmentBindingsType)
 
@@ -93,7 +93,7 @@ internal class HiltComponentDetector(
 
     private fun detectExplicitCustomComponent(
         bindAnnotation: XAnnotation,
-        annotatedElement: XTypeElement
+        annotatedElement: XTypeElement,
     ): HiltComponent.Custom {
         val defaultType = processingEnv.getBindAnnotationDefaultType()
         val customComponentType = checkNotNull(bindAnnotation.getCustomComponentArg(defaultType))
@@ -101,7 +101,7 @@ internal class HiltComponentDetector(
         if (customComponentType == defaultType) {
             throw HiltBinderException(
                 messageProvider.undefinedCustomComponentError(),
-                annotatedElement
+                annotatedElement,
             )
         }
 
@@ -111,7 +111,7 @@ internal class HiltComponentDetector(
     private fun checkComponentMismatch(
         componentInferredFromScope: HiltComponent?,
         explicitComponent: HiltComponent?,
-        annotatedElement: XTypeElement
+        annotatedElement: XTypeElement,
     ) {
         val mismatchExists = (
             (componentInferredFromScope != null) &&

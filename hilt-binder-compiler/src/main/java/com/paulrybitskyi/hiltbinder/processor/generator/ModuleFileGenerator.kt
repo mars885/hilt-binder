@@ -26,7 +26,7 @@ import com.paulrybitskyi.hiltbinder.processor.model.ModuleSchema
 internal class ModuleFileGenerator(
     private val outputLanguage: Language,
     private val moduleFileContentGenerator: ModuleFileContentGenerator,
-    private val filer: XFiler
+    private val filer: XFiler,
 ) {
 
     fun generateModuleFile(moduleSchema: ModuleSchema) {
@@ -36,7 +36,7 @@ internal class ModuleFileGenerator(
             name = moduleSchema.interfaceName,
             extension = outputLanguage.fileExtension,
             content = fileContent,
-            originatingElements = moduleSchema.getOriginatingElements()
+            originatingElements = moduleSchema.getOriginatingElements(),
         )
 
         filer.createSourceFile(file)

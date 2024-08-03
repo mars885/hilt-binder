@@ -28,5 +28,5 @@ internal class KspKotlinViewWithFragmentDeps @Inject constructor(
     private val kspKotlinViewDep13: KspKotlinViewDep13,
     private val kspKotlinViewDep14: KspKotlinViewDep14,
     private val kspKotlinFragmentDep1: KspKotlinFragmentDep1,
-    private val kspKotlinFragmentDep2: KspKotlinFragmentDep2
+    private val kspKotlinFragmentDep2: KspKotlinFragmentDep2,
 )

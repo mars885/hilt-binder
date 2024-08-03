@@ -25,7 +25,7 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.TypeSpec
 
 internal class KotlinModuleFileContentGenerator(
-    private val typeSpecFactory: KotlinTypeSpecFactory
+    private val typeSpecFactory: KotlinTypeSpecFactory,
 ) : ModuleFileContentGenerator {
 
     override fun generateFileContent(moduleSchema: ModuleSchema): String {

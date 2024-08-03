@@ -82,7 +82,7 @@ private fun KSTypeArgument.toKotlinTypeName(): KotlinTypeName {
                 throw IllegalArgumentException("Unexpected node: $node.")
             }
         },
-        Unit
+        Unit,
     )
 }
 
@@ -153,7 +153,7 @@ private fun ArrayList<*>.toCodeBlock(argName: String): CodeBlock {
 private fun CodeBlock.Companion.create(
     argName: String,
     format: String,
-    vararg args: Any?
+    vararg args: Any?,
 ): CodeBlock {
     return of("$argName$format", *args)
 }
@@ -172,6 +172,6 @@ internal fun KSAnnotation.toJavaAnnoSpec(): JavaAnnotationSpec {
 
 private fun throwUnsupportedOpError(): Nothing {
     throw UnsupportedOperationException(
-        "Converting KSP types to JavaPoet types is currently not supported."
+        "Converting KSP types to JavaPoet types is currently not supported.",
     )
 }

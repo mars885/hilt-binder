@@ -47,7 +47,7 @@ interface KspKotlinCustomComponentDep1
 
 @BindType(
     installIn = BindType.Component.CUSTOM,
-    customComponent = KspKotlinCustomComponent::class
+    customComponent = KspKotlinCustomComponent::class,
 )
 internal class KspKotlinCustomComponentDep1Impl @Inject constructor() : KspKotlinCustomComponentDep1
 
@@ -58,14 +58,14 @@ abstract class KspKotlinCustomComponentDep2
 @KspKotlinCustomScope
 @BindType(
     installIn = BindType.Component.CUSTOM,
-    customComponent = KspKotlinCustomComponent::class
+    customComponent = KspKotlinCustomComponent::class,
 )
 internal class KspKotlinCustomComponentDep2Impl @Inject constructor() : KspKotlinCustomComponentDep2()
 
 // ######################################################################################################
 
 class KspKotlinCustomComponentManager @Inject constructor(
-    private val customComponentBuilder: KspKotlinCustomComponent.Builder
+    private val customComponentBuilder: KspKotlinCustomComponent.Builder,
 ) {
 
     private var customComponent: KspKotlinCustomComponent? = null
@@ -85,7 +85,7 @@ class KspKotlinCustomComponentManager @Inject constructor(
 
         val dependenciesProvider = EntryPoints.get(
             customComponent!!,
-            DependenciesProvider::class.java
+            DependenciesProvider::class.java,
         )
 
         customComponentDep1 = dependenciesProvider.getCustomComponentDep1()

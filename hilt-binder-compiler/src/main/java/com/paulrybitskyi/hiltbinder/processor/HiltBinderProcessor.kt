@@ -28,7 +28,7 @@ internal class HiltBinderProcessor(
     private val roundEnv: XRoundEnv,
     private val logger: XLogger,
     private val annotationsParser: AnnotationsParser,
-    private val moduleFileGenerator: ModuleFileGenerator
+    private val moduleFileGenerator: ModuleFileGenerator,
 ) {
 
     fun process() {

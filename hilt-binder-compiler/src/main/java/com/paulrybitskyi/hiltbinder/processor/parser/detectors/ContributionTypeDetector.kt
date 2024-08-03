@@ -30,7 +30,7 @@ import com.paulrybitskyi.hiltbinder.processor.utils.getTypeUnsafely
 
 internal class ContributionTypeDetector(
     private val processingEnv: XProcessingEnv,
-    private val messageProvider: MessageProvider
+    private val messageProvider: MessageProvider,
 ) {
 
     fun detectType(annotatedElement: XTypeElement): ContributionType? {

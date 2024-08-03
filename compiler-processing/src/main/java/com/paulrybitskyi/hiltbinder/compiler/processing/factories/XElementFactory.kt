@@ -32,7 +32,8 @@ internal object XElementFactory {
             ElementKind.CLASS,
             ElementKind.ENUM,
             ElementKind.INTERFACE,
-            ElementKind.ANNOTATION_TYPE -> XTypeElementFactory.createJavacTypeElement(env, delegate.unsafeCast())
+            ElementKind.ANNOTATION_TYPE,
+            -> XTypeElementFactory.createJavacTypeElement(env, delegate.unsafeCast())
             else -> error("A Javac element with the kind = ${delegate.kind} is not supported.")
         }
     }

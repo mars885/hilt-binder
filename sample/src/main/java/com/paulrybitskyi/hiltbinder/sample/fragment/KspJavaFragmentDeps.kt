@@ -41,7 +41,7 @@ internal class KspJavaFragmentDeps @Inject constructor(
     @Named("dep8") private val kspJavaFragmentDep8: KspJavaFragmentDep8,
     private val kspJavaFragmentDep9: KspJavaFragmentDep9<Float>,
     private val kspJavaFragmentDep10: KspJavaFragmentDep10<Float>,
-    private val kspJavaFragmentDeps11: Set<@JvmSuppressWildcards KspJavaFragmentDep11<*>>
+    private val kspJavaFragmentDeps11: Set<@JvmSuppressWildcards KspJavaFragmentDep11<*>>,
 ) {
 
     fun check() {
