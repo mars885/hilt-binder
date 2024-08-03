@@ -46,7 +46,7 @@ internal fun XAnnotation.getInstallInArg(): Component {
     return getEnumValue(
         BIND_ANNOTATION_PARAM_INSTALL_IN,
         Component::valueOf,
-        Component.NONE
+        Component.NONE,
     )
 }
 
@@ -58,7 +58,7 @@ internal fun XAnnotation.getContributesToArg(): Collection {
     return getEnumValue(
         BIND_ANNOTATION_PARAM_CONTRIBUTES_TO,
         Collection::valueOf,
-        Collection.NONE
+        Collection.NONE,
     )
 }
 

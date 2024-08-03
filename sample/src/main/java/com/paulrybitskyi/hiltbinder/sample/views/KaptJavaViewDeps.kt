@@ -41,7 +41,7 @@ internal class KaptJavaViewDeps @Inject constructor(
     @Named("dep8") private val kaptJavaViewDep8: KaptJavaViewDep8,
     private val kaptJavaViewDep9: KaptJavaViewDep9<Double>,
     private val kaptJavaViewDep10: KaptJavaViewDep10<Double>,
-    private val kaptJavaViewDeps11: Set<@JvmSuppressWildcards KaptJavaViewDep11<*>>
+    private val kaptJavaViewDeps11: Set<@JvmSuppressWildcards KaptJavaViewDep11<*>>,
 ) {
 
     fun check() {

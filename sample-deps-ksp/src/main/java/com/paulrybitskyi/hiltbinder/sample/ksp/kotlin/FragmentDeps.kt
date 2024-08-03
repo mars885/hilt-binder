@@ -35,7 +35,7 @@ interface KspKotlinFragmentDep2
 
 @BindType(
     to = KspKotlinFragmentDep2::class,
-    installIn = BindType.Component.FRAGMENT
+    installIn = BindType.Component.FRAGMENT,
 )
 internal class KspKotlinFragmentDep2Impl @Inject constructor() : KspKotlinFragmentDep2
 
@@ -62,7 +62,7 @@ interface KspKotlinFragmentDep5
 @FragmentScoped
 @BindType(
     to = KspKotlinFragmentDep5::class,
-    installIn = BindType.Component.FRAGMENT
+    installIn = BindType.Component.FRAGMENT,
 )
 internal class KspKotlinFragmentDep5Impl @Inject constructor() : KspKotlinFragmentDep5
 
@@ -73,21 +73,21 @@ interface KspKotlinFragmentDep6
 @FragmentScoped
 @BindType(
     installIn = BindType.Component.FRAGMENT,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KspKotlinFragmentDep6Impl1 @Inject constructor() : KspKotlinFragmentDep6
 
 @FragmentScoped
 @BindType(
     installIn = BindType.Component.FRAGMENT,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KspKotlinFragmentDep6Impl2 @Inject constructor() : KspKotlinFragmentDep6
 
 @FragmentScoped
 @BindType(
     installIn = BindType.Component.FRAGMENT,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KspKotlinFragmentDep6Impl3 @Inject constructor() : KspKotlinFragmentDep6
 
@@ -97,21 +97,21 @@ interface KspKotlinFragmentDep7
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
-    contributesTo = BindType.Collection.MAP
+    contributesTo = BindType.Collection.MAP,
 )
 @MapLongKey(1L)
 internal class KspKotlinFragmentDep7Impl1 @Inject constructor() : KspKotlinFragmentDep7
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
-    contributesTo = BindType.Collection.MAP
+    contributesTo = BindType.Collection.MAP,
 )
 @MapLongKey(2L)
 internal class KspKotlinFragmentDep7Impl2 @Inject constructor() : KspKotlinFragmentDep7
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
-    contributesTo = BindType.Collection.MAP
+    contributesTo = BindType.Collection.MAP,
 )
 @MapLongKey(3L)
 internal class KspKotlinFragmentDep7Impl3 @Inject constructor() : KspKotlinFragmentDep7
@@ -122,10 +122,10 @@ interface KspKotlinFragmentDep8
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
-    withQualifier = true
+    withQualifier = true,
 )
 @Named("dep8")
-internal class KspKotlinFragmentDep8Impl @Inject constructor () : KspKotlinFragmentDep8
+internal class KspKotlinFragmentDep8Impl @Inject constructor() : KspKotlinFragmentDep8
 
 // ######################################################################################################
 
@@ -140,7 +140,7 @@ abstract class KspKotlinFragmentDep10<T>
 
 @BindType(
     to = KspKotlinFragmentDep10::class,
-    installIn = BindType.Component.FRAGMENT
+    installIn = BindType.Component.FRAGMENT,
 )
 internal class KspKotlinFragmentDep10Impl @Inject constructor() : KspKotlinFragmentDep10<Float>()
 
@@ -150,18 +150,18 @@ abstract class KspKotlinFragmentDep11<T>
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KspKotlinFragmentDep11Impl1 @Inject constructor() : KspKotlinFragmentDep11<Float>()
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KspKotlinFragmentDep11Impl2 @Inject constructor() : KspKotlinFragmentDep11<Float>()
 
 @BindType(
     installIn = BindType.Component.FRAGMENT,
-    contributesTo = BindType.Collection.SET
+    contributesTo = BindType.Collection.SET,
 )
 internal class KspKotlinFragmentDep11Impl3 @Inject constructor() : KspKotlinFragmentDep11<Float>()

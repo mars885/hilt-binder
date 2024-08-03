@@ -41,7 +41,7 @@ internal class JavacJavaViewModelDeps @Inject constructor(
     @Named("dep8") private val javacJavaViewModelDep8: JavacJavaViewModelDep8,
     private val javacJavaViewModelDep9: JavacJavaViewModelDep9<Float>,
     private val javacJavaViewModelDep10: JavacJavaViewModelDep10<Float>,
-    private val javacJavaViewModelDeps11: Set<@JvmSuppressWildcards JavacJavaViewModelDep11<*>>
+    private val javacJavaViewModelDeps11: Set<@JvmSuppressWildcards JavacJavaViewModelDep11<*>>,
 ) {
 
     fun check() {

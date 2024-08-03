@@ -24,7 +24,7 @@ import javax.lang.model.element.Element
 import javax.tools.Diagnostic
 
 internal class JavacLogger(
-    private val delegate: Messager
+    private val delegate: Messager,
 ) : XLogger {
 
     override fun info(message: String, element: XElement?) {

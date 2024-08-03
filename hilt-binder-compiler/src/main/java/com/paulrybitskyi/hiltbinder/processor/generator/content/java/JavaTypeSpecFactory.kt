@@ -26,7 +26,7 @@ import com.squareup.javapoet.TypeSpec
 import javax.lang.model.element.Modifier
 
 internal class JavaTypeSpecFactory(
-    private val bindingMethodSpecFactory: JavaBindingMethodSpecFactory
+    private val bindingMethodSpecFactory: JavaBindingMethodSpecFactory,
 ) : TypeSpecFactory<TypeSpec> {
 
     override fun createTypeSpec(moduleSchema: ModuleSchema): TypeSpec {

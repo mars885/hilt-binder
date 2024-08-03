@@ -28,5 +28,5 @@ internal class KaptJavaViewWithFragmentDeps @Inject constructor(
     private val kaptJavaViewDep13: KaptJavaViewDep13,
     private val kaptJavaViewDep14: KaptJavaViewDep14,
     private val kaptJavaFragmentDep1: KaptJavaFragmentDep1,
-    private val kaptJavaFragmentDep2: KaptJavaFragmentDep2
+    private val kaptJavaFragmentDep2: KaptJavaFragmentDep2,
 )

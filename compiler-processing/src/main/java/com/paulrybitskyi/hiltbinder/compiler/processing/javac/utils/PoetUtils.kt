@@ -52,6 +52,6 @@ internal fun AnnotationMirror.toKotlinAnnoSpec(): KotlinAnnotationSpec {
 
 private fun throwUnsupportedOpError(): Nothing {
     throw UnsupportedOperationException(
-        "Converting Javac types to KotlinPoet types is currently not supported."
+        "Converting Javac types to KotlinPoet types is currently not supported.",
     )
 }

@@ -46,7 +46,7 @@ internal val KSClassDeclaration.isClass: Boolean
     get() = classKind in listOf(
         ClassKind.CLASS,
         ClassKind.ENUM_CLASS,
-        ClassKind.OBJECT
+        ClassKind.OBJECT,
     )
 
 internal val KSDeclaration.packageNameStr: String

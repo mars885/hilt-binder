@@ -22,6 +22,10 @@ plugins {
     shadow()
 }
 
+kotlin {
+    jvmToolchain(appConfig.exportableLibJavaCompatVersion)
+}
+
 // Custom configuration used for dependencies that are copied
 // into the library jar instead of adding it as a POM dependency.
 val shadowed: Configuration = configurations.create("shadowed") {

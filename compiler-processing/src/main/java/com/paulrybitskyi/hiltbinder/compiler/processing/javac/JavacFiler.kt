@@ -23,7 +23,7 @@ import javax.annotation.processing.Filer
 import javax.lang.model.element.Element
 
 internal class JavacFiler(
-    private val delegate: Filer
+    private val delegate: Filer,
 ) : XFiler {
 
     override fun createSourceFile(file: XFiler.File) {

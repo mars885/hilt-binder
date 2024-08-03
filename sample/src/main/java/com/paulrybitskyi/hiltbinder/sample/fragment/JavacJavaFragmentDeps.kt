@@ -41,7 +41,7 @@ internal class JavacJavaFragmentDeps @Inject constructor(
     @Named("dep8") private val javacJavaFragmentDep8: JavacJavaFragmentDep8,
     private val javacJavaFragmentDep9: JavacJavaFragmentDep9<Float>,
     private val javacJavaFragmentDep10: JavacJavaFragmentDep10<Float>,
-    private val javacJavaFragmentDeps11: Set<@JvmSuppressWildcards JavacJavaFragmentDep11<*>>
+    private val javacJavaFragmentDeps11: Set<@JvmSuppressWildcards JavacJavaFragmentDep11<*>>,
 ) {
 
     fun check() {

@@ -19,46 +19,46 @@ package com.paulrybitskyi.hiltbinder.processor.model
 internal enum class PredefinedHiltComponent(
     val simpleName: String,
     val qualifiedName: String,
-    val scopeQualifiedName: String
+    val scopeQualifiedName: String,
 ) {
     SINGLETON(
         simpleName = "SingletonComponent",
         qualifiedName = "dagger.hilt.components.SingletonComponent",
-        scopeQualifiedName = "javax.inject.Singleton"
+        scopeQualifiedName = "javax.inject.Singleton",
     ),
     ACTIVITY_RETAINED(
         simpleName = "ActivityRetainedComponent",
         qualifiedName = "dagger.hilt.android.components.ActivityRetainedComponent",
-        scopeQualifiedName = "dagger.hilt.android.scopes.ActivityRetainedScoped"
+        scopeQualifiedName = "dagger.hilt.android.scopes.ActivityRetainedScoped",
     ),
     SERVICE(
         simpleName = "ServiceComponent",
         qualifiedName = "dagger.hilt.android.components.ServiceComponent",
-        scopeQualifiedName = "dagger.hilt.android.scopes.ServiceScoped"
+        scopeQualifiedName = "dagger.hilt.android.scopes.ServiceScoped",
     ),
     ACTIVITY(
         simpleName = "ActivityComponent",
         qualifiedName = "dagger.hilt.android.components.ActivityComponent",
-        scopeQualifiedName = "dagger.hilt.android.scopes.ActivityScoped"
+        scopeQualifiedName = "dagger.hilt.android.scopes.ActivityScoped",
     ),
     VIEW_MODEL(
         simpleName = "ViewModelComponent",
         qualifiedName = "dagger.hilt.android.components.ViewModelComponent",
-        scopeQualifiedName = "dagger.hilt.android.scopes.ViewModelScoped"
+        scopeQualifiedName = "dagger.hilt.android.scopes.ViewModelScoped",
     ),
     FRAGMENT(
         simpleName = "FragmentComponent",
         qualifiedName = "dagger.hilt.android.components.FragmentComponent",
-        scopeQualifiedName = "dagger.hilt.android.scopes.FragmentScoped"
+        scopeQualifiedName = "dagger.hilt.android.scopes.FragmentScoped",
     ),
     VIEW(
         simpleName = "ViewComponent",
         qualifiedName = "dagger.hilt.android.components.ViewComponent",
-        scopeQualifiedName = "dagger.hilt.android.scopes.ViewScoped"
+        scopeQualifiedName = "dagger.hilt.android.scopes.ViewScoped",
     ),
     VIEW_WITH_FRAGMENT(
         simpleName = "ViewWithFragmentComponent",
         qualifiedName = "dagger.hilt.android.components.ViewWithFragmentComponent",
-        scopeQualifiedName = "dagger.hilt.android.scopes.ViewScoped"
-    )
+        scopeQualifiedName = "dagger.hilt.android.scopes.ViewScoped",
+    ),
 }

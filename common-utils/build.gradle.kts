@@ -17,3 +17,7 @@
 plugins {
     kotlin()
 }
+
+kotlin {
+    jvmToolchain(appConfig.exportableLibJavaCompatVersion)
+}

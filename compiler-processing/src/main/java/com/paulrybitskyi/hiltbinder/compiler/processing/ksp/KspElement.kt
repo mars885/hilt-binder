@@ -29,7 +29,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.simpleNameStr
 
 internal abstract class KspElement(
     protected val env: KspProcessingEnv,
-    open val delegate: KSDeclaration
+    open val delegate: KSDeclaration,
 ) : XElement {
 
     override val packageName: String

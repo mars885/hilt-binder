@@ -28,14 +28,14 @@ object XProcessingEnvFactory {
 
     fun createJavacEnv(
         processingEnv: ProcessingEnvironment,
-        roundEnv: RoundEnvironment
+        roundEnv: RoundEnvironment,
     ): XProcessingEnv {
         return JavacProcessingEnv(processingEnv, roundEnv)
     }
 
     fun createKspEnv(
         processingEnv: SymbolProcessorEnvironment,
-        resolver: Resolver
+        resolver: Resolver,
     ): XProcessingEnv {
         return KspProcessingEnv(processingEnv, resolver)
     }

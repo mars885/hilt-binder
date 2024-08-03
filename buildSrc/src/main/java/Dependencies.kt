@@ -20,15 +20,17 @@ import org.gradle.api.JavaVersion
 
 object appConfig {
 
-    const val compileSdkVersion = 32
-    const val targetSdkVersion = 32
+    const val compileSdkVersion = 34
+    const val targetSdkVersion = 34
     const val minSdkVersion = 21
     const val applicationId = "com.paulrybitskyi.hiltbinder.sample"
     const val versionCode = 1
     const val versionName = "1.0.0"
 
-    val javaCompatibilityVersion = JavaVersion.VERSION_1_8
-    val kotlinCompatibilityVersion = JavaVersion.VERSION_1_8
+    const val exportableLibJavaCompatVersion = 8
+
+    val androidModuleJavaCompatVersion = JavaVersion.VERSION_17
+    val androidModuleKotlinCompatVersion = JavaVersion.VERSION_17
 }
 
 object publishingConfig {
@@ -64,39 +66,40 @@ object publishingConfig {
 
 object versions {
 
-    const val kotlin = "1.7.0" // also in buildSrc build.gradle.kts file
-    const val gradlePlugin = "7.2.2" // also in buildSrc build.gradle.kts file
-    const val detektPlugin = "1.20.0"
-    const val ktlintPlugin = "10.3.0"
-    const val gradleVersionsPlugin = "0.42.0"
-    const val dokkaPlugin = "1.7.0"
-    const val shadowPlugin = "7.1.2"
-    const val appCompat = "1.4.2"
-    const val navigation = "2.5.1"
-    const val fragmentKtx = "1.5.1"
+    const val kotlin = "1.9.25" // also in buildSrc build.gradle.kts file
+    const val gradlePlugin = "8.1.0" // also in buildSrc build.gradle.kts file
+    const val detektPlugin = "1.23.6"
+    const val ktlintPlugin = "12.1.1"
+    const val gradleVersionsPlugin = "0.51.0"
+    const val dokkaPlugin = "1.9.20"
+    const val shadowPlugin = "8.0.0"
+    const val ksp = "1.9.25-1.0.20"
+    const val dagger = "2.51.1"
+    const val appCompat = "1.7.0"
+    const val navigation = "2.7.7"
+    const val fragmentKtx = "1.8.2"
     const val constraintLayout = "2.1.4"
-    const val dagger = "2.43.2"
-    const val materialComponents = "1.6.1"
-    const val apacheCommons = "3.12.0"
+    const val materialComponents = "1.12.0"
+    const val apacheCommons = "3.15.0"
     const val javaPoet = "1.13.0" // also in buildSrc build.gradle.kts file
-    const val kotlinPoet = "1.12.0"
-    const val incap = "0.3"
-    const val autoService = "1.0"
-    const val ksp = "1.7.0-1.0.6"
+    const val kotlinPoet = "1.18.1"
+    const val incap = "1.0.0"
+    const val autoService = "1.1.1"
+    const val ktlint = "1.3.1"
     const val jUnit = "4.13.2"
-    const val jUnitExt = "1.1.2"
-    const val truth = "1.1.3"
-    const val ktCompileTesting = "1.4.9"
-    const val testParamInjector = "1.0"
+    const val truth = "1.4.4"
+    const val ktCompileTesting = "1.6.0"
+    const val testParamInjector = "1.16"
 }
 
 object deps {
 
     object plugins {
 
-        const val androidGradle = "com.android.tools.build:gradle:${versions.gradlePlugin}"
-        const val kotlinGradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
-        const val daggerHiltGradle = "com.google.dagger:hilt-android-gradle-plugin:${versions.dagger}"
+        const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+        const val android = "com.android.tools.build:gradle:${versions.gradlePlugin}"
+        const val ksp = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:${versions.ksp}"
+        const val daggerHilt = "com.google.dagger:hilt-android-gradle-plugin:${versions.dagger}"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersionsPlugin}"
         const val dokka = "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokkaPlugin}"
         const val shadow = "gradle.plugin.com.github.johnrengelman:shadow:${versions.shadowPlugin}"
@@ -136,7 +139,6 @@ object deps {
     const val kspCore = "com.google.devtools.ksp:symbol-processing:${versions.ksp}"
     const val kspApi = "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}"
     const val jUnit = "junit:junit:${versions.jUnit}"
-    const val jUnitExt = "androidx.test.ext:junit:${versions.jUnitExt}"
     const val truth = "com.google.truth:truth:${versions.truth}"
     const val kspCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.ktCompileTesting}"
     const val testParamInjector = "com.google.testparameterinjector:test-parameter-injector:${versions.testParamInjector}"

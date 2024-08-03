@@ -45,7 +45,7 @@ internal class KotlinBindingMethodSpecFactory : BindingMethodSpecFactory<FunSpec
     }
 
     private fun FunSpec.Builder.addMultibindingAnnotationsIfExist(
-        contributionType: ContributionType?
+        contributionType: ContributionType?,
     ): FunSpec.Builder = apply {
         if (contributionType == null) return@apply
 
@@ -60,14 +60,14 @@ internal class KotlinBindingMethodSpecFactory : BindingMethodSpecFactory<FunSpec
     }
 
     private fun FunSpec.Builder.contributeToMap(
-        mapKeyAnnotation: XAnnotation
+        mapKeyAnnotation: XAnnotation,
     ): FunSpec.Builder = apply {
         addAnnotation(DAGGER_TYPE_INTO_MAP_KOTLIN_CLASS_NAME)
         addAnnotation(mapKeyAnnotation.kotlinAnnoSpec)
     }
 
     private fun FunSpec.Builder.addQualifierAnnotationIfExists(
-        qualifierAnnotation: XAnnotation?
+        qualifierAnnotation: XAnnotation?,
     ): FunSpec.Builder = apply {
         if (qualifierAnnotation == null) return@apply
 

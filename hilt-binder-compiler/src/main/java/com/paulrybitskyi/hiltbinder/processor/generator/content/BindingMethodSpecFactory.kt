@@ -23,7 +23,7 @@ internal interface BindingMethodSpecFactory<MS : Any> {
 }
 
 internal fun <MS : Any> BindingMethodSpecFactory<MS>.createMethodSpecs(
-    bindingSchemas: List<BindingSchema>
+    bindingSchemas: List<BindingSchema>,
 ): List<MS> {
     return bindingSchemas.map(::createMethodSpec)
 }

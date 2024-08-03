@@ -36,7 +36,7 @@ import com.paulrybitskyi.hiltbinder.processor.utils.typeElement
 
 internal class BindingReturnTypeDetector(
     private val processingEnv: XProcessingEnv,
-    private val messageProvider: MessageProvider
+    private val messageProvider: MessageProvider,
 ) {
 
     fun detectReturnType(annotatedElement: XTypeElement): ReturnType {
@@ -51,14 +51,14 @@ internal class BindingReturnTypeDetector(
             (collection == Collection.NONE) -> ReturnType.Generic.Parameterized(returnType)
             else -> ReturnType.Generic.UnboundedWildcard(
                 type = returnType,
-                typeParamCount = returnType.element.typeParameterCount
+                typeParamCount = returnType.element.typeParameterCount,
             )
         }
     }
 
     private fun retrieveReturnType(
         bindAnnotation: XAnnotation,
-        annotatedElement: XTypeElement
+        annotatedElement: XTypeElement,
     ): XType {
         val returnType = detectExplicitReturnType(bindAnnotation, annotatedElement)
             ?: inferReturnType(annotatedElement)
@@ -79,7 +79,7 @@ internal class BindingReturnTypeDetector(
 
     private fun detectExplicitReturnType(
         bindAnnotation: XAnnotation,
-        annotatedElement: XTypeElement
+        annotatedElement: XTypeElement,
     ): XType? {
         if (!bindAnnotation.hasExplicitReturnType()) return null
 
@@ -89,7 +89,7 @@ internal class BindingReturnTypeDetector(
 
         val parameterizedReturnType = findParameterizedReturnType(
             annotatedElement,
-            explicitReturnType.qualifiedName
+            explicitReturnType.qualifiedName,
         )
 
         return (parameterizedReturnType ?: explicitReturnType)
@@ -104,7 +104,7 @@ internal class BindingReturnTypeDetector(
 
     private fun findParameterizedReturnType(
         annotatedElement: XTypeElement,
-        parameterizedTypeName: String
+        parameterizedTypeName: String,
     ): XType? {
         fun MutableList<XType>.addTypeElementSuperTypes(typeElement: XTypeElement) {
             if (typeElement.isClass) {
@@ -160,7 +160,7 @@ internal class BindingReturnTypeDetector(
         val returnTypeName = returnType.qualifiedName
         val errorMessage = messageProvider.noSubtypeRelationError(
             bindingTypeName = bindingTypeName,
-            returnTypeName = returnTypeName
+            returnTypeName = returnTypeName,
         )
 
         throw HiltBinderException(errorMessage, bindingType.element)

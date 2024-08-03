@@ -26,6 +26,7 @@ android {
 
     defaultConfig {
         applicationId = appConfig.applicationId
+        namespace = appConfig.applicationId
         minSdk = appConfig.minSdkVersion
         targetSdk = appConfig.targetSdkVersion
         versionCode = appConfig.versionCode
@@ -42,12 +43,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = appConfig.javaCompatibilityVersion
-        targetCompatibility = appConfig.javaCompatibilityVersion
+        sourceCompatibility = appConfig.androidModuleJavaCompatVersion
+        targetCompatibility = appConfig.androidModuleJavaCompatVersion
     }
 
     kotlinOptions {
-        jvmTarget = appConfig.kotlinCompatibilityVersion.toString()
+        jvmTarget = appConfig.androidModuleKotlinCompatVersion.toString()
     }
 }
 

@@ -45,7 +45,7 @@ internal class KspJavaSingletonDeps @Inject constructor(
     @Named("dep10") private val kspJavaSingletonDep10: KspJavaSingletonDep10,
     private val kspJavaSingletonDep11: KspJavaSingletonDep11<Int>,
     private val kspJavaSingletonDep12: KspJavaSingletonDep12<Int>,
-    private val kspJavaSingletonDeps13: Set<@JvmSuppressWildcards KspJavaSingletonDep13<*>>
+    private val kspJavaSingletonDeps13: Set<@JvmSuppressWildcards KspJavaSingletonDep13<*>>,
 ) {
 
     fun check() {

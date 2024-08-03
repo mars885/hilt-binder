@@ -28,7 +28,7 @@ internal class BindingSchemaFactory(
     private val contributionTypeDetector: ContributionTypeDetector,
     private val qualifierAnnotationDetector: QualifierAnnotationDetector,
     private val bindingReturnTypeDetector: BindingReturnTypeDetector,
-    private val bindingMethodNameFactory: BindingMethodNameFactory
+    private val bindingMethodNameFactory: BindingMethodNameFactory,
 ) {
 
     private companion object {
@@ -51,7 +51,7 @@ internal class BindingSchemaFactory(
             methodName = methodName,
             paramType = annotatedElement,
             paramName = BINDING_PARAM_NAME,
-            returnType = returnType
+            returnType = returnType,
         )
     }
 }

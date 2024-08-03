@@ -41,7 +41,7 @@ internal class KaptKotlinFragmentDeps @Inject constructor(
     @Named("dep8") private val kaptKotlinFragmentDep8: KaptKotlinFragmentDep8,
     private val kaptKotlinFragmentDep9: KaptKotlinFragmentDep9<Float>,
     private val kaptKotlinFragmentDep10: KaptKotlinFragmentDep10<Float>,
-    private val kaptKotlinFragmentDeps11: Set<@JvmSuppressWildcards KaptKotlinFragmentDep11<*>>
+    private val kaptKotlinFragmentDeps11: Set<@JvmSuppressWildcards KaptKotlinFragmentDep11<*>>,
 ) {
 
     fun check() {

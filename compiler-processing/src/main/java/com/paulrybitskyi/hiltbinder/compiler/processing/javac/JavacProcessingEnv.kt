@@ -36,7 +36,7 @@ import javax.lang.model.util.Types
 
 internal class JavacProcessingEnv(
     private val delegate: ProcessingEnvironment,
-    private val roundEnvironment: RoundEnvironment
+    private val roundEnvironment: RoundEnvironment,
 ) : XProcessingEnv {
 
     val elementUtils: Elements = delegate.elementUtils

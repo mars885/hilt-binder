@@ -45,7 +45,7 @@ internal class JavaBindingMethodSpecFactory : BindingMethodSpecFactory<MethodSpe
     }
 
     private fun MethodSpec.Builder.addMultibindingAnnotationsIfExist(
-        contributionType: ContributionType?
+        contributionType: ContributionType?,
     ): MethodSpec.Builder = apply {
         if (contributionType == null) return@apply
 
@@ -60,14 +60,14 @@ internal class JavaBindingMethodSpecFactory : BindingMethodSpecFactory<MethodSpe
     }
 
     private fun MethodSpec.Builder.contributeToMap(
-        mapKeyAnnotation: XAnnotation
+        mapKeyAnnotation: XAnnotation,
     ): MethodSpec.Builder = apply {
         addAnnotation(DAGGER_TYPE_INTO_MAP_JAVA_CLASS_NAME)
         addAnnotation(mapKeyAnnotation.javaAnnoSpec)
     }
 
     private fun MethodSpec.Builder.addQualifierAnnotationIfExists(
-        qualifierAnnotation: XAnnotation?
+        qualifierAnnotation: XAnnotation?,
     ): MethodSpec.Builder = apply {
         if (qualifierAnnotation == null) return@apply
 

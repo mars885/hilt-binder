@@ -29,19 +29,19 @@ internal object HiltBinderProcessorFactory {
 
     fun createJavacProcessor(
         processingEnv: ProcessingEnvironment,
-        roundEnv: RoundEnvironment
+        roundEnv: RoundEnvironment,
     ): HiltBinderProcessor {
         return createProcessor(
-            processingEnv = XProcessingEnvFactory.createJavacEnv(processingEnv, roundEnv)
+            processingEnv = XProcessingEnvFactory.createJavacEnv(processingEnv, roundEnv),
         )
     }
 
     fun createKspProcessor(
         processingEnv: SymbolProcessorEnvironment,
-        resolver: Resolver
+        resolver: Resolver,
     ): HiltBinderProcessor {
         return createProcessor(
-            processingEnv = XProcessingEnvFactory.createKspEnv(processingEnv, resolver)
+            processingEnv = XProcessingEnvFactory.createKspEnv(processingEnv, resolver),
         )
     }
 
@@ -50,7 +50,7 @@ internal object HiltBinderProcessorFactory {
             roundEnv = processingEnv.roundEnv,
             logger = processingEnv.logger,
             annotationsParser = AnnotationsParserFactory.create(processingEnv),
-            moduleFileGenerator = ModuleFileGeneratorFactory.create(processingEnv)
+            moduleFileGenerator = ModuleFileGeneratorFactory.create(processingEnv),
         )
     }
 }

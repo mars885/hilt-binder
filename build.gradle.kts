@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import com.android.build.gradle.LibraryExtension
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
@@ -35,9 +34,10 @@ buildscript {
     }
 
     dependencies {
-        classpath(deps.plugins.androidGradle)
-        classpath(deps.plugins.kotlinGradle)
-        classpath(deps.plugins.daggerHiltGradle)
+        classpath(deps.plugins.kotlin)
+        classpath(deps.plugins.android)
+        classpath(deps.plugins.ksp)
+        classpath(deps.plugins.daggerHilt)
         classpath(deps.plugins.gradleVersions)
         classpath(deps.plugins.dokka)
         classpath(deps.plugins.shadow)
@@ -54,6 +54,14 @@ tasks.withType<Detekt>().configureEach {
     reports.html.required.set(true)
 }
 
+tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf {
+        listOf("alpha", "beta", "rc").any { keyword ->
+            candidate.version.lowercase().contains(keyword)
+        }
+    }
+}
+
 allprojects {
     apply(plugin = PLUGIN_KTLINT)
 
@@ -63,7 +71,7 @@ allprojects {
                 "sample-deps-javac",
                 "sample-deps-kapt",
                 "sample-deps-ksp",
-                "sample"
+                "sample",
             )
         }
         .forEach { subproject ->
@@ -75,24 +83,11 @@ allprojects {
         google()
     }
 
-    tasks.withType(KotlinCompile::class.java) {
-        kotlinOptions {
-            jvmTarget = appConfig.kotlinCompatibilityVersion.toString()
-        }
-    }
-
-    plugins.withId(PLUGIN_ANDROID_LIBRARY) {
-        extensions.findByType<LibraryExtension>()?.run {
-            compileOptions {
-                sourceCompatibility = appConfig.javaCompatibilityVersion
-                targetCompatibility = appConfig.javaCompatibilityVersion
-            }
-        }
-    }
-
     configure<KtlintExtension> {
+        version.set(versions.ktlint)
         android.set(true)
         outputToConsole.set(true)
+        verbose.set(true)
 
         filter {
             // https://github.com/JLLeitschuh/ktlint-gradle/issues/266#issuecomment-529527697
@@ -107,4 +102,10 @@ allprojects {
 
 val clean by tasks.registering(Delete::class) {
     delete(buildDir)
+}
+
+fun isUnstable(version: String): Boolean {
+    return listOf("alpha", "beta", "rc").any { keyword ->
+        version.lowercase().contains(keyword)
+    }
 }

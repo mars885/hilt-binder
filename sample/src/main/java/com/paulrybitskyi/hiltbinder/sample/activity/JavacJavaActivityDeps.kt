@@ -41,7 +41,7 @@ internal class JavacJavaActivityDeps @Inject constructor(
     @Named("dep8") private val javacJavaActivityDep8: JavacJavaActivityDep8,
     private val javacJavaActivityDep9: JavacJavaActivityDep9<Float>,
     private val javacJavaActivityDep10: JavacJavaActivityDep10<Float>,
-    private val javacJavaActivityDeps11: Set<@JvmSuppressWildcards JavacJavaActivityDep11<*>>
+    private val javacJavaActivityDeps11: Set<@JvmSuppressWildcards JavacJavaActivityDep11<*>>,
 ) {
 
     fun check() {

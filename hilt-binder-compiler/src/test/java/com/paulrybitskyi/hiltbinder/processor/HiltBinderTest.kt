@@ -34,12 +34,14 @@ import com.tschuchort.compiletesting.SourceFile.Companion.java
 import com.tschuchort.compiletesting.SourceFile.Companion.kotlin
 import com.tschuchort.compiletesting.kspSourcesDir
 import com.tschuchort.compiletesting.symbolProcessorProviders
-import java.io.File
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.File
 
 @Suppress("LargeClass", "LongMethod", "MaxLineLength")
 @RunWith(TestParameterInjector::class)
+@OptIn(ExperimentalCompilerApi::class)
 internal class HiltBinderTest {
 
     internal companion object {
@@ -49,12 +51,12 @@ internal class HiltBinderTest {
         enum class Scenario(
             val processorType: ProcessorType,
             val inputLanguage: Language,
-            val outputLanguage: Language
+            val outputLanguage: Language,
         ) {
             JAVAC_JAVA_IN_JAVA_OUT(ProcessorType.JAVAC, Language.JAVA, Language.JAVA),
             JAVAC_KOTLIN_IN_JAVA_OUT(ProcessorType.JAVAC, Language.KOTLIN, Language.JAVA),
             KSP_JAVA_IN_KOTLIN_OUT(ProcessorType.KSP, Language.JAVA, Language.KOTLIN),
-            KSP_KOTLIN_IN_KOTLIN_OUT(ProcessorType.KSP, Language.KOTLIN, Language.KOTLIN)
+            KSP_KOTLIN_IN_KOTLIN_OUT(ProcessorType.KSP, Language.KOTLIN, Language.KOTLIN),
         }
 
         private val JAVA_TESTABLE_FILE = java("Testable.java", "public interface Testable {}")
@@ -86,8 +88,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -98,8 +100,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -138,7 +140,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -158,8 +160,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable.class)
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -170,8 +172,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable::class)
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -210,7 +212,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -230,8 +232,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     public class Test extends AbstractTest {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_ABSTRACT_TEST_FILE,
@@ -242,8 +244,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     class Test : AbstractTest()
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -282,7 +284,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -302,8 +304,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractTest.class)
                     public class Test extends AbstractTest {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_ABSTRACT_TEST_FILE,
@@ -314,8 +316,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractTest::class)
                     class Test : AbstractTest()
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -354,7 +356,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -368,11 +370,11 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "Testable1.java",
-                    "public interface Testable1 {}"
+                    "public interface Testable1 {}",
                 ),
                 java(
                     "Testable2.java",
-                    "public interface Testable2 {}"
+                    "public interface Testable2 {}",
                 ),
                 java(
                     "Test.java",
@@ -381,17 +383,17 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable1.class)
                     public class Test implements Testable1, Testable2 {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "Testable1.kt",
-                    "interface Testable1"
+                    "interface Testable1",
                 ),
                 kotlin(
                     "Testable2.kt",
-                    "interface Testable2"
+                    "interface Testable2",
                 ),
                 kotlin(
                     "Test.kt",
@@ -400,8 +402,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable1::class)
                     class Test : Testable1, Testable2
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -440,7 +442,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -461,8 +463,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractTest.class)
                     public class Test extends AbstractTest implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -474,8 +476,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractTest::class)
                     class Test : AbstractTest(), Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -514,7 +516,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -535,8 +537,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable.class)
                     public class Test extends AbstractTest implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -548,8 +550,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable::class)
                     class Test : AbstractTest(), Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -588,7 +590,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -607,8 +609,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Object.class)
                     public class Test {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
@@ -618,8 +620,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Any::class)
                     class Test
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -660,7 +662,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -680,8 +682,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Object.class)
                     public class Test extends AbstractTest {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_ABSTRACT_TEST_FILE,
@@ -692,8 +694,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Any::class)
                     class Test : AbstractTest()
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -734,7 +736,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -754,8 +756,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Object.class)
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -766,8 +768,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Any::class)
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -808,7 +810,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -829,8 +831,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Object.class)
                     public class Test extends AbstractTest implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -842,8 +844,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Any::class)
                     class Test : AbstractTest(), Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -884,7 +886,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -899,7 +901,7 @@ internal class HiltBinderTest {
                 JAVA_TESTABLE_FILE,
                 java(
                     "AbstractTest.java",
-                    "public abstract class AbstractTest implements Testable {}"
+                    "public abstract class AbstractTest implements Testable {}",
                 ),
                 java(
                     "Test.java",
@@ -908,14 +910,14 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable.class)
                     public class Test extends AbstractTest {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
                 kotlin(
                     "AbstractTest.kt",
-                    "abstract class AbstractTest : Testable"
+                    "abstract class AbstractTest : Testable",
                 ),
                 kotlin(
                     "Test.kt",
@@ -924,8 +926,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable::class)
                     class Test : AbstractTest()
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -964,7 +966,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -978,11 +980,11 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "AbstractAbstractTest.java",
-                    "public abstract class AbstractAbstractTest {}"
+                    "public abstract class AbstractAbstractTest {}",
                 ),
                 java(
                     "AbstractTest.java",
-                    "public abstract class AbstractTest extends AbstractAbstractTest {}"
+                    "public abstract class AbstractTest extends AbstractAbstractTest {}",
                 ),
                 java(
                     "Test.java",
@@ -991,17 +993,17 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractAbstractTest.class)
                     public class Test extends AbstractTest {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "AbstractAbstractTest.kt",
-                    "abstract class AbstractAbstractTest"
+                    "abstract class AbstractAbstractTest",
                 ),
                 kotlin(
                     "AbstractTest.kt",
-                    "abstract class AbstractTest : AbstractAbstractTest()"
+                    "abstract class AbstractTest : AbstractAbstractTest()",
                 ),
                 kotlin(
                     "Test.kt",
@@ -1010,8 +1012,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractAbstractTest::class)
                     class Test : AbstractTest()
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -1050,7 +1052,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1065,7 +1067,7 @@ internal class HiltBinderTest {
                 JAVA_TESTABLE_FILE,
                 java(
                     "UnitTestable.java",
-                    "public interface UnitTestable extends Testable {}"
+                    "public interface UnitTestable extends Testable {}",
                 ),
                 java(
                     "Test.java",
@@ -1074,14 +1076,14 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable.class)
                     public class Test implements UnitTestable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
                 kotlin(
                     "UnitTestable.kt",
-                    "interface UnitTestable : Testable"
+                    "interface UnitTestable : Testable",
                 ),
                 kotlin(
                     "Test.kt",
@@ -1090,8 +1092,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable::class)
                     class Test : UnitTestable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -1130,7 +1132,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1150,8 +1152,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     public enum Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -1162,8 +1164,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     enum class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -1202,7 +1204,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1222,8 +1224,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable.class)
                     public enum Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -1234,8 +1236,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable::class)
                     enum class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -1274,7 +1276,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1295,8 +1297,8 @@ internal class HiltBinderTest {
 
                 @BindType
                 object Test : Testable
-                """.trimIndent()
-            )
+                """.trimIndent(),
+            ),
         )
         val expectedGeneratedFile = when (scenario.outputLanguage) {
             Language.JAVA -> """
@@ -1334,7 +1336,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1355,8 +1357,8 @@ internal class HiltBinderTest {
 
                 @BindType(to = Testable::class)
                 object Test : Testable
-                """.trimIndent()
-            )
+                """.trimIndent(),
+            ),
         )
         val expectedGeneratedFile = when (scenario.outputLanguage) {
             Language.JAVA -> """
@@ -1394,7 +1396,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1415,8 +1417,8 @@ internal class HiltBinderTest {
 
                 @BindType
                 object Test : AbstractTest()
-                """.trimIndent()
-            )
+                """.trimIndent(),
+            ),
         )
         val expectedGeneratedFile = when (scenario.outputLanguage) {
             Language.JAVA -> """
@@ -1454,7 +1456,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1475,8 +1477,8 @@ internal class HiltBinderTest {
 
                 @BindType(to = AbstractTest::class)
                 object Test : AbstractTest()
-                """.trimIndent()
-            )
+                """.trimIndent(),
+            ),
         )
         val expectedGeneratedFile = when (scenario.outputLanguage) {
             Language.JAVA -> """
@@ -1514,7 +1516,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1528,7 +1530,7 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "Testable.java",
-                    "public interface Testable<T> {}"
+                    "public interface Testable<T> {}",
                 ),
                 java(
                     "Test.java",
@@ -1537,13 +1539,13 @@ internal class HiltBinderTest {
 
                     @BindType
                     public class Test implements Testable<Long> {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "Testable.kt",
-                    "interface Testable<T>"
+                    "interface Testable<T>",
                 ),
                 kotlin(
                     "Test.kt",
@@ -1552,8 +1554,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     class Test : Testable<Long>
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -1594,7 +1596,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1608,7 +1610,7 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "Testable.java",
-                    "public interface Testable<T> {}"
+                    "public interface Testable<T> {}",
                 ),
                 java(
                     "Test.java",
@@ -1617,13 +1619,13 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable.class)
                     public class Test implements Testable<Long> {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "Testable.kt",
-                    "interface Testable<T>"
+                    "interface Testable<T>",
                 ),
                 kotlin(
                     "Test.kt",
@@ -1632,8 +1634,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable::class)
                     class Test : Testable<Long>
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -1674,7 +1676,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1688,11 +1690,11 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "Testable.java",
-                    "public interface Testable<T> {}"
+                    "public interface Testable<T> {}",
                 ),
                 java(
                     "UnitTestable.java",
-                    "public interface UnitTestable extends Testable<Float> {}"
+                    "public interface UnitTestable extends Testable<Float> {}",
                 ),
                 java(
                     "Test.java",
@@ -1701,17 +1703,17 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable.class)
                     public class Test implements UnitTestable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "Testable.kt",
-                    "interface Testable<T>"
+                    "interface Testable<T>",
                 ),
                 kotlin(
                     "UnitTestable.kt",
-                    "interface UnitTestable : Testable<Float>"
+                    "interface UnitTestable : Testable<Float>",
                 ),
                 kotlin(
                     "Test.kt",
@@ -1720,8 +1722,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable::class)
                     class Test : UnitTestable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -1762,7 +1764,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1776,7 +1778,7 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "AbstractTest.java",
-                    "public abstract class AbstractTest<T> {}"
+                    "public abstract class AbstractTest<T> {}",
                 ),
                 java(
                     "Test.java",
@@ -1785,13 +1787,13 @@ internal class HiltBinderTest {
 
                     @BindType
                     public class Test extends AbstractTest<Long> {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "AbstractTest.kt",
-                    "abstract class AbstractTest<T>"
+                    "abstract class AbstractTest<T>",
                 ),
                 kotlin(
                     "Test.kt",
@@ -1800,8 +1802,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     class Test : AbstractTest<Long>()
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -1842,7 +1844,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1856,7 +1858,7 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "AbstractTest.java",
-                    "public abstract class AbstractTest<T> {}"
+                    "public abstract class AbstractTest<T> {}",
                 ),
                 java(
                     "Test.java",
@@ -1865,13 +1867,13 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractTest.class)
                     public class Test extends AbstractTest<Long> {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "AbstractTest.kt",
-                    "abstract class AbstractTest<T>"
+                    "abstract class AbstractTest<T>",
                 ),
                 kotlin(
                     "Test.kt",
@@ -1880,8 +1882,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractTest::class)
                     class Test : AbstractTest<Long>()
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -1922,7 +1924,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -1936,11 +1938,11 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "AbstractAbstractTest.java",
-                    "public abstract class AbstractAbstractTest<T> {}"
+                    "public abstract class AbstractAbstractTest<T> {}",
                 ),
                 java(
                     "AbstractTest.java",
-                    "public abstract class AbstractTest extends AbstractAbstractTest<Integer> {}"
+                    "public abstract class AbstractTest extends AbstractAbstractTest<Integer> {}",
                 ),
                 java(
                     "Test.java",
@@ -1949,17 +1951,17 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractAbstractTest.class)
                     public class Test extends AbstractTest {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "AbstractAbstractTest.kt",
-                    "abstract class AbstractAbstractTest<T>"
+                    "abstract class AbstractAbstractTest<T>",
                 ),
                 kotlin(
                     "AbstractTest.kt",
-                    "abstract class AbstractTest : AbstractAbstractTest<Int>()"
+                    "abstract class AbstractTest : AbstractAbstractTest<Int>()",
                 ),
                 kotlin(
                     "Test.kt",
@@ -1968,8 +1970,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractAbstractTest::class)
                     class Test : AbstractTest()
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -2010,7 +2012,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -2024,19 +2026,19 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "Testable.java",
-                    "public interface Testable<T1, T2, T3> {}"
+                    "public interface Testable<T1, T2, T3> {}",
                 ),
                 java(
                     "Testable1.java",
-                    "public interface Testable1<T1, T2, T3> {}"
+                    "public interface Testable1<T1, T2, T3> {}",
                 ),
                 java(
                     "Testable2.java",
-                    "public interface Testable2<T1, T2, T3> {}"
+                    "public interface Testable2<T1, T2, T3> {}",
                 ),
                 java(
                     "Testable3.java",
-                    "public interface Testable3<T1, T2, T3> {}"
+                    "public interface Testable3<T1, T2, T3> {}",
                 ),
                 java(
                     "Test.java",
@@ -2049,25 +2051,25 @@ internal class HiltBinderTest {
                       Testable2<? extends Integer, ? extends Float, ? extends String>,
                       Testable3<?, ?, ?>
                     > {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "Testable.kt",
-                    "interface Testable<T1, T2, T3>"
+                    "interface Testable<T1, T2, T3>",
                 ),
                 kotlin(
                     "Testable1.kt",
-                    "interface Testable1<T1, T2, T3>"
+                    "interface Testable1<T1, T2, T3>",
                 ),
                 kotlin(
                     "Testable2.kt",
-                    "interface Testable2<T1, T2, T3>"
+                    "interface Testable2<T1, T2, T3>",
                 ),
                 kotlin(
                     "Testable3.kt",
-                    "interface Testable3<T1, T2, T3>"
+                    "interface Testable3<T1, T2, T3>",
                 ),
                 kotlin(
                     "Test.kt",
@@ -2080,8 +2082,8 @@ internal class HiltBinderTest {
                         Testable2<out Int, out Float, out String>,
                         Testable3<*, *, *>
                     >
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -2128,7 +2130,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -2147,8 +2149,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     public class Test {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
@@ -2158,8 +2160,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     class Test
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val compilation = setupCompilation(sourceFiles, scenario.processorType)
@@ -2175,11 +2177,11 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "Testable1.java",
-                    "public interface Testable1 {}"
+                    "public interface Testable1 {}",
                 ),
                 java(
                     "Testable2.java",
-                    "public interface Testable2 {}"
+                    "public interface Testable2 {}",
                 ),
                 java(
                     "Test.java",
@@ -2188,17 +2190,17 @@ internal class HiltBinderTest {
 
                     @BindType
                     public class Test implements Testable1, Testable2 {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "Testable1.kt",
-                    "interface Testable1"
+                    "interface Testable1",
                 ),
                 kotlin(
                     "Testable2.kt",
-                    "interface Testable2"
+                    "interface Testable2",
                 ),
                 kotlin(
                     "Test.kt",
@@ -2207,8 +2209,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     class Test : Testable1, Testable2
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val compilation = setupCompilation(sourceFiles, scenario.processorType)
@@ -2231,8 +2233,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     public class Test extends AbstractTest implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -2244,8 +2246,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     class Test : AbstractTest(), Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val compilation = setupCompilation(sourceFiles, scenario.processorType)
@@ -2267,8 +2269,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable.class)
                     public class Test {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -2279,8 +2281,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = Testable::class)
                     class Test
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val compilation = setupCompilation(sourceFiles, scenario.processorType)
@@ -2302,8 +2304,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractTest.class)
                     public class Test {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_ABSTRACT_TEST_FILE,
@@ -2314,8 +2316,8 @@ internal class HiltBinderTest {
 
                     @BindType(to = AbstractTest::class)
                     class Test
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val compilation = setupCompilation(sourceFiles, scenario.processorType)
@@ -2348,8 +2350,8 @@ internal class HiltBinderTest {
                         $withFragmentBindingAnnotation
                         @BindType
                         public class Test implements Testable {}
-                        """.trimIndent()
-                    )
+                        """.trimIndent(),
+                    ),
                 )
                 Language.KOTLIN -> listOf(
                     KOTLIN_TESTABLE_FILE,
@@ -2362,8 +2364,8 @@ internal class HiltBinderTest {
                         $withFragmentBindingAnnotation
                         @BindType
                         class Test : Testable
-                        """.trimIndent()
-                    )
+                        """.trimIndent(),
+                    ),
                 )
             }
             val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -2402,7 +2404,7 @@ internal class HiltBinderTest {
             val result = compilation.compile()
             val actualGeneratedFile = compilation.getGeneratedFile(
                 interfaceName,
-                scenario.outputLanguage
+                scenario.outputLanguage,
             )
 
             assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -2427,8 +2429,8 @@ internal class HiltBinderTest {
 
                         @BindType(installIn = BindType.Component.${predefinedComponent.name})
                         public class Test implements Testable {}
-                        """.trimIndent()
-                    )
+                        """.trimIndent(),
+                    ),
                 )
                 Language.KOTLIN -> listOf(
                     KOTLIN_TESTABLE_FILE,
@@ -2439,8 +2441,8 @@ internal class HiltBinderTest {
 
                         @BindType(installIn = BindType.Component.${predefinedComponent.name})
                         class Test : Testable
-                        """.trimIndent()
-                    )
+                        """.trimIndent(),
+                    ),
                 )
             }
             val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -2479,7 +2481,7 @@ internal class HiltBinderTest {
             val result = compilation.compile()
             val actualGeneratedFile = compilation.getGeneratedFile(
                 interfaceName,
-                scenario.outputLanguage
+                scenario.outputLanguage,
             )
 
             assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -2512,8 +2514,8 @@ internal class HiltBinderTest {
                         $withFragmentBindingAnnotation
                         @BindType(installIn = BindType.Component.${predefinedComponent.name})
                         public class Test implements Testable {}
-                        """.trimIndent()
-                    )
+                        """.trimIndent(),
+                    ),
                 )
                 Language.KOTLIN -> listOf(
                     KOTLIN_TESTABLE_FILE,
@@ -2526,8 +2528,8 @@ internal class HiltBinderTest {
                         $withFragmentBindingAnnotation
                         @BindType(installIn = BindType.Component.${predefinedComponent.name})
                         class Test : Testable
-                        """.trimIndent()
-                    )
+                        """.trimIndent(),
+                    ),
                 )
             }
             val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -2566,7 +2568,7 @@ internal class HiltBinderTest {
             val result = compilation.compile()
             val actualGeneratedFile = compilation.getGeneratedFile(
                 interfaceName,
-                scenario.outputLanguage
+                scenario.outputLanguage,
             )
 
             assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -2607,8 +2609,8 @@ internal class HiltBinderTest {
                         $withFragmentBindingAnnotation
                         @BindType(installIn = BindType.Component.${mismatchedExplicitComponent.name})
                         public class Test implements Testable {}
-                        """.trimIndent()
-                    )
+                        """.trimIndent(),
+                    ),
                 )
                 Language.KOTLIN -> listOf(
                     KOTLIN_TESTABLE_FILE,
@@ -2621,8 +2623,8 @@ internal class HiltBinderTest {
                         $withFragmentBindingAnnotation
                         @BindType(installIn = BindType.Component.${mismatchedExplicitComponent.name})
                         class Test : Testable
-                        """.trimIndent()
-                    )
+                        """.trimIndent(),
+                    ),
                 )
             }
             val compilation = setupCompilation(sourceFiles, scenario.processorType)
@@ -2649,7 +2651,7 @@ internal class HiltBinderTest {
                     @Scope
                     @Retention(RetentionPolicy.RUNTIME)
                     public @interface CustomScope {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "CustomComponent.java",
@@ -2660,7 +2662,7 @@ internal class HiltBinderTest {
                     @CustomScope
                     @DefineComponent(parent = SingletonComponent.class)
                     public interface CustomComponent {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test.java",
@@ -2673,8 +2675,8 @@ internal class HiltBinderTest {
                     )
                     @CustomScope
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -2687,7 +2689,7 @@ internal class HiltBinderTest {
                     @CustomScope
                     @DefineComponent(parent = SingletonComponent::class)
                     interface CustomComponent
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "CustomScope.kt",
@@ -2697,7 +2699,7 @@ internal class HiltBinderTest {
                     @Scope
                     @Retention(value = AnnotationRetention.RUNTIME)
                     annotation class CustomScope
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test.kt",
@@ -2710,8 +2712,8 @@ internal class HiltBinderTest {
                     )
                     @CustomScope
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -2748,7 +2750,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_CustomComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -2769,7 +2771,7 @@ internal class HiltBinderTest {
 
                     @DefineComponent(parent = SingletonComponent.class)
                     public interface CustomComponent {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test.java",
@@ -2781,8 +2783,8 @@ internal class HiltBinderTest {
                       customComponent = CustomComponent.class
                     )
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -2794,7 +2796,7 @@ internal class HiltBinderTest {
 
                     @DefineComponent(parent = SingletonComponent::class)
                     interface CustomComponent
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test.kt",
@@ -2806,8 +2808,8 @@ internal class HiltBinderTest {
                       customComponent = CustomComponent::class
                     )
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -2844,7 +2846,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_CustomComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -2868,7 +2870,7 @@ internal class HiltBinderTest {
                     @Scope
                     @Retention(RetentionPolicy.RUNTIME)
                     public @interface CustomScope {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "CustomComponent.java",
@@ -2879,7 +2881,7 @@ internal class HiltBinderTest {
                     @CustomScope
                     @DefineComponent(parent = SingletonComponent.class)
                     public interface CustomComponent {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test1.java",
@@ -2892,7 +2894,7 @@ internal class HiltBinderTest {
                     )
                     @CustomScope
                     public class Test1 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -2904,8 +2906,8 @@ internal class HiltBinderTest {
                       customComponent = CustomComponent.class
                     )
                     public class Test2 implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -2918,7 +2920,7 @@ internal class HiltBinderTest {
                     @CustomScope
                     @DefineComponent(parent = SingletonComponent::class)
                     interface CustomComponent
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "CustomScope.kt",
@@ -2928,7 +2930,7 @@ internal class HiltBinderTest {
                     @Scope
                     @Retention(value = AnnotationRetention.RUNTIME)
                     annotation class CustomScope
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test.kt",
@@ -2947,8 +2949,8 @@ internal class HiltBinderTest {
                       customComponent = CustomComponent::class
                     )
                     class Test2 : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -2991,7 +2993,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_CustomComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -3011,8 +3013,8 @@ internal class HiltBinderTest {
 
                     @BindType(installIn = BindType.Component.CUSTOM)
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -3023,8 +3025,8 @@ internal class HiltBinderTest {
 
                     @BindType(installIn = BindType.Component.CUSTOM)
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val compilation = setupCompilation(sourceFiles, scenario.processorType)
@@ -3049,8 +3051,8 @@ internal class HiltBinderTest {
                     @Named("test")
                     @BindType(withQualifier = true)
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -3064,8 +3066,8 @@ internal class HiltBinderTest {
                     @Named("test")
                     @BindType(withQualifier = true)
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -3108,7 +3110,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -3138,7 +3140,7 @@ internal class HiltBinderTest {
                       enum Type { ONE }
 
                     }
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test.java",
@@ -3148,8 +3150,8 @@ internal class HiltBinderTest {
                     @CustomQualifier(type = CustomQualifier.Type.ONE)
                     @BindType(withQualifier = true)
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -3165,7 +3167,7 @@ internal class HiltBinderTest {
                       enum class Type { ONE }
 
                     }
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test.kt",
@@ -3175,8 +3177,8 @@ internal class HiltBinderTest {
                     @CustomQualifier(CustomQualifier.Type.ONE)
                     @BindType(withQualifier = true)
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -3219,7 +3221,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -3239,8 +3241,8 @@ internal class HiltBinderTest {
 
                     @BindType(withQualifier = true)
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -3251,8 +3253,8 @@ internal class HiltBinderTest {
 
                     @BindType(withQualifier = true)
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val compilation = setupCompilation(sourceFiles, scenario.processorType)
@@ -3269,7 +3271,7 @@ internal class HiltBinderTest {
                 JAVA_TESTABLE_FILE,
                 java(
                     "CustomQualifierType.java",
-                    "public enum CustomQualifierType { ONE, TWO, THREE }"
+                    "public enum CustomQualifierType { ONE, TWO, THREE }",
                 ),
                 java(
                     "InnerAnno.java",
@@ -3285,11 +3287,11 @@ internal class HiltBinderTest {
                       Class<?> classValue();
 
                     }
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "CustomQualifierClass.java",
-                    "public class CustomQualifierClass {}"
+                    "public class CustomQualifierClass {}",
                 ),
                 java(
                     "CustomQualifier.java",
@@ -3329,7 +3331,7 @@ internal class HiltBinderTest {
                       Class<?>[] classArray();
 
                     }
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test.java",
@@ -3359,8 +3361,8 @@ internal class HiltBinderTest {
                       shortArray = { Short.MIN_VALUE, Short.MAX_VALUE },
                       intArray = { 0, 10, 20 },
                       longArray = { 10L, 20L, 30L },
-                      floatArray = { Float.MAX_VALUE, Float.MIN_VALUE },
-                      doubleArray = { 100.0, 200.0, 300.0 },
+                      floatArray = { 50.250f, 100.500f, 150.750f },
+                      doubleArray = { 100.33, 200.66, 300.99 },
                       stringArray = { "one", "two", "three" },
                       enumArray = {
                         CustomQualifierType.ONE,
@@ -3387,8 +3389,8 @@ internal class HiltBinderTest {
                     )
                     @BindType(withQualifier = true)
                     public class Test implements Testable { }
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -3402,7 +3404,7 @@ internal class HiltBinderTest {
                       THREE
 
                     }
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "InnerAnno.kt",
@@ -3415,11 +3417,11 @@ internal class HiltBinderTest {
                       val longValue: Long,
                       val classValue: KClass<*>
                     )
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "CustomQualifierClass.kt",
-                    "class CustomQualifierClass"
+                    "class CustomQualifierClass",
                 ),
                 kotlin(
                     "CustomQualifier.kt",
@@ -3456,7 +3458,7 @@ internal class HiltBinderTest {
                       val annotationArray: Array<InnerAnno>,
                       val classArray: Array<KClass<*>>
                     )
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test.kt",
@@ -3486,8 +3488,8 @@ internal class HiltBinderTest {
                       shortArray = [Short.MIN_VALUE, Short.MAX_VALUE],
                       intArray = [0, 10, 20],
                       longArray = [10L, 20L, 30L],
-                      floatArray = [Float.MAX_VALUE, Float.MIN_VALUE],
-                      doubleArray = [100.0, 200.0, 300.0],
+                      floatArray = [50.250f, 100.500f, 150.750f],
+                      doubleArray = [100.33, 200.66, 300.99],
                       stringArray = ["one", "two", "three"],
                       enumArray = [
                         CustomQualifierType.ONE,
@@ -3514,8 +3516,8 @@ internal class HiltBinderTest {
                     )
                     @BindType(withQualifier = true)
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -3572,13 +3574,14 @@ internal class HiltBinderTest {
                           30
                       },
                       floatArray = {
-                          3.4028235E38f,
-                          1.4E-45f
+                          50.25f,
+                          100.5f,
+                          150.75f
                       },
                       doubleArray = {
-                          100.0,
-                          200.0,
-                          300.0
+                          100.33,
+                          200.66,
+                          300.99
                       },
                       stringArray = {
                           "one",
@@ -3619,7 +3622,7 @@ internal class HiltBinderTest {
                     boolValue = true,
                     byteValue = 10,
                     charValue = ',',
-                    shortValue = 32767,
+                    shortValue = 32_767,
                     intValue = -10,
                     longValue = 100,
                     floatValue = -15.0f,
@@ -3632,11 +3635,11 @@ internal class HiltBinderTest {
                     boolArray = [true, false],
                     byteArray = [100, 105],
                     charArray = ['A', 'B', 'C'],
-                    shortArray = [-32768, 32767],
+                    shortArray = [-32_768, 32_767],
                     intArray = [0, 10, 20],
                     longArray = [10, 20, 30],
-                    floatArray = [3.4028235E38f, 1.4E-45f],
-                    doubleArray = [100.0, 200.0, 300.0],
+                    floatArray = [50.25f, 100.5f, 150.75f],
+                    doubleArray = [100.33, 200.66, 300.99],
                     stringArray = ["one", "two", "three"],
                     enumArray = [CustomQualifierType.ONE, CustomQualifierType.TWO, CustomQualifierType.THREE],
                     annotationArray = [InnerAnno(intValue = 0, longValue = 1, classValue = Test::class),
@@ -3651,7 +3654,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -3671,7 +3674,7 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     public class Test1 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -3680,7 +3683,7 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     public class Test2 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -3689,8 +3692,8 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     public class Test3 implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -3701,7 +3704,7 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     class Test1 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -3710,7 +3713,7 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     class Test2 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -3719,8 +3722,8 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     class Test3 : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -3779,7 +3782,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -3793,7 +3796,7 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "Testable.java",
-                    "public interface Testable<T1> {}"
+                    "public interface Testable<T1> {}",
                 ),
                 java(
                     "Test1.java",
@@ -3802,7 +3805,7 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     public class Test1 implements Testable<Integer> {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -3811,7 +3814,7 @@ internal class HiltBinderTest {
 
                      @BindType(contributesTo = BindType.Collection.SET)
                      public class Test2 implements Testable<Long> {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -3820,13 +3823,13 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     public class Test3 implements Testable<Float> {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "Testable.kt",
-                    "interface Testable<T1>"
+                    "interface Testable<T1>",
                 ),
                 kotlin(
                     "Test1.kt",
@@ -3835,7 +3838,7 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     class Test1 : Testable<Int>
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -3844,7 +3847,7 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     class Test2 : Testable<Long>
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -3853,8 +3856,8 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.SET)
                     class Test3 : Testable<Float>
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -3913,7 +3916,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -3939,7 +3942,7 @@ internal class HiltBinderTest {
                       withQualifier = true
                     )
                     public class Test1 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -3954,7 +3957,7 @@ internal class HiltBinderTest {
                       withQualifier = true
                     )
                     public class Test2 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -3969,8 +3972,8 @@ internal class HiltBinderTest {
                        withQualifier = true
                      )
                      public class Test3 implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -3987,7 +3990,7 @@ internal class HiltBinderTest {
                       withQualifier = true
                     )
                     class Test1 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -4002,7 +4005,7 @@ internal class HiltBinderTest {
                       withQualifier = true
                     )
                     class Test2 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -4017,8 +4020,8 @@ internal class HiltBinderTest {
                       withQualifier = true
                     )
                     class Test3 : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -4085,7 +4088,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -4105,8 +4108,8 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -4117,8 +4120,8 @@ internal class HiltBinderTest {
 
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val compilation = setupCompilation(sourceFiles, scenario.processorType)
@@ -4142,7 +4145,7 @@ internal class HiltBinderTest {
                     @MapIntKey(1)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test1 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -4153,7 +4156,7 @@ internal class HiltBinderTest {
                     @MapIntKey(2)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test2 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -4164,8 +4167,8 @@ internal class HiltBinderTest {
                     @MapIntKey(3)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test3 implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -4178,7 +4181,7 @@ internal class HiltBinderTest {
                     @MapIntKey(1)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test1 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -4189,7 +4192,7 @@ internal class HiltBinderTest {
                     @MapIntKey(2)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test2 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -4200,8 +4203,8 @@ internal class HiltBinderTest {
                     @MapIntKey(3)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test3 : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -4268,7 +4271,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -4290,7 +4293,7 @@ internal class HiltBinderTest {
                     @MapLongKey(1L)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test1 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -4301,7 +4304,7 @@ internal class HiltBinderTest {
                     @MapLongKey(2L)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test2 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -4312,8 +4315,8 @@ internal class HiltBinderTest {
                     @MapLongKey(3L)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test3 implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -4326,7 +4329,7 @@ internal class HiltBinderTest {
                     @MapLongKey(1L)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test1 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -4337,7 +4340,7 @@ internal class HiltBinderTest {
                     @MapLongKey(2L)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test2 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -4348,8 +4351,8 @@ internal class HiltBinderTest {
                     @MapLongKey(3L)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test3 : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -4416,7 +4419,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -4438,7 +4441,7 @@ internal class HiltBinderTest {
                     @MapStringKey("one")
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test1 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -4449,7 +4452,7 @@ internal class HiltBinderTest {
                     @MapStringKey("two")
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test2 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -4460,8 +4463,8 @@ internal class HiltBinderTest {
                     @MapStringKey("three")
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test3 implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -4474,7 +4477,7 @@ internal class HiltBinderTest {
                     @MapStringKey("one")
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test1 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -4485,7 +4488,7 @@ internal class HiltBinderTest {
                     @MapStringKey("two")
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test2 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -4496,8 +4499,8 @@ internal class HiltBinderTest {
                     @MapStringKey("three")
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test3 : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -4564,7 +4567,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -4586,7 +4589,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test1.class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test1 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -4597,7 +4600,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test2.class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test2 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -4608,8 +4611,8 @@ internal class HiltBinderTest {
                     @MapClassKey(Test3.class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test3 implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -4622,7 +4625,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test1::class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test1 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -4633,7 +4636,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test2::class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test2 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -4644,8 +4647,8 @@ internal class HiltBinderTest {
                     @MapClassKey(Test3::class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test3 : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -4712,7 +4715,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -4726,7 +4729,7 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "Testable.java",
-                    "public interface Testable<T1, T2> {}"
+                    "public interface Testable<T1, T2> {}",
                 ),
                 java(
                     "Test1.java",
@@ -4737,7 +4740,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test1.class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test1 implements Testable<Long, Long> {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -4748,7 +4751,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test2.class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test2 implements Testable<Integer, Integer> {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -4759,13 +4762,13 @@ internal class HiltBinderTest {
                      @MapClassKey(Test3.class)
                      @BindType(contributesTo = BindType.Collection.MAP)
                      public class Test3 implements Testable<Float, Float> {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "Testable.kt",
-                    "interface Testable<T1, T2>"
+                    "interface Testable<T1, T2>",
                 ),
                 kotlin(
                     "Test1.kt",
@@ -4776,7 +4779,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test1::class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test1 : Testable<Long, Long>
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -4787,7 +4790,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test2::class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test2 : Testable<Int, Int>
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -4798,8 +4801,8 @@ internal class HiltBinderTest {
                     @MapClassKey(Test3::class)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test3 : Testable<Float, Float>
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -4866,7 +4869,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -4897,7 +4900,7 @@ internal class HiltBinderTest {
                       enum Type { ONE, TWO, THREE }
 
                     }
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test1.java",
@@ -4907,7 +4910,7 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.ONE)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test1 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -4917,7 +4920,7 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.TWO)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test2 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -4927,8 +4930,8 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.THREE)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test3 implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -4950,7 +4953,7 @@ internal class HiltBinderTest {
                       }
 
                     }
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test1.kt",
@@ -4960,7 +4963,7 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.ONE)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test1 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -4970,7 +4973,7 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.TWO)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test2 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -4980,8 +4983,8 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.THREE)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test3 : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -5046,7 +5049,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -5060,7 +5063,7 @@ internal class HiltBinderTest {
             Language.JAVA -> listOf(
                 java(
                     "Testable.java",
-                    "public interface Testable<T1, T2, T3> {}"
+                    "public interface Testable<T1, T2, T3> {}",
                 ),
                 java(
                     "TestMapKey.java",
@@ -5080,7 +5083,7 @@ internal class HiltBinderTest {
                       enum Type { ONE, TWO, THREE }
 
                     }
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test1.java",
@@ -5090,7 +5093,7 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.ONE)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test1 implements Testable<Integer, Integer, Integer> {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -5100,7 +5103,7 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.TWO)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test2 implements Testable<Float, Float, Float> {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -5110,13 +5113,13 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.THREE)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     public class Test3 implements Testable<Double, Double, Double> {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
                     "Testable.kt",
-                    "interface Testable<T1, T2, T3>"
+                    "interface Testable<T1, T2, T3>",
                 ),
                 kotlin(
                     "TestMapKey.kt",
@@ -5136,7 +5139,7 @@ internal class HiltBinderTest {
                       }
 
                     }
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test1.kt",
@@ -5146,7 +5149,7 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.ONE)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test1 : Testable<Int, Int, Int>
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -5156,7 +5159,7 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.TWO)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test2 : Testable<Float, Float, Float>
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -5166,8 +5169,8 @@ internal class HiltBinderTest {
                     @TestMapKey(TestMapKey.Type.THREE)
                     @BindType(contributesTo = BindType.Collection.MAP)
                     class Test3 : Testable<Double, Double, Double>
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -5232,7 +5235,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -5260,7 +5263,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test1.class)
                     @Named("one")
                     public class Test1 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -5277,7 +5280,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test2.class)
                     @Named("two")
                     public class Test2 implements Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -5294,8 +5297,8 @@ internal class HiltBinderTest {
                     @MapClassKey(Test3.class)
                     @Named("three")
                     public class Test3 implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 KOTLIN_TESTABLE_FILE,
@@ -5314,7 +5317,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test1::class)
                     @Named("one")
                     class Test1 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -5331,7 +5334,7 @@ internal class HiltBinderTest {
                     @MapClassKey(Test2::class)
                     @Named("two")
                     class Test2 : Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -5348,8 +5351,8 @@ internal class HiltBinderTest {
                     @MapClassKey(Test3::class)
                     @Named("three")
                     class Test3 : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -5424,7 +5427,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -5442,7 +5445,7 @@ internal class HiltBinderTest {
                     package com.paulrybitskyi.hiltbinder.test;
 
                     public interface Testable {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test.java",
@@ -5456,8 +5459,8 @@ internal class HiltBinderTest {
                     @Named("test")
                     @BindType(withQualifier = true)
                     public class Test implements Testable {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
@@ -5466,7 +5469,7 @@ internal class HiltBinderTest {
                     package com.paulrybitskyi.hiltbinder.test
 
                     interface Testable
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test.kt",
@@ -5480,8 +5483,8 @@ internal class HiltBinderTest {
                     @Named("test")
                     @BindType(withQualifier = true)
                     class Test : Testable
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -5528,7 +5531,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "com/paulrybitskyi/hiltbinder/test/HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -5546,7 +5549,7 @@ internal class HiltBinderTest {
                     package com.paulrybitskyi.hiltbinder.testing.feature1.interfaces.testing;
 
                     public interface Testable1 {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Testable2.java",
@@ -5554,7 +5557,7 @@ internal class HiltBinderTest {
                     package com.paulrybitskyi.hiltbinder.testing.feature2.repositories.model;
 
                     public interface Testable2 {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Testable3.java",
@@ -5562,7 +5565,7 @@ internal class HiltBinderTest {
                     package com.paulrybitskyi.hiltbinder.testing.utils.interfaces;
 
                     public interface Testable3 {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test1.java",
@@ -5573,7 +5576,7 @@ internal class HiltBinderTest {
 
                     @BindType
                     public class Test1 implements Testable1 {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test2.java",
@@ -5584,7 +5587,7 @@ internal class HiltBinderTest {
 
                     @BindType
                     public class Test2 implements Testable2 {}
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 java(
                     "Test3.java",
@@ -5595,8 +5598,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     public class Test3 implements Testable3 {}
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
             Language.KOTLIN -> listOf(
                 kotlin(
@@ -5605,7 +5608,7 @@ internal class HiltBinderTest {
                     package com.paulrybitskyi.hiltbinder.testing.feature1.interfaces.testing
 
                     interface Testable1
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Testable2.kt",
@@ -5613,7 +5616,7 @@ internal class HiltBinderTest {
                     package com.paulrybitskyi.hiltbinder.testing.feature2.repositories.model
 
                     interface Testable2
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Testable3.kt",
@@ -5621,7 +5624,7 @@ internal class HiltBinderTest {
                     package com.paulrybitskyi.hiltbinder.testing.utils.interfaces
 
                     interface Testable3
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test1.kt",
@@ -5632,7 +5635,7 @@ internal class HiltBinderTest {
 
                     @BindType
                     class Test1 : Testable1
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test2.kt",
@@ -5643,7 +5646,7 @@ internal class HiltBinderTest {
 
                     @BindType
                     class Test2 : Testable2
-                    """.trimIndent()
+                    """.trimIndent(),
                 ),
                 kotlin(
                     "Test3.kt",
@@ -5654,8 +5657,8 @@ internal class HiltBinderTest {
 
                     @BindType
                     class Test3 : Testable3
-                    """.trimIndent()
-                )
+                    """.trimIndent(),
+                ),
             )
         }
         val expectedGeneratedFile = when (scenario.outputLanguage) {
@@ -5727,7 +5730,7 @@ internal class HiltBinderTest {
         val result = compilation.compile()
         val actualGeneratedFile = compilation.getGeneratedFile(
             "com/paulrybitskyi/hiltbinder/testing/HiltBinder_SingletonComponentModule",
-            scenario.outputLanguage
+            scenario.outputLanguage,
         )
 
         assertThat(result.exitCode).isEqualTo(ExitCode.OK)
@@ -5737,7 +5740,7 @@ internal class HiltBinderTest {
 
     private fun setupCompilation(
         sourceFiles: List<SourceFile>,
-        processorType: ProcessorType
+        processorType: ProcessorType,
     ): KotlinCompilation {
         val compilation = KotlinCompilation().apply {
             sources = sourceFiles

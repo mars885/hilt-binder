@@ -26,8 +26,8 @@ android {
     compileSdk = appConfig.compileSdkVersion
 
     defaultConfig {
+        namespace = "com.paulrybitskyi.hiltbinder.sample.ksp"
         minSdk = appConfig.minSdkVersion
-        targetSdk = appConfig.targetSdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -53,6 +53,15 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = appConfig.androidModuleJavaCompatVersion
+        targetCompatibility = appConfig.androidModuleJavaCompatVersion
+    }
+
+    kotlinOptions {
+        jvmTarget = appConfig.androidModuleKotlinCompatVersion.toString()
     }
 }
 

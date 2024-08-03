@@ -41,7 +41,7 @@ internal class KaptJavaActivityDeps @Inject constructor(
     @Named("dep8") private val kaptJavaActivityDep8: KaptJavaActivityDep8,
     private val kaptJavaActivityDep9: KaptJavaActivityDep9<Float>,
     private val kaptJavaActivityDep10: KaptJavaActivityDep10<Float>,
-    private val kaptJavaActivityDeps11: Set<@JvmSuppressWildcards KaptJavaActivityDep11<*>>
+    private val kaptJavaActivityDeps11: Set<@JvmSuppressWildcards KaptJavaActivityDep11<*>>,
 ) {
 
     fun check() {

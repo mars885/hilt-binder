@@ -26,7 +26,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.TypeSpec
 
 internal class KotlinTypeSpecFactory(
-    private val bindingMethodSpecFactory: KotlinBindingMethodSpecFactory
+    private val bindingMethodSpecFactory: KotlinBindingMethodSpecFactory,
 ) : TypeSpecFactory<TypeSpec> {
 
     override fun createTypeSpec(moduleSchema: ModuleSchema): TypeSpec {

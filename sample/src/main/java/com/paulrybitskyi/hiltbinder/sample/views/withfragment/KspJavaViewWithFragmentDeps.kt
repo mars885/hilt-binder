@@ -28,5 +28,5 @@ internal class KspJavaViewWithFragmentDeps @Inject constructor(
     private val kspJavaViewDep13: KspJavaViewDep13,
     private val kspJavaViewDep14: KspJavaViewDep14,
     private val kspJavaFragmentDep1: KspJavaFragmentDep1,
-    private val kspJavaFragmentDep2: KspJavaFragmentDep2
+    private val kspJavaFragmentDep2: KspJavaFragmentDep2,
 )

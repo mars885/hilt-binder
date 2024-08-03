@@ -22,5 +22,5 @@ internal class ModuleSchema(
     val packageName: String,
     val interfaceName: String,
     val componentType: XTypeElement,
-    val bindings: List<BindingSchema>
+    val bindings: List<BindingSchema>,
 )

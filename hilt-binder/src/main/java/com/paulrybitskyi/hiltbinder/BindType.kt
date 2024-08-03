@@ -415,7 +415,7 @@ annotation class BindType(
     val installIn: Component = Component.NONE,
     val customComponent: KClass<*> = Nothing::class,
     val contributesTo: Collection = Collection.NONE,
-    val withQualifier: Boolean = false
+    val withQualifier: Boolean = false,
 ) {
 
     /**
@@ -434,7 +434,7 @@ annotation class BindType(
         VIEW,
         VIEW_WITH_FRAGMENT,
 
-        CUSTOM
+        CUSTOM,
     }
 
     /**
@@ -445,6 +445,6 @@ annotation class BindType(
         NONE,
 
         SET,
-        MAP
+        MAP,
     }
 }

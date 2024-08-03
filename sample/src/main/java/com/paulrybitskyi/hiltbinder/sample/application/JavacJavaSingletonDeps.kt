@@ -45,7 +45,7 @@ internal class JavacJavaSingletonDeps @Inject constructor(
     @Named("dep10") private val javacJavaSingletonDep10: JavacJavaSingletonDep10,
     private val javacJavaSingletonDep11: JavacJavaSingletonDep11<Int>,
     private val javacJavaSingletonDep12: JavacJavaSingletonDep12<Int>,
-    private val javacJavaSingletonDeps13: Set<@JvmSuppressWildcards JavacJavaSingletonDep13<*>>
+    private val javacJavaSingletonDeps13: Set<@JvmSuppressWildcards JavacJavaSingletonDep13<*>>,
 ) {
 
     fun check() {

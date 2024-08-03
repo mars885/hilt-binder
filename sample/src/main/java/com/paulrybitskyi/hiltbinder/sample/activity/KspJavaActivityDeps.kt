@@ -41,7 +41,7 @@ internal class KspJavaActivityDeps @Inject constructor(
     @Named("dep8") private val kspJavaActivityDep8: KspJavaActivityDep8,
     private val kspJavaActivityDep9: KspJavaActivityDep9<Float>,
     private val kspJavaActivityDep10: KspJavaActivityDep10<Float>,
-    private val kspJavaActivityDeps11: Set<@JvmSuppressWildcards KspJavaActivityDep11<*>>
+    private val kspJavaActivityDeps11: Set<@JvmSuppressWildcards KspJavaActivityDep11<*>>,
 ) {
 
     fun check() {

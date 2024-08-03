@@ -31,6 +31,6 @@ internal fun XProcessingEnv.getRootType(backend: XBackend = this.backend): XType
         when (backend) {
             XBackend.JAVAC -> OBJECT_TYPE_QUALIFIED_NAME
             XBackend.KSP -> ANY_TYPE_QUALIFIED_NAME
-        }
+        },
     )
 }

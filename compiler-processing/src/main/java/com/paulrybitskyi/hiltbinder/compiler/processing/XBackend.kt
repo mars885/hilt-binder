@@ -18,5 +18,5 @@ package com.paulrybitskyi.hiltbinder.compiler.processing
 
 enum class XBackend {
     JAVAC,
-    KSP
+    KSP,
 }

@@ -29,7 +29,7 @@ import com.paulrybitskyi.hiltbinder.processor.utils.getWithQualifierArg
 
 internal class QualifierAnnotationDetector(
     private val processingEnv: XProcessingEnv,
-    private val messageProvider: MessageProvider
+    private val messageProvider: MessageProvider,
 ) {
 
     fun detectAnnotation(annotatedElement: XTypeElement): XAnnotation? {

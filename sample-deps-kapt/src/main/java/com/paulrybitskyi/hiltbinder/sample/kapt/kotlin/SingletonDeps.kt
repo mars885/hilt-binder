@@ -49,7 +49,7 @@ interface KaptKotlinSingletonDep4
 
 @BindType(
     to = KaptKotlinSingletonDep4::class,
-    installIn = BindType.Component.SINGLETON
+    installIn = BindType.Component.SINGLETON,
 )
 internal class KaptKotlinSingletonDep4Impl @Inject constructor() : KaptKotlinSingletonDep4
 
@@ -76,7 +76,7 @@ interface KaptKotlinSingletonDep7
 @Singleton
 @BindType(
     to = KaptKotlinSingletonDep7::class,
-    installIn = BindType.Component.SINGLETON
+    installIn = BindType.Component.SINGLETON,
 )
 internal class KaptKotlinSingletonDep7Impl @Inject constructor() : KaptKotlinSingletonDep7
 

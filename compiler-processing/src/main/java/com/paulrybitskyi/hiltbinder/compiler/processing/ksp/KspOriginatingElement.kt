@@ -20,5 +20,5 @@ import com.google.devtools.ksp.symbol.KSFile
 import com.paulrybitskyi.hiltbinder.compiler.processing.XOriginatingElement
 
 internal class KspOriginatingElement(
-    val file: KSFile
+    val file: KSFile,
 ) : XOriginatingElement

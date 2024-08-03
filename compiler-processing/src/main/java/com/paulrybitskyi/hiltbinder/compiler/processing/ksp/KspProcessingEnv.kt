@@ -35,7 +35,7 @@ import com.paulrybitskyi.hiltbinder.compiler.processing.ksp.utils.getTypeByName
 
 internal class KspProcessingEnv(
     private val delegate: SymbolProcessorEnvironment,
-    val resolver: Resolver
+    val resolver: Resolver,
 ) : XProcessingEnv {
 
     override val backend = XBackend.KSP

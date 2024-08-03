@@ -33,7 +33,7 @@ internal class PredefinedHiltComponentMapper {
             BindType.Component.VIEW_WITH_FRAGMENT -> PredefinedHiltComponent.VIEW_WITH_FRAGMENT
 
             else -> throw IllegalArgumentException(
-                "Cannot map the component ${component::class.qualifiedName} to a Hilt's predefined one."
+                "Cannot map the component ${component::class.qualifiedName} to a Hilt's predefined one.",
             )
         }
     }
