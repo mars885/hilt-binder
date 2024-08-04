@@ -73,7 +73,7 @@ object versions {
     const val gradleVersionsPlugin = "0.51.0"
     const val dokkaPlugin = "1.9.20"
     const val shadowPlugin = "8.0.0"
-    const val ksp = "1.9.25-1.0.20"
+    const val ksp = "2.0.0-1.0.24"
     const val dagger = "2.51.1"
     const val appCompat = "1.7.0"
     const val navigation = "2.7.7"
