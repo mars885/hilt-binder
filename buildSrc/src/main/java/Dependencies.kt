@@ -67,7 +67,7 @@ object publishingConfig {
 object versions {
 
     const val kotlin = "2.0.0" // also in buildSrc build.gradle.kts file
-    const val gradlePlugin = "8.1.0" // also in buildSrc build.gradle.kts file
+    const val androidPlugin = "8.3.1" // also in buildSrc build.gradle.kts file
     const val detektPlugin = "1.23.6"
     const val ktlintPlugin = "12.1.1"
     const val gradleVersionsPlugin = "0.51.0"
@@ -97,7 +97,7 @@ object deps {
     object plugins {
 
         const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
-        const val android = "com.android.tools.build:gradle:${versions.gradlePlugin}"
+        const val android = "com.android.tools.build:gradle:${versions.androidPlugin}"
         const val ksp = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:${versions.ksp}"
         const val daggerHilt = "com.google.dagger:hilt-android-gradle-plugin:${versions.dagger}"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersionsPlugin}"
