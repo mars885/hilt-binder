@@ -47,7 +47,7 @@ buildscript {
 detekt {
     parallel = true
     buildUponDefaultConfig = true
-    config = files("config/detekt/detekt.yml")
+    config.setFrom("config/detekt/detekt.yml")
 }
 
 tasks.withType<Detekt>().configureEach {
@@ -102,10 +102,4 @@ allprojects {
 
 val clean by tasks.registering(Delete::class) {
     delete(buildDir)
-}
-
-fun isUnstable(version: String): Boolean {
-    return listOf("alpha", "beta", "rc").any { keyword ->
-        version.lowercase().contains(keyword)
-    }
 }
