@@ -2122,7 +2122,7 @@ internal class HiltBinderTest {
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   fun bind_Test(
-                      binding: Test): Testable<Testable1<Int, Float, String>, Testable2<Int, Float, String>, Testable3<*, *, *>>
+                      binding: Test): Testable<Testable1<in Int, in Float, in String>, Testable2<out Int, out Float, out String>, Testable3<*, *, *>>
                 }
                 """.trimIndent()
         }
@@ -3101,7 +3101,7 @@ internal class HiltBinderTest {
                 @InstallIn(SingletonComponent::class)
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
-                  @Named("test")
+                  @Named(`value` = "test")
                   fun bind_Test(binding: Test): Testable
                 }
                 """.trimIndent()
@@ -3212,7 +3212,7 @@ internal class HiltBinderTest {
                 @InstallIn(SingletonComponent::class)
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
-                  @CustomQualifier(CustomQualifier.Type.ONE)
+                  @CustomQualifier(type = CustomQualifier.Type.ONE)
                   fun bind_Test(binding: Test): Testable
                 }
                 """.trimIndent()
@@ -4069,17 +4069,17 @@ internal class HiltBinderTest {
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoSet
-                  @Named("one")
+                  @Named(`value` = "one")
                   fun bind_Test1(binding: Test1): Testable
 
                   @Binds
                   @IntoSet
-                  @Named("two")
+                  @Named(`value` = "two")
                   fun bind_Test2(binding: Test2): Testable
 
                   @Binds
                   @IntoSet
-                  @Named("three")
+                  @Named(`value` = "three")
                   fun bind_Test3(binding: Test3): Testable
                 }
                 """.trimIndent()
@@ -4252,17 +4252,17 @@ internal class HiltBinderTest {
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
-                  @MapIntKey(1)
+                  @MapIntKey(`value` = 1)
                   fun bind_Test1(binding: Test1): Testable
 
                   @Binds
                   @IntoMap
-                  @MapIntKey(2)
+                  @MapIntKey(`value` = 2)
                   fun bind_Test2(binding: Test2): Testable
 
                   @Binds
                   @IntoMap
-                  @MapIntKey(3)
+                  @MapIntKey(`value` = 3)
                   fun bind_Test3(binding: Test3): Testable
                 }
                 """.trimIndent()
@@ -4400,17 +4400,17 @@ internal class HiltBinderTest {
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
-                  @MapLongKey(1)
+                  @MapLongKey(`value` = 1)
                   fun bind_Test1(binding: Test1): Testable
 
                   @Binds
                   @IntoMap
-                  @MapLongKey(2)
+                  @MapLongKey(`value` = 2)
                   fun bind_Test2(binding: Test2): Testable
 
                   @Binds
                   @IntoMap
-                  @MapLongKey(3)
+                  @MapLongKey(`value` = 3)
                   fun bind_Test3(binding: Test3): Testable
                 }
                 """.trimIndent()
@@ -4548,17 +4548,17 @@ internal class HiltBinderTest {
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
-                  @MapStringKey("one")
+                  @MapStringKey(`value` = "one")
                   fun bind_Test1(binding: Test1): Testable
 
                   @Binds
                   @IntoMap
-                  @MapStringKey("two")
+                  @MapStringKey(`value` = "two")
                   fun bind_Test2(binding: Test2): Testable
 
                   @Binds
                   @IntoMap
-                  @MapStringKey("three")
+                  @MapStringKey(`value` = "three")
                   fun bind_Test3(binding: Test3): Testable
                 }
                 """.trimIndent()
@@ -4696,17 +4696,17 @@ internal class HiltBinderTest {
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
-                  @MapClassKey(Test1::class)
+                  @MapClassKey(`value` = Test1::class)
                   fun bind_Test1(binding: Test1): Testable
 
                   @Binds
                   @IntoMap
-                  @MapClassKey(Test2::class)
+                  @MapClassKey(`value` = Test2::class)
                   fun bind_Test2(binding: Test2): Testable
 
                   @Binds
                   @IntoMap
-                  @MapClassKey(Test3::class)
+                  @MapClassKey(`value` = Test3::class)
                   fun bind_Test3(binding: Test3): Testable
                 }
                 """.trimIndent()
@@ -4850,17 +4850,17 @@ internal class HiltBinderTest {
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
-                  @MapClassKey(Test1::class)
+                  @MapClassKey(`value` = Test1::class)
                   fun bind_Test1(binding: Test1): Testable<*, *>
 
                   @Binds
                   @IntoMap
-                  @MapClassKey(Test2::class)
+                  @MapClassKey(`value` = Test2::class)
                   fun bind_Test2(binding: Test2): Testable<*, *>
 
                   @Binds
                   @IntoMap
-                  @MapClassKey(Test3::class)
+                  @MapClassKey(`value` = Test3::class)
                   fun bind_Test3(binding: Test3): Testable<*, *>
                 }
                 """.trimIndent()
@@ -5030,17 +5030,17 @@ internal class HiltBinderTest {
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
-                  @TestMapKey(TestMapKey.Type.ONE)
+                  @TestMapKey(`value` = TestMapKey.Type.ONE)
                   fun bind_Test1(binding: Test1): Testable
 
                   @Binds
                   @IntoMap
-                  @TestMapKey(TestMapKey.Type.TWO)
+                  @TestMapKey(`value` = TestMapKey.Type.TWO)
                   fun bind_Test2(binding: Test2): Testable
 
                   @Binds
                   @IntoMap
-                  @TestMapKey(TestMapKey.Type.THREE)
+                  @TestMapKey(`value` = TestMapKey.Type.THREE)
                   fun bind_Test3(binding: Test3): Testable
                 }
                 """.trimIndent()
@@ -5216,17 +5216,17 @@ internal class HiltBinderTest {
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
-                  @TestMapKey(TestMapKey.Type.ONE)
+                  @TestMapKey(`value` = TestMapKey.Type.ONE)
                   fun bind_Test1(binding: Test1): Testable<*, *, *>
 
                   @Binds
                   @IntoMap
-                  @TestMapKey(TestMapKey.Type.TWO)
+                  @TestMapKey(`value` = TestMapKey.Type.TWO)
                   fun bind_Test2(binding: Test2): Testable<*, *, *>
 
                   @Binds
                   @IntoMap
-                  @TestMapKey(TestMapKey.Type.THREE)
+                  @TestMapKey(`value` = TestMapKey.Type.THREE)
                   fun bind_Test3(binding: Test3): Testable<*, *, *>
                 }
                 """.trimIndent()
@@ -5405,20 +5405,20 @@ internal class HiltBinderTest {
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
                   @IntoMap
-                  @MapClassKey(Test1::class)
-                  @Named("one")
+                  @MapClassKey(`value` = Test1::class)
+                  @Named(`value` = "one")
                   fun bind_Test1(binding: Test1): Testable
 
                   @Binds
                   @IntoMap
-                  @MapClassKey(Test2::class)
-                  @Named("two")
+                  @MapClassKey(`value` = Test2::class)
+                  @Named(`value` = "two")
                   fun bind_Test2(binding: Test2): Testable
 
                   @Binds
                   @IntoMap
-                  @MapClassKey(Test3::class)
-                  @Named("three")
+                  @MapClassKey(`value` = Test3::class)
+                  @Named(`value` = "three")
                   fun bind_Test3(binding: Test3): Testable
                 }
                 """.trimIndent()
@@ -5522,7 +5522,7 @@ internal class HiltBinderTest {
                 @InstallIn(SingletonComponent::class)
                 internal interface HiltBinder_SingletonComponentModule {
                   @Binds
-                  @Named("test")
+                  @Named(`value` = "test")
                   fun bind_com_paulrybitskyi_hiltbinder_test_Test(binding: Test): Testable
                 }
                 """.trimIndent()

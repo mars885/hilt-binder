@@ -133,6 +133,7 @@ object deps {
     const val apacheCommons = "org.apache.commons:commons-lang3:${versions.apacheCommons}"
     const val javaPoet = "com.squareup:javapoet:${versions.javaPoet}"
     const val kotlinPoet = "com.squareup:kotlinpoet:${versions.kotlinPoet}"
+    const val kotlinPoetKsp = "com.squareup:kotlinpoet-ksp:${versions.kotlinPoet}"
     const val incap = "net.ltgt.gradle.incap:incap:${versions.incap}"
     const val incapCompiler = "net.ltgt.gradle.incap:incap-processor:${versions.incap}"
     const val autoService = "com.google.auto.service:auto-service:${versions.autoService}"
