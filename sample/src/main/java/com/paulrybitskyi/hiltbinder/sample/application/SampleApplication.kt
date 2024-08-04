@@ -17,11 +17,18 @@
 package com.paulrybitskyi.hiltbinder.sample.application
 
 import android.app.Application
+import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltAndroidApp
 internal class SampleApplication : Application() {
+
+    // TODO Delete when https://github.com/google/dagger/issues/3601 is resolved.
+    @Inject
+    @ApplicationContext
+    lateinit var context: Context
 
     @Inject lateinit var javacJavaSingletonDeps: JavacJavaSingletonDeps
     @Inject lateinit var kaptJavaSingletonDeps: KaptJavaSingletonDeps
