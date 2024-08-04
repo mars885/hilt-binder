@@ -32,7 +32,9 @@ import com.tschuchort.compiletesting.KotlinCompilation.ExitCode
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.SourceFile.Companion.java
 import com.tschuchort.compiletesting.SourceFile.Companion.kotlin
+import com.tschuchort.compiletesting.configureKsp
 import com.tschuchort.compiletesting.kspSourcesDir
+import com.tschuchort.compiletesting.kspWithCompilation
 import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.Test
@@ -5746,10 +5748,13 @@ internal class HiltBinderTest {
             sources = sourceFiles
             verbose = false
             inheritClassPath = true
+            languageVersion = "1.9"
 
             when (processorType) {
                 ProcessorType.JAVAC -> annotationProcessors = listOf(HiltBinderJavacProcessor())
-                ProcessorType.KSP -> symbolProcessorProviders = listOf(HiltBinderKspProcessor.Provider())
+                ProcessorType.KSP -> configureKsp {
+                    symbolProcessorProviders.add(HiltBinderKspProcessor.Provider())
+                }
             }
         }
 

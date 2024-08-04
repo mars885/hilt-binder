@@ -88,7 +88,7 @@ object versions {
     const val ktlint = "1.3.1"
     const val jUnit = "4.13.2"
     const val truth = "1.4.4"
-    const val ktCompileTesting = "1.6.0"
+    const val ktCompileTesting = "0.5.1"
     const val testParamInjector = "1.16"
 }
 
@@ -140,6 +140,6 @@ object deps {
     const val kspApi = "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}"
     const val jUnit = "junit:junit:${versions.jUnit}"
     const val truth = "com.google.truth:truth:${versions.truth}"
-    const val kspCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.ktCompileTesting}"
+    const val kspCompileTesting = "dev.zacsweers.kctfork:ksp:${versions.ktCompileTesting}"
     const val testParamInjector = "com.google.testparameterinjector:test-parameter-injector:${versions.testParamInjector}"
 }
