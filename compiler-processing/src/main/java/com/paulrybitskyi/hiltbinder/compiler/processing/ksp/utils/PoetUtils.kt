@@ -129,22 +129,22 @@ private fun KSType.toCodeBlock(argName: String): CodeBlock {
 }
 
 private fun ArrayList<*>.toCodeBlock(argName: String): CodeBlock {
-    val members = mutableListOf<String>()
-
-    for (member in this) {
-        val codeBlock = member.toCodeBlock()
-            .toString()
-            .let { codeStr ->
-                if (member is KSAnnotation) {
-                    // Annotations wrapped in arrays/lists should
-                    // not start with @ symbol
-                    codeStr.trimStart(ANNOTATION_INDICATOR_SYMBOL)
-                } else {
-                    codeStr
+    val members = buildList {
+        for (member in this@toCodeBlock) {
+            val codeBlock = member.toCodeBlock()
+                .toString()
+                .let { codeStr ->
+                    if (member is KSAnnotation) {
+                        // Annotations wrapped in arrays/lists should
+                        // not start with @ symbol
+                        codeStr.trimStart(ANNOTATION_INDICATOR_SYMBOL)
+                    } else {
+                        codeStr
+                    }
                 }
-            }
 
-        members.add(codeBlock)
+            add(codeBlock)
+        }
     }
 
     return CodeBlock.create(argName, "%L", members)
