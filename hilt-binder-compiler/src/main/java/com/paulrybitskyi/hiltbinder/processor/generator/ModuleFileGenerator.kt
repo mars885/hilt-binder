@@ -43,25 +43,25 @@ internal class ModuleFileGenerator(
     }
 
     private fun ModuleSchema.getOriginatingElements(): List<XOriginatingElement> {
-        val elements = mutableListOf<XOriginatingElement?>()
+        val elements = buildList {
+            add(componentType.originatingElement)
 
-        elements.add(componentType.originatingElement)
+            for (binding in bindings) {
+                if (binding.component is HiltComponent.Custom) {
+                    add(binding.component.element.originatingElement)
+                }
 
-        for (binding in bindings) {
-            if (binding.component is HiltComponent.Custom) {
-                elements.add(binding.component.element.originatingElement)
+                if (binding.contributionType is ContributionType.Map) {
+                    add(binding.contributionType.mapKeyAnnotation.type.element.originatingElement)
+                }
+
+                if (binding.qualifierAnnotation != null) {
+                    add(binding.qualifierAnnotation.type.element.originatingElement)
+                }
+
+                add(binding.paramType.originatingElement)
+                add(binding.returnType.type.element.originatingElement)
             }
-
-            if (binding.contributionType is ContributionType.Map) {
-                elements.add(binding.contributionType.mapKeyAnnotation.type.element.originatingElement)
-            }
-
-            if (binding.qualifierAnnotation != null) {
-                elements.add(binding.qualifierAnnotation.type.element.originatingElement)
-            }
-
-            elements.add(binding.paramType.originatingElement)
-            elements.add(binding.returnType.type.element.originatingElement)
         }
 
         return elements.filterNotNull()
