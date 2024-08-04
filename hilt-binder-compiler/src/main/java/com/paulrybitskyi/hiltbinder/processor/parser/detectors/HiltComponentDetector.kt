@@ -54,7 +54,7 @@ internal class HiltComponentDetector(
             return HiltComponent.Predefined(PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
         }
 
-        return PredefinedHiltComponent.values()
+        return PredefinedHiltComponent.entries
             .firstOrNull {
                 val scopeAnnotationType = processingEnv.getTypeUnsafely(it.scopeQualifiedName)
                 val hasScopeAnnotation = annotatedElement.hasAnnotation(scopeAnnotationType)
