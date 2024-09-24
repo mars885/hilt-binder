@@ -76,7 +76,7 @@ object versions {
     const val ksp = "2.0.20-1.0.25"
     const val dagger = "2.52"
     const val appCompat = "1.7.0"
-    const val navigation = "2.7.7"
+    const val navigation = "2.8.1"
     const val fragmentKtx = "1.8.3"
     const val constraintLayout = "2.1.4"
     const val materialComponents = "1.12.0"
