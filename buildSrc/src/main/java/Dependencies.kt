@@ -77,7 +77,7 @@ object versions {
     const val dagger = "2.52"
     const val appCompat = "1.7.0"
     const val navigation = "2.7.7"
-    const val fragmentKtx = "1.8.2"
+    const val fragmentKtx = "1.8.3"
     const val constraintLayout = "2.1.4"
     const val materialComponents = "1.12.0"
     const val apacheCommons = "3.15.0"
