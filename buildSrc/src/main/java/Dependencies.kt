@@ -29,8 +29,8 @@ object appConfig {
 
     const val exportableLibJavaCompatVersion = 8
 
-    val androidModuleJavaCompatVersion = JavaVersion.VERSION_17
-    val androidModuleKotlinCompatVersion = JavaVersion.VERSION_17
+    val androidModuleJavaCompatVersion = JavaVersion.VERSION_1_8
+    val androidModuleKotlinCompatVersion = JavaVersion.VERSION_1_8
 }
 
 object publishingConfig {
@@ -66,14 +66,14 @@ object publishingConfig {
 
 object versions {
 
-    const val kotlin = "1.9.25" // also in buildSrc build.gradle.kts file
-    const val gradlePlugin = "8.1.0" // also in buildSrc build.gradle.kts file
+    const val kotlin = "2.0.0" // also in buildSrc build.gradle.kts file
+    const val androidPlugin = "8.3.1" // also in buildSrc build.gradle.kts file
     const val detektPlugin = "1.23.6"
     const val ktlintPlugin = "12.1.1"
     const val gradleVersionsPlugin = "0.51.0"
     const val dokkaPlugin = "1.9.20"
     const val shadowPlugin = "8.0.0"
-    const val ksp = "1.9.25-1.0.20"
+    const val ksp = "2.0.0-1.0.24"
     const val dagger = "2.51.1"
     const val appCompat = "1.7.0"
     const val navigation = "2.7.7"
@@ -88,7 +88,7 @@ object versions {
     const val ktlint = "1.3.1"
     const val jUnit = "4.13.2"
     const val truth = "1.4.4"
-    const val ktCompileTesting = "1.6.0"
+    const val ktCompileTesting = "0.5.1"
     const val testParamInjector = "1.16"
 }
 
@@ -97,7 +97,7 @@ object deps {
     object plugins {
 
         const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
-        const val android = "com.android.tools.build:gradle:${versions.gradlePlugin}"
+        const val android = "com.android.tools.build:gradle:${versions.androidPlugin}"
         const val ksp = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:${versions.ksp}"
         const val daggerHilt = "com.google.dagger:hilt-android-gradle-plugin:${versions.dagger}"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersionsPlugin}"
@@ -140,6 +140,6 @@ object deps {
     const val kspApi = "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}"
     const val jUnit = "junit:junit:${versions.jUnit}"
     const val truth = "com.google.truth:truth:${versions.truth}"
-    const val kspCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.ktCompileTesting}"
+    const val kspCompileTesting = "dev.zacsweers.kctfork:ksp:${versions.ktCompileTesting}"
     const val testParamInjector = "com.google.testparameterinjector:test-parameter-injector:${versions.testParamInjector}"
 }

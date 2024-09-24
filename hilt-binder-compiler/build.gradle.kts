@@ -69,6 +69,31 @@ configurations {
     }
 }
 
+// https://github.com/ZacSweers/kotlin-compile-testing?tab=readme-ov-file#java-16-compatibility
+if (JavaVersion.current() >= JavaVersion.VERSION_16) {
+    tasks.withType<Test>().configureEach {
+        // Kotlin Compile Testing lib does not run the Javac tests with the JDK 1.8 as of the
+        // 0.5.1 version. This is a workaround to run the tests using the JDK 17.
+        // See https://github.com/ZacSweers/kotlin-compile-testing/issues/277
+        javaLauncher = javaToolchains.launcherFor {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+
+        jvmArgs(
+            "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+        )
+    }
+}
+
 dependencies {
     implementation(project(deps.local.hiltBinder))
     shadowed(project(deps.local.compilerProcessing))
