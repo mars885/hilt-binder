@@ -69,7 +69,7 @@ internal class HiltBinderTest {
         private val MESSAGE_PROVIDER = MessageProvider()
 
         private val PREDEFINED_COMPONENTS = BindType.Component
-            .values()
+            .entries
             .filter { (it != BindType.Component.NONE) && (it != BindType.Component.CUSTOM) }
     }
 
@@ -2329,7 +2329,7 @@ internal class HiltBinderTest {
 
     @Test
     fun `Installs binding in predefined component, which is inferred from scope annotation`() {
-        for (component in PredefinedHiltComponent.values()) {
+        for (component in PredefinedHiltComponent.entries) {
             val isViewWithFragmentComponent = (component == PredefinedHiltComponent.VIEW_WITH_FRAGMENT)
             val withFragmentBindingAnnotation = if (isViewWithFragmentComponent) {
                 "@$WITH_FRAGMENT_BINDINGS_TYPE_QUALIFIED_NAME"
