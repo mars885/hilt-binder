@@ -29,8 +29,8 @@ object appConfig {
 
     const val exportableLibJavaCompatVersion = 8
 
-    val androidModuleJavaCompatVersion = JavaVersion.VERSION_17
-    val androidModuleKotlinCompatVersion = JavaVersion.VERSION_17
+    val androidModuleJavaCompatVersion = JavaVersion.VERSION_1_8
+    val androidModuleKotlinCompatVersion = JavaVersion.VERSION_1_8
 }
 
 object publishingConfig {
