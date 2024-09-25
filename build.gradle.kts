@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import com.android.build.gradle.tasks.JavaPreCompileTask
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
@@ -78,29 +76,6 @@ allprojects {
         }
         .forEach { subproject ->
             subproject.apply(plugin = PLUGIN_DETEKT)
-        }
-
-    project.subprojects
-        .filter { subproject ->
-            subproject.name in listOf(
-                "sample-deps-javac",
-                "sample-deps-kapt",
-                "sample-deps-ksp",
-                "sample",
-            )
-        }
-        .forEach { subproject ->
-            // To fix the following error:
-            // Reason: Task ':*:javaPreCompileDebug' uses this output of task ':hilt-binder-compiler:jar'
-            // without declaring an explicit or implicit dependency. This can lead to incorrect results
-            // being produced, depending on what order the tasks are executed.
-            subproject.tasks.withType<JavaPreCompileTask>().configureEach {
-                dependsOn(":hilt-binder-compiler:jar")
-            }
-            // Same, but for the '*:kspDebugKotlin' tasks
-            subproject.tasks.withType<KspTaskJvm>().configureEach {
-                dependsOn(":hilt-binder-compiler:jar")
-            }
         }
 
     repositories {

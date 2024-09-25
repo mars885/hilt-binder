@@ -66,14 +66,14 @@ object publishingConfig {
 
 object versions {
 
-    const val kotlin = "2.0.20" // also in buildSrc build.gradle.kts file
+    const val kotlin = "2.0.0" // also in buildSrc build.gradle.kts file
     const val androidPlugin = "8.3.1" // also in buildSrc build.gradle.kts file
     const val detektPlugin = "1.23.7"
     const val ktlintPlugin = "12.1.1"
     const val gradleVersionsPlugin = "0.51.0"
     const val dokkaPlugin = "1.9.20"
     const val shadowPlugin = "8.0.0"
-    const val ksp = "2.0.20-1.0.25"
+    const val ksp = "2.0.0-1.0.24"
     const val dagger = "2.52"
     const val appCompat = "1.7.0"
     const val navigation = "2.8.1"
