@@ -68,19 +68,19 @@ object versions {
 
     const val kotlin = "2.0.0" // also in buildSrc build.gradle.kts file
     const val androidPlugin = "8.3.1" // also in buildSrc build.gradle.kts file
-    const val detektPlugin = "1.23.6"
+    const val detektPlugin = "1.23.7"
     const val ktlintPlugin = "12.1.1"
     const val gradleVersionsPlugin = "0.51.0"
     const val dokkaPlugin = "1.9.20"
     const val shadowPlugin = "8.0.0"
     const val ksp = "2.0.0-1.0.24"
-    const val dagger = "2.51.1"
+    const val dagger = "2.52"
     const val appCompat = "1.7.0"
-    const val navigation = "2.7.7"
-    const val fragmentKtx = "1.8.2"
+    const val navigation = "2.8.1"
+    const val fragmentKtx = "1.8.3"
     const val constraintLayout = "2.1.4"
     const val materialComponents = "1.12.0"
-    const val apacheCommons = "3.15.0"
+    const val apacheCommons = "3.17.0"
     const val javaPoet = "1.13.0" // also in buildSrc build.gradle.kts file
     const val kotlinPoet = "1.18.1"
     const val incap = "1.0.0"
@@ -89,7 +89,7 @@ object versions {
     const val jUnit = "4.13.2"
     const val truth = "1.4.4"
     const val ktCompileTesting = "0.5.1"
-    const val testParamInjector = "1.16"
+    const val testParamInjector = "1.17"
 }
 
 object deps {
