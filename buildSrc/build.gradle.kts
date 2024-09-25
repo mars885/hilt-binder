@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.android.tools.build:gradle:8.5.2")
+    implementation("com.android.tools.build:gradle:8.3.1")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20")
     // See https://github.com/google/dagger/issues/3068#issuecomment-999118496
     // for why it should be here.
