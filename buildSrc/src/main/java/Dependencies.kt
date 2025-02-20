@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Paul Rybitskyi, paul.rybitskyi.work@gmail.com
+ * Copyright 2021 Paul Rybitskyi, oss@paulrybitskyi.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ object publishingConfig {
     const val licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt"
     const val developerId = "mars885"
     const val developerName = "Paul Rybitskyi"
-    const val developerEmail = "paul.rybitskyi.work@gmail.com"
+    const val developerEmail = "oss@paulrybitskyi.com"
     const val siteUrl = "https://github.com/mars885/hilt-binder"
     const val gitUrl = "https://github.com/mars885/hilt-binder.git"
 
