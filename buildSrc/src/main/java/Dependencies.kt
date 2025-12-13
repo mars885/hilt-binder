@@ -71,7 +71,7 @@ object versions {
     const val detektPlugin = "1.23.7"
     const val ktlintPlugin = "12.1.1"
     const val gradleVersionsPlugin = "0.53.0"
-    const val dokkaPlugin = "1.9.20"
+    const val dokkaPlugin = "2.1.0"
     const val shadowPlugin = "9.3.0"
     const val ksp = "2.3.3"
     const val dagger = "2.57.2"
