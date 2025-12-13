@@ -74,7 +74,7 @@ object versions {
     const val dokkaPlugin = "1.9.20"
     const val shadowPlugin = "9.3.0"
     const val ksp = "2.3.3"
-    const val dagger = "2.52"
+    const val dagger = "2.57.2"
     const val appCompat = "1.7.0"
     const val navigation = "2.8.1"
     const val fragmentKtx = "1.8.3"
