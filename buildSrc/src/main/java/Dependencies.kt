@@ -85,7 +85,7 @@ object versions {
     const val kotlinPoet = "2.2.0"
     const val incap = "1.0.0"
     const val autoService = "1.1.1"
-    const val ktlint = "1.3.1"
+    const val ktlint = "1.8.0"
     const val jUnit = "4.13.2"
     const val truth = "1.4.5"
     const val ktCompileTesting = "0.11.0"
