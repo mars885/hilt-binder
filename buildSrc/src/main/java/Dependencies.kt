@@ -70,7 +70,7 @@ object versions {
     const val androidPlugin = "8.13.2" // also in buildSrc build.gradle.kts file
     const val detektPlugin = "1.23.7"
     const val ktlintPlugin = "12.1.1"
-    const val gradleVersionsPlugin = "0.51.0"
+    const val gradleVersionsPlugin = "0.53.0"
     const val dokkaPlugin = "1.9.20"
     const val shadowPlugin = "9.3.0"
     const val ksp = "2.3.3"
