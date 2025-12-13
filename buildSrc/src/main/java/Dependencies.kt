@@ -72,7 +72,7 @@ object versions {
     const val ktlintPlugin = "12.1.1"
     const val gradleVersionsPlugin = "0.51.0"
     const val dokkaPlugin = "1.9.20"
-    const val shadowPlugin = "8.0.0"
+    const val shadowPlugin = "9.3.0"
     const val ksp = "2.0.0-1.0.24"
     const val dagger = "2.52"
     const val appCompat = "1.7.0"
@@ -102,7 +102,7 @@ object deps {
         const val daggerHilt = "com.google.dagger:hilt-android-gradle-plugin:${versions.dagger}"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersionsPlugin}"
         const val dokka = "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokkaPlugin}"
-        const val shadow = "gradle.plugin.com.github.johnrengelman:shadow:${versions.shadowPlugin}"
+        const val shadow = "com.gradleup.shadow:shadow-gradle-plugin:${versions.shadowPlugin}"
 
     }
 
