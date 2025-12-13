@@ -16,6 +16,7 @@
 
 package com.paulrybitskyi.hiltbinder.compiler.processing.ksp
 
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.paulrybitskyi.hiltbinder.common.utils.safeCast
 import com.paulrybitskyi.hiltbinder.common.utils.unsafeCast
@@ -37,10 +38,11 @@ internal class KspAnnotationValue(
         return try {
             when (value) {
                 is Enum<*> -> value.unsafeCast()
+                is KSClassDeclaration -> valueOf(value.simpleName.asString())
                 is KSType -> valueOf(value.simpleName)
                 else -> default
             }
-        } catch (ignore: Throwable) {
+        } catch (_: Throwable) {
             default
         }
     }
