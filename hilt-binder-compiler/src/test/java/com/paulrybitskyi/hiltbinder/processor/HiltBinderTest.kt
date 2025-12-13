@@ -3135,7 +3135,7 @@ internal class HiltBinderTest {
                     @Retention(RetentionPolicy.RUNTIME)
                     public @interface CustomQualifier {
 
-                      Type type();
+                      Type value();
 
                       enum Type { ONE }
 
@@ -3147,7 +3147,7 @@ internal class HiltBinderTest {
                     """
                     import com.paulrybitskyi.hiltbinder.BindType;
 
-                    @CustomQualifier(type = CustomQualifier.Type.ONE)
+                    @CustomQualifier(CustomQualifier.Type.ONE)
                     @BindType(withQualifier = true)
                     public class Test implements Testable {}
                     """.trimIndent(),
@@ -3162,7 +3162,7 @@ internal class HiltBinderTest {
 
                     @Qualifier
                     @Retention(AnnotationRetention.RUNTIME)
-                    annotation class CustomQualifier(val type: Type) {
+                    annotation class CustomQualifier(val value: Type) {
 
                       enum class Type { ONE }
 
@@ -3194,9 +3194,7 @@ internal class HiltBinderTest {
                 @InstallIn(SingletonComponent.class)
                 public interface HiltBinder_SingletonComponentModule {
                   @Binds
-                  @CustomQualifier(
-                      type = CustomQualifier.Type.ONE
-                  )
+                  @CustomQualifier(CustomQualifier.Type.ONE)
                   Testable bind_Test(Test binding);
                 }
                 """.trimIndent()
