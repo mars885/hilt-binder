@@ -82,7 +82,7 @@ object versions {
     const val materialComponents = "1.12.0"
     const val apacheCommons = "3.17.0"
     const val javaPoet = "1.13.0" // also in buildSrc build.gradle.kts file
-    const val kotlinPoet = "1.18.1"
+    const val kotlinPoet = "2.2.0"
     const val incap = "1.0.0"
     const val autoService = "1.1.1"
     const val ktlint = "1.3.1"
