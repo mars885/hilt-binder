@@ -88,7 +88,7 @@ object versions {
     const val ktlint = "1.3.1"
     const val jUnit = "4.13.2"
     const val truth = "1.4.4"
-    const val ktCompileTesting = "0.5.1"
+    const val ktCompileTesting = "0.11.0"
     const val testParamInjector = "1.17"
 }
 

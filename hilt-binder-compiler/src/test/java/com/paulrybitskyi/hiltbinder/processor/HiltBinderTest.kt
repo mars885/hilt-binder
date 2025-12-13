@@ -5746,7 +5746,6 @@ internal class HiltBinderTest {
             sources = sourceFiles
             verbose = false
             inheritClassPath = true
-            languageVersion = "1.9"
 
             when (processorType) {
                 ProcessorType.JAVAC -> annotationProcessors = listOf(HiltBinderJavacProcessor())
