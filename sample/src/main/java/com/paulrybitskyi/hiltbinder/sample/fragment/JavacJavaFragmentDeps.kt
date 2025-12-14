@@ -38,7 +38,7 @@ internal class JavacJavaFragmentDeps @Inject constructor(
     private val javacJavaFragmentDep5: JavacJavaFragmentDep5,
     private val javacJavaFragmentDeps6: Set<@JvmSuppressWildcards JavacJavaFragmentDep6>,
     private val javacJavaFragmentDeps7: Map<Long, @JvmSuppressWildcards JavacJavaFragmentDep7>,
-    @Named("dep8") private val javacJavaFragmentDep8: JavacJavaFragmentDep8,
+    @param:Named("dep8") private val javacJavaFragmentDep8: JavacJavaFragmentDep8,
     private val javacJavaFragmentDep9: JavacJavaFragmentDep9<Float>,
     private val javacJavaFragmentDep10: JavacJavaFragmentDep10<Float>,
     private val javacJavaFragmentDeps11: Set<@JvmSuppressWildcards JavacJavaFragmentDep11<*>>,

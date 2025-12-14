@@ -38,7 +38,7 @@ internal class KaptKotlinFragmentDeps @Inject constructor(
     private val kaptKotlinFragmentDep5: KaptKotlinFragmentDep5,
     private val kaptKotlinFragmentDeps6: Set<@JvmSuppressWildcards KaptKotlinFragmentDep6>,
     private val kaptKotlinFragmentDeps7: Map<Long, @JvmSuppressWildcards KaptKotlinFragmentDep7>,
-    @Named("dep8") private val kaptKotlinFragmentDep8: KaptKotlinFragmentDep8,
+    @param:Named("dep8") private val kaptKotlinFragmentDep8: KaptKotlinFragmentDep8,
     private val kaptKotlinFragmentDep9: KaptKotlinFragmentDep9<Float>,
     private val kaptKotlinFragmentDep10: KaptKotlinFragmentDep10<Float>,
     private val kaptKotlinFragmentDeps11: Set<@JvmSuppressWildcards KaptKotlinFragmentDep11<*>>,

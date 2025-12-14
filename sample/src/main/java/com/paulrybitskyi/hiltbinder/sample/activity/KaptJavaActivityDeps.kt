@@ -38,7 +38,7 @@ internal class KaptJavaActivityDeps @Inject constructor(
     private val kaptJavaActivityDep5: KaptJavaActivityDep5,
     private val kaptJavaActivityDeps6: Set<@JvmSuppressWildcards KaptJavaActivityDep6>,
     private val kaptJavaActivityDeps7: Map<String, @JvmSuppressWildcards KaptJavaActivityDep7>,
-    @Named("dep8") private val kaptJavaActivityDep8: KaptJavaActivityDep8,
+    @param:Named("dep8") private val kaptJavaActivityDep8: KaptJavaActivityDep8,
     private val kaptJavaActivityDep9: KaptJavaActivityDep9<Float>,
     private val kaptJavaActivityDep10: KaptJavaActivityDep10<Float>,
     private val kaptJavaActivityDeps11: Set<@JvmSuppressWildcards KaptJavaActivityDep11<*>>,

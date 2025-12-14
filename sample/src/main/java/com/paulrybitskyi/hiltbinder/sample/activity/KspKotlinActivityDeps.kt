@@ -38,7 +38,7 @@ internal class KspKotlinActivityDeps @Inject constructor(
     private val kspKotlinActivityDep5: KspKotlinActivityDep5,
     private val kspKotlinActivityDeps6: Set<@JvmSuppressWildcards KspKotlinActivityDep6>,
     private val kspKotlinActivityDeps7: Map<String, @JvmSuppressWildcards KspKotlinActivityDep7>,
-    @Named("dep8") private val kspKotlinActivityDep8: KspKotlinActivityDep8,
+    @param:Named("dep8") private val kspKotlinActivityDep8: KspKotlinActivityDep8,
     private val kspKotlinActivityDep9: KspKotlinActivityDep9<Float>,
     private val kspKotlinActivityDep10: KspKotlinActivityDep10<Float>,
     private val kspKotlinActivityDeps11: Set<@JvmSuppressWildcards KspKotlinActivityDep11<*>>,

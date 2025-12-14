@@ -42,7 +42,7 @@ internal class KspJavaSingletonDeps @Inject constructor(
     private val kspJavaSingletonDep7: KspJavaSingletonDep7,
     private val kspJavaSingletonDeps8: Set<@JvmSuppressWildcards KspJavaSingletonDep8>,
     private val kspJavaSingletonDeps9: Map<Class<*>, @JvmSuppressWildcards KspJavaSingletonDep9>,
-    @Named("dep10") private val kspJavaSingletonDep10: KspJavaSingletonDep10,
+    @param:Named("dep10") private val kspJavaSingletonDep10: KspJavaSingletonDep10,
     private val kspJavaSingletonDep11: KspJavaSingletonDep11<Int>,
     private val kspJavaSingletonDep12: KspJavaSingletonDep12<Int>,
     private val kspJavaSingletonDeps13: Set<@JvmSuppressWildcards KspJavaSingletonDep13<*>>,

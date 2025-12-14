@@ -42,7 +42,7 @@ internal class KaptJavaSingletonDeps @Inject constructor(
     private val kaptJavaSingletonDep7: KaptJavaSingletonDep7,
     private val kaptJavaSingletonDeps8: Set<@JvmSuppressWildcards KaptJavaSingletonDep8>,
     private val kaptJavaSingletonDeps9: Map<Class<*>, @JvmSuppressWildcards KaptJavaSingletonDep9>,
-    @Named("dep10") private val kaptJavaSingletonDep10: KaptJavaSingletonDep10,
+    @param:Named("dep10") private val kaptJavaSingletonDep10: KaptJavaSingletonDep10,
     private val kaptJavaSingletonDep11: KaptJavaSingletonDep11<Int>,
     private val kaptJavaSingletonDep12: KaptJavaSingletonDep12<Int>,
     private val kaptJavaSingletonDeps13: Set<@JvmSuppressWildcards KaptJavaSingletonDep13<*>>,

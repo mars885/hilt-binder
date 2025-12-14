@@ -38,7 +38,7 @@ internal class KspKotlinViewDeps @Inject constructor(
     private val kspKotlinViewDep5: KspKotlinViewDep5,
     private val kspKotlinViewDeps6: Set<@JvmSuppressWildcards KspKotlinViewDep6>,
     private val kspKotlinViewDeps7: Map<Long, @JvmSuppressWildcards KspKotlinViewDep7>,
-    @Named("dep8") private val kspKotlinViewDep8: KspKotlinViewDep8,
+    @param:Named("dep8") private val kspKotlinViewDep8: KspKotlinViewDep8,
     private val kspKotlinViewDep9: KspKotlinViewDep9<Double>,
     private val kspKotlinViewDep10: KspKotlinViewDep10<Double>,
     private val kspKotlinViewDeps11: Set<@JvmSuppressWildcards KspKotlinViewDep11<*>>,

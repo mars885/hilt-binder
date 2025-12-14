@@ -38,7 +38,7 @@ internal class KaptKotlinViewModelDeps @Inject constructor(
     private val kaptKotlinViewModelDep5: KaptKotlinViewModelDep5,
     private val kaptKotlinViewModelDeps6: Set<@JvmSuppressWildcards KaptKotlinViewModelDep6>,
     private val kaptKotlinViewModelDeps7: Map<Int, @JvmSuppressWildcards KaptKotlinViewModelDep7>,
-    @Named("dep8") private val kaptKotlinViewModelDep8: KaptKotlinViewModelDep8,
+    @param:Named("dep8") private val kaptKotlinViewModelDep8: KaptKotlinViewModelDep8,
     private val kaptKotlinViewModelDep9: KaptKotlinViewModelDep9<Float>,
     private val kaptKotlinViewModelDep10: KaptKotlinViewModelDep10<Float>,
     private val kaptKotlinViewModelDeps11: Set<@JvmSuppressWildcards KaptKotlinViewModelDep11<*>>,

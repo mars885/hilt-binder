@@ -42,7 +42,7 @@ internal class KaptKotlinSingletonDeps @Inject constructor(
     private val kaptKotlinSingletonDep7: KaptKotlinSingletonDep7,
     private val kaptKotlinSingletonDeps8: Set<@JvmSuppressWildcards KaptKotlinSingletonDep8>,
     private val kaptKotlinSingletonDeps9: Map<Class<*>, @JvmSuppressWildcards KaptKotlinSingletonDep9>,
-    @Named("dep10") private val kaptKotlinSingletonDep10: KaptKotlinSingletonDep10,
+    @param:Named("dep10") private val kaptKotlinSingletonDep10: KaptKotlinSingletonDep10,
     private val kaptKotlinSingletonDep11: KaptKotlinSingletonDep11<Int>,
     private val kaptKotlinSingletonDep12: KaptKotlinSingletonDep12<Int>,
     private val kaptKotlinSingletonDeps13: Set<@JvmSuppressWildcards KaptKotlinSingletonDep13<*>>,
