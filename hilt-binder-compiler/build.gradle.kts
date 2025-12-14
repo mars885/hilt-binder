@@ -15,6 +15,7 @@
  */
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin()
@@ -22,8 +23,18 @@ plugins {
     shadow()
 }
 
+java {
+    val version = JavaVersion.toVersion(appConfig.jvmBytecodeVersion)
+
+    sourceCompatibility = version
+    targetCompatibility = version
+}
+
 kotlin {
-    jvmToolchain(appConfig.exportableLibJavaCompatVersion)
+    jvmToolchain(appConfig.jvmToolchainVersion)
+    compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(appConfig.jvmBytecodeVersion))
+    }
 }
 
 // Custom configuration used for dependencies that are copied
