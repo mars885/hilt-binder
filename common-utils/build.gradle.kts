@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     kotlin()
 }
 
+java {
+    val version = JavaVersion.toVersion(appConfig.jvmBytecodeVersion)
+
+    sourceCompatibility = version
+    targetCompatibility = version
+}
+
 kotlin {
-    jvmToolchain(appConfig.exportableLibJavaCompatVersion)
+    jvmToolchain(appConfig.jvmToolchainVersion)
+    compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(appConfig.jvmBytecodeVersion))
+    }
 }

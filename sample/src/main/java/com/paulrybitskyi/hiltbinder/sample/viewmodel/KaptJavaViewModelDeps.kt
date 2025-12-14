@@ -38,7 +38,7 @@ internal class KaptJavaViewModelDeps @Inject constructor(
     private val kaptJavaViewModelDep5: KaptJavaViewModelDep5,
     private val kaptJavaViewModelDeps6: Set<@JvmSuppressWildcards KaptJavaViewModelDep6>,
     private val kaptJavaViewModelDeps7: Map<Int, @JvmSuppressWildcards KaptJavaViewModelDep7>,
-    @Named("dep8") private val kaptJavaViewModelDep8: KaptJavaViewModelDep8,
+    @param:Named("dep8") private val kaptJavaViewModelDep8: KaptJavaViewModelDep8,
     private val kaptJavaViewModelDep9: KaptJavaViewModelDep9<Float>,
     private val kaptJavaViewModelDep10: KaptJavaViewModelDep10<Float>,
     private val kaptJavaViewModelDeps11: Set<@JvmSuppressWildcards KaptJavaViewModelDep11<*>>,

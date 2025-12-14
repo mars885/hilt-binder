@@ -38,7 +38,7 @@ internal class KspJavaActivityDeps @Inject constructor(
     private val kspJavaActivityDep5: KspJavaActivityDep5,
     private val kspJavaActivityDeps6: Set<@JvmSuppressWildcards KspJavaActivityDep6>,
     private val kspJavaActivityDeps7: Map<String, @JvmSuppressWildcards KspJavaActivityDep7>,
-    @Named("dep8") private val kspJavaActivityDep8: KspJavaActivityDep8,
+    @param:Named("dep8") private val kspJavaActivityDep8: KspJavaActivityDep8,
     private val kspJavaActivityDep9: KspJavaActivityDep9<Float>,
     private val kspJavaActivityDep10: KspJavaActivityDep10<Float>,
     private val kspJavaActivityDeps11: Set<@JvmSuppressWildcards KspJavaActivityDep11<*>>,

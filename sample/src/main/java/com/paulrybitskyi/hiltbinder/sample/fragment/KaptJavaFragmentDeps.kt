@@ -38,7 +38,7 @@ internal class KaptJavaFragmentDeps @Inject constructor(
     private val kaptJavaFragmentDep5: KaptJavaFragmentDep5,
     private val kaptJavaFragmentDeps6: Set<@JvmSuppressWildcards KaptJavaFragmentDep6>,
     private val kaptJavaFragmentDeps7: Map<Long, @JvmSuppressWildcards KaptJavaFragmentDep7>,
-    @Named("dep8") private val kaptJavaFragmentDep8: KaptJavaFragmentDep8,
+    @param:Named("dep8") private val kaptJavaFragmentDep8: KaptJavaFragmentDep8,
     private val kaptJavaFragmentDep9: KaptJavaFragmentDep9<Float>,
     private val kaptJavaFragmentDep10: KaptJavaFragmentDep10<Float>,
     private val kaptJavaFragmentDeps11: Set<@JvmSuppressWildcards KaptJavaFragmentDep11<*>>,

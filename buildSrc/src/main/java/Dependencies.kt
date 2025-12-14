@@ -16,21 +16,17 @@
 
 @file:Suppress("ClassName")
 
-import org.gradle.api.JavaVersion
-
 object appConfig {
 
-    const val compileSdkVersion = 34
-    const val targetSdkVersion = 34
+    const val compileSdkVersion = 36
+    const val targetSdkVersion = 36
     const val minSdkVersion = 21
     const val applicationId = "com.paulrybitskyi.hiltbinder.sample"
     const val versionCode = 1
     const val versionName = "1.0.0"
 
-    const val exportableLibJavaCompatVersion = 8
-
-    val androidModuleJavaCompatVersion = JavaVersion.VERSION_1_8
-    val androidModuleKotlinCompatVersion = JavaVersion.VERSION_1_8
+    const val jvmToolchainVersion = 17
+    const val jvmBytecodeVersion = "1.8"
 }
 
 object publishingConfig {
@@ -66,30 +62,30 @@ object publishingConfig {
 
 object versions {
 
-    const val kotlin = "2.0.0" // also in buildSrc build.gradle.kts file
-    const val androidPlugin = "8.3.1" // also in buildSrc build.gradle.kts file
-    const val detektPlugin = "1.23.7"
-    const val ktlintPlugin = "12.1.1"
-    const val gradleVersionsPlugin = "0.51.0"
-    const val dokkaPlugin = "1.9.20"
-    const val shadowPlugin = "8.0.0"
-    const val ksp = "2.0.0-1.0.24"
-    const val dagger = "2.52"
-    const val appCompat = "1.7.0"
-    const val navigation = "2.8.1"
-    const val fragmentKtx = "1.8.3"
-    const val constraintLayout = "2.1.4"
-    const val materialComponents = "1.12.0"
-    const val apacheCommons = "3.17.0"
+    const val kotlin = "2.2.21" // also in buildSrc build.gradle.kts file
+    const val androidPlugin = "8.13.2" // also in buildSrc build.gradle.kts file
+    const val detektPlugin = "1.23.8"
+    const val ktlintPlugin = "14.0.1"
+    const val gradleVersionsPlugin = "0.53.0"
+    const val dokkaPlugin = "2.1.0"
+    const val shadowPlugin = "9.3.0"
+    const val ksp = "2.3.3"
+    const val dagger = "2.57.2"
+    const val appCompat = "1.7.1"
+    const val navigation = "2.9.6"
+    const val fragmentKtx = "1.8.9"
+    const val constraintLayout = "2.2.1"
+    const val materialComponents = "1.13.0"
+    const val apacheCommons = "3.20.0"
     const val javaPoet = "1.13.0" // also in buildSrc build.gradle.kts file
-    const val kotlinPoet = "1.18.1"
+    const val kotlinPoet = "2.2.0"
     const val incap = "1.0.0"
     const val autoService = "1.1.1"
-    const val ktlint = "1.3.1"
+    const val ktlint = "1.8.0"
     const val jUnit = "4.13.2"
-    const val truth = "1.4.4"
-    const val ktCompileTesting = "0.5.1"
-    const val testParamInjector = "1.17"
+    const val truth = "1.4.5"
+    const val ktCompileTesting = "0.11.0"
+    const val testParamInjector = "1.20"
 }
 
 object deps {
@@ -102,7 +98,7 @@ object deps {
         const val daggerHilt = "com.google.dagger:hilt-android-gradle-plugin:${versions.dagger}"
         const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersionsPlugin}"
         const val dokka = "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokkaPlugin}"
-        const val shadow = "gradle.plugin.com.github.johnrengelman:shadow:${versions.shadowPlugin}"
+        const val shadow = "com.gradleup.shadow:shadow-gradle-plugin:${versions.shadowPlugin}"
 
     }
 

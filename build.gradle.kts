@@ -99,7 +99,3 @@ allprojects {
         }
     }
 }
-
-val clean by tasks.registering(Delete::class) {
-    delete(layout.buildDirectory)
-}

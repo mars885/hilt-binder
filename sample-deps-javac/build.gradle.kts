@@ -37,8 +37,16 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = appConfig.androidModuleJavaCompatVersion
-        targetCompatibility = appConfig.androidModuleJavaCompatVersion
+        val version = JavaVersion.toVersion(appConfig.jvmBytecodeVersion)
+
+        sourceCompatibility = version
+        targetCompatibility = version
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(appConfig.jvmToolchainVersion))
     }
 }
 

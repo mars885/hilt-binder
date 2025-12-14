@@ -38,7 +38,7 @@ internal class KspJavaViewModelDeps @Inject constructor(
     private val kspJavaViewModelDep5: KspJavaViewModelDep5,
     private val kspJavaViewModelDeps6: Set<@JvmSuppressWildcards KspJavaViewModelDep6>,
     private val kspJavaViewModelDeps7: Map<Int, @JvmSuppressWildcards KspJavaViewModelDep7>,
-    @Named("dep8") private val kspJavaViewModelDep8: KspJavaViewModelDep8,
+    @param:Named("dep8") private val kspJavaViewModelDep8: KspJavaViewModelDep8,
     private val kspJavaViewModelDep9: KspJavaViewModelDep9<Float>,
     private val kspJavaViewModelDep10: KspJavaViewModelDep10<Float>,
     private val kspJavaViewModelDeps11: Set<@JvmSuppressWildcards KspJavaViewModelDep11<*>>,

@@ -38,7 +38,7 @@ internal class JavacJavaViewDeps @Inject constructor(
     private val javacJavaViewDep5: JavacJavaViewDep5,
     private val javacJavaViewDeps6: Set<@JvmSuppressWildcards JavacJavaViewDep6>,
     private val javacJavaViewDeps7: Map<Long, @JvmSuppressWildcards JavacJavaViewDep7>,
-    @Named("dep8") private val javacJavaViewDep8: JavacJavaViewDep8,
+    @param:Named("dep8") private val javacJavaViewDep8: JavacJavaViewDep8,
     private val javacJavaViewDep9: JavacJavaViewDep9<Double>,
     private val javacJavaViewDep10: JavacJavaViewDep10<Double>,
     private val javacJavaViewDeps11: Set<@JvmSuppressWildcards JavacJavaViewDep11<*>>,

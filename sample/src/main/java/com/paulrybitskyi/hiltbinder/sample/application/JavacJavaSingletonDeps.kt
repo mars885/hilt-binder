@@ -42,7 +42,7 @@ internal class JavacJavaSingletonDeps @Inject constructor(
     private val javacJavaSingletonDep7: JavacJavaSingletonDep7,
     private val javacJavaSingletonDeps8: Set<@JvmSuppressWildcards JavacJavaSingletonDep8>,
     private val javacJavaSingletonDeps9: Map<Class<*>, @JvmSuppressWildcards JavacJavaSingletonDep9>,
-    @Named("dep10") private val javacJavaSingletonDep10: JavacJavaSingletonDep10,
+    @param:Named("dep10") private val javacJavaSingletonDep10: JavacJavaSingletonDep10,
     private val javacJavaSingletonDep11: JavacJavaSingletonDep11<Int>,
     private val javacJavaSingletonDep12: JavacJavaSingletonDep12<Int>,
     private val javacJavaSingletonDeps13: Set<@JvmSuppressWildcards JavacJavaSingletonDep13<*>>,

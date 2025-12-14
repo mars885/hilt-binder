@@ -38,7 +38,7 @@ internal class JavacJavaActivityDeps @Inject constructor(
     private val javacJavaActivityDep5: JavacJavaActivityDep5,
     private val javacJavaActivityDeps6: Set<@JvmSuppressWildcards JavacJavaActivityDep6>,
     private val javacJavaActivityDeps7: Map<String, @JvmSuppressWildcards JavacJavaActivityDep7>,
-    @Named("dep8") private val javacJavaActivityDep8: JavacJavaActivityDep8,
+    @param:Named("dep8") private val javacJavaActivityDep8: JavacJavaActivityDep8,
     private val javacJavaActivityDep9: JavacJavaActivityDep9<Float>,
     private val javacJavaActivityDep10: JavacJavaActivityDep10<Float>,
     private val javacJavaActivityDeps11: Set<@JvmSuppressWildcards JavacJavaActivityDep11<*>>,

@@ -109,18 +109,17 @@ private fun Any.toCodeBlock(argName: String = ""): CodeBlock {
         is Char -> CodeBlock.create(argName, "'%L'", this)
         is Float -> CodeBlock.create(argName, "%Lf", this)
         is String -> CodeBlock.create(argName, "%S", this)
-        is KSType -> toCodeBlock(argName)
+        is KSType -> classDeclaration.toCodeBlock(argName)
+        is KSClassDeclaration -> toCodeBlock(argName)
         is KSAnnotation -> CodeBlock.create(argName, "%L", toKotlinAnnoSpec())
         is ArrayList<*> -> toCodeBlock(argName)
         else -> CodeBlock.create(argName, "%L", this)
     }
 }
 
-private fun KSType.toCodeBlock(argName: String): CodeBlock {
-    val argValueDeclaration = classDeclaration
-    val argValueClassName = argValueDeclaration.toKotlinClassName()
-    val argValueClassKind = argValueDeclaration.classKind
-    val argValueFormat = when (argValueClassKind) {
+private fun KSClassDeclaration.toCodeBlock(argName: String): CodeBlock {
+    val argValueClassName = toKotlinClassName()
+    val argValueFormat = when (classKind) {
         ClassKind.ENUM_ENTRY -> "%T"
         else -> "%T::class"
     }

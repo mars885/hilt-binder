@@ -30,10 +30,10 @@ configure<JavaPluginExtension> {
 val javadocJar by tasks.getting(Jar::class) {
     archiveClassifier.set("javadoc")
 
-    val dokkaJavadocTask = tasks.getByName("dokkaJavadoc")
+    val dokkaTask = tasks.getByName("dokkaGeneratePublicationHtml")
 
-    from(dokkaJavadocTask)
-    dependsOn(dokkaJavadocTask)
+    from(dokkaTask)
+    dependsOn(dokkaTask)
 }
 
 configure<PublishingExtension> {
@@ -92,12 +92,4 @@ configure<SigningExtension> {
     val publication = pubExt.publications[publishingConfig.mavenPublicationName]
 
     sign(publication)
-}
-
-tasks {
-    named<Javadoc>("javadoc") {
-        if (JavaVersion.current().isJava9Compatible) {
-            (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
-        }
-    }
 }
